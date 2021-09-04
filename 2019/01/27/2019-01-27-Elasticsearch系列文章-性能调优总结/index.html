@@ -117,17 +117,17 @@
 
 
 
-  <meta name="description" content="目录[TOC] ##背景 Elasticseach是一个基于Apache Lucene的开源检索引擎，允许用户近实时的存储、检索和分析数据。虽然 Elasticsearch 专为快速查询而设计，但其性能在很大程度上取决于应用使用的场景、索引的数据量以及应用用户查询数据的速度。本文主要参考Elasticseach官方文档和社区在集群调优上的经验，根据个人经验主要分为：集群的性能调优、集群稳定性调优、">
+  <meta name="description" content="目录[TOC] 背景Elasticseach是一个基于Apache Lucene的开源检索引擎，允许用户近实时的存储、检索和分析数据。虽然 Elasticsearch 专为快速查询而设计，但其性能在很大程度上取决于应用使用的场景、索引的数据量以及应用用户查询数据的速度。本文主要参考Elasticseach官方文档和社区在集群调优上的经验，根据个人经验主要分为：集群的性能调优、集群稳定性调优、业务使">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Elasticsearch性能调优总结">
 <meta property="og:url" content="https://zjrongxiang.github.io/2019/01/27/2019-01-27-Elasticsearch系列文章-性能调优总结/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="目录[TOC] ##背景 Elasticseach是一个基于Apache Lucene的开源检索引擎，允许用户近实时的存储、检索和分析数据。虽然 Elasticsearch 专为快速查询而设计，但其性能在很大程度上取决于应用使用的场景、索引的数据量以及应用用户查询数据的速度。本文主要参考Elasticseach官方文档和社区在集群调优上的经验，根据个人经验主要分为：集群的性能调优、集群稳定性调优、">
+<meta property="og:description" content="目录[TOC] 背景Elasticseach是一个基于Apache Lucene的开源检索引擎，允许用户近实时的存储、检索和分析数据。虽然 Elasticsearch 专为快速查询而设计，但其性能在很大程度上取决于应用使用的场景、索引的数据量以及应用用户查询数据的速度。本文主要参考Elasticseach官方文档和社区在集群调优上的经验，根据个人经验主要分为：集群的性能调优、集群稳定性调优、业务使">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-21T07:16:57.933Z">
+<meta property="og:updated_time" content="2021-08-25T14:37:24.253Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch性能调优总结">
-<meta name="twitter:description" content="目录[TOC] ##背景 Elasticseach是一个基于Apache Lucene的开源检索引擎，允许用户近实时的存储、检索和分析数据。虽然 Elasticsearch 专为快速查询而设计，但其性能在很大程度上取决于应用使用的场景、索引的数据量以及应用用户查询数据的速度。本文主要参考Elasticseach官方文档和社区在集群调优上的经验，根据个人经验主要分为：集群的性能调优、集群稳定性调优、">
+<meta name="twitter:description" content="目录[TOC] 背景Elasticseach是一个基于Apache Lucene的开源检索引擎，允许用户近实时的存储、检索和分析数据。虽然 Elasticsearch 专为快速查询而设计，但其性能在很大程度上取决于应用使用的场景、索引的数据量以及应用用户查询数据的速度。本文主要参考Elasticseach官方文档和社区在集群调优上的经验，根据个人经验主要分为：集群的性能调优、集群稳定性调优、业务使">
 
 
 
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-08-21 15:16:57" itemprop="dateModified" datetime="2019-08-21T15:16:57+08:00">2019-08-21</time>
+                <time title="修改时间：2021-08-25 22:37:24" itemprop="dateModified" datetime="2021-08-25T22:37:24+08:00">2021-08-25</time>
               
             
           </span>
@@ -580,8 +580,7 @@
 
       
         <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><p>[TOC]</p>
-<p>##背景</p>
-<p>Elasticseach是一个基于Apache Lucene的开源检索引擎，允许用户近实时的存储、检索和分析数据。虽然 Elasticsearch 专为快速查询而设计，但其性能在很大程度上取决于应用使用的场景、索引的数据量以及应用用户查询数据的速度。本文主要参考Elasticseach官方文档和社区在集群调优上的经验，根据个人经验主要分为：集群的性能调优、集群稳定性调优、业务使用调优。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Elasticseach是一个基于Apache Lucene的开源检索引擎，允许用户近实时的存储、检索和分析数据。虽然 Elasticsearch 专为快速查询而设计，但其性能在很大程度上取决于应用使用的场景、索引的数据量以及应用用户查询数据的速度。本文主要参考Elasticseach官方文档和社区在集群调优上的经验，根据个人经验主要分为：集群的性能调优、集群稳定性调优、业务使用调优。</p>
 <p>##第一部分 性能调优</p>
 <p>###1.1 操作系统侧基线调优建议</p>
 <p>####1.1.1 关闭交换分区（或降低Swappiness值）</p>
@@ -896,8 +895,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/27/2020-10-03-Docker系统文章-Docker compose编排Docker集群/" rel="next" title="Docker Compose使用介绍">
-                <i class="fa fa-chevron-left"></i> Docker Compose使用介绍
+              <a href="/2019/01/27/2019-01-27-Elasticsearch系列文章-冷热节点架构/" rel="next" title="Elasticsearch温热集群架构">
+                <i class="fa fa-chevron-left"></i> Elasticsearch温热集群架构
               </a>
             
           </div>
@@ -987,7 +986,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">162</span>
+                    <span class="site-state-item-count">186</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1128,7 +1127,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">64</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">67</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1179,7 +1184,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1273,7 +1280,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-2-大内存物理机多实例部署"><span class="nav-number">1.0.1.</span> <span class="nav-text">2.3.2 大内存物理机多实例部署</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-业务使用调优"><span class="nav-number">2.</span> <span class="nav-text">第三部分  业务使用调优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-13-增加负载均衡（查询）节点"><span class="nav-number">2.1.</span> <span class="nav-text">3.13 增加负载均衡（查询）节点</span></a></li></ol></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-2-大内存物理机多实例部署"><span class="nav-number">2.0.1.</span> <span class="nav-text">2.3.2 大内存物理机多实例部署</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-业务使用调优"><span class="nav-number">3.</span> <span class="nav-text">第三部分  业务使用调优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-13-增加负载均衡（查询）节点"><span class="nav-number">3.1.</span> <span class="nav-text">3.13 增加负载均衡（查询）节点</span></a></li></ol></li></div>
             
 
           </div>
@@ -1306,7 +1313,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">525k</span>
+    <span title="站点总字数">577k</span>
   
 
   
@@ -1315,7 +1322,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">7:57</span>
+    <span title="站点阅读时长">8:45</span>
   
 </div>
 

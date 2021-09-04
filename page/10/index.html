@@ -422,7 +422,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/03/2020-09-17-Java中定时任务/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/10/02/2021-04-27-Hive中外部表总结和实践/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -442,7 +442,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/09/03/2020-09-17-Java中定时任务/" class="post-title-link" itemprop="url">Java中定时任务</a>
+                <a href="/2020/10/02/2021-04-27-Hive中外部表总结和实践/" class="post-title-link" itemprop="url">Hive中外部表总结和实践</a>
               
             
           </h1>
@@ -467,7 +467,7 @@
                 
               
 
-              <time title="创建时间：2020-09-03 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-03T13:30:00+08:00">2020-09-03</time>
+              <time title="创建时间：2020-10-02 21:30:00" itemprop="dateCreated datePublished" datetime="2020-10-02T21:30:00+08:00">2020-10-02</time>
             
 
             
@@ -484,7 +484,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-17 20:42:50" itemprop="dateModified" datetime="2020-09-17T20:42:50+08:00">2020-09-17</time>
+                <time title="修改时间：2021-04-27 15:49:21" itemprop="dateModified" datetime="2021-04-27T15:49:21+08:00">2021-04-27</time>
               
             
           </span>
@@ -501,7 +501,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hive/" itemprop="url" rel="index"><span itemprop="name">Hive</span></a></span>
 
                 
                 
@@ -516,9 +516,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/09/03/2020-09-17-Java中定时任务/#comments" itemprop="discussionUrl">
+                <a href="/2020/10/02/2021-04-27-Hive中外部表总结和实践/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/03/2020-09-17-Java中定时任务/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/10/02/2021-04-27-Hive中外部表总结和实践/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -540,7 +540,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">432</span>
+                <span title="本文字数">923</span>
               
 
               
@@ -579,17 +579,953 @@
             <p>
               目录
 背景
+第一部分  静态分区
+第二部分 动态分区
+第三部分 两者的比较
+第四部分 动态分区使用的问题
+参考文献及资料
+
+背景参考文献及资料1、动态分区，链接：https://cwiki.apache.org/confluence/display/Hive/DynamicPartitions
+2、
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/10/02/2021-04-27-Hive中外部表总结和实践/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    <div>
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/10/02/2021-04-29-Elasticsearch集群pending_task任务等待集群故障处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/10/02/2021-04-29-Elasticsearch集群pending_task任务等待集群故障处理/" class="post-title-link" itemprop="url">Elasticsearch集群pending_task任务等待集群故障处理</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-02 21:30:00" itemprop="dateCreated datePublished" datetime="2020-10-02T21:30:00+08:00">2020-10-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-04-30 00:01:00" itemprop="dateModified" datetime="2021-04-30T00:01:00+08:00">2021-04-30</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hive/" itemprop="url" rel="index"><span itemprop="name">Hive</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/10/02/2021-04-29-Elasticsearch集群pending_task任务等待集群故障处理/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/10/02/2021-04-29-Elasticsearch集群pending_task任务等待集群故障处理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">4.8k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">4 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              目录
+背景
+第一部分  静态分区
+第二部分 动态分区
+第三部分 两者的比较
+第四部分 动态分区使用的问题
+参考文献及资料
+
+背景故障现象：
+集群出现大量的put-mapping的任务堆积 （1200个左右），该任务属于HIGH级别，比创建索引等任务级别高。所以出现集群4月27号的索引未创建成功。
+p
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/10/02/2021-04-29-Elasticsearch集群pending_task任务等待集群故障处理/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    <div>
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/10/02/2020-10-02-Hive中静态分区和动态分区总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/10/02/2020-10-02-Hive中静态分区和动态分区总结/" class="post-title-link" itemprop="url">Hive中静态分区和动态分区总结</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-02 21:30:00" itemprop="dateCreated datePublished" datetime="2020-10-02T21:30:00+08:00">2020-10-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-10-21 20:08:05" itemprop="dateModified" datetime="2020-10-21T20:08:05+08:00">2020-10-21</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hive/" itemprop="url" rel="index"><span itemprop="name">Hive</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/10/02/2020-10-02-Hive中静态分区和动态分区总结/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/10/02/2020-10-02-Hive中静态分区和动态分区总结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">12k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">11 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              目录
+背景
+第一部分  静态分区
+第二部分 动态分区
+第三部分 两者的比较
+第四部分 动态分区使用的问题
+参考文献及资料
+
+背景在Hive中有两种类型的分区：静态分区(Static Partitioning)和动态分区(Dynamic Partitioning)。
+
+静态分区。对于静态分区，从字面就
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/10/02/2020-10-02-Hive中静态分区和动态分区总结/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    <div>
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/10/02/2020-10-01-Mysql的两种连接方式总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/10/02/2020-10-01-Mysql的两种连接方式总结/" class="post-title-link" itemprop="url">Mysql的两种连接方式总结</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-02 13:30:00" itemprop="dateCreated datePublished" datetime="2020-10-02T13:30:00+08:00">2020-10-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-01-09 11:50:30" itemprop="dateModified" datetime="2021-01-09T11:50:30+08:00">2021-01-09</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/10/02/2020-10-01-Mysql的两种连接方式总结/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/10/02/2020-10-01-Mysql的两种连接方式总结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">11k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">10 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              目录
+背景
+第一部分  TCP/IP Socket
+第二部分 UNIX Domain Socket
+第三部分 Mysql的两种连接方式
+参考文献及资料
+
+背景我们在使用Mysql客户端和Mysql交互的时候，如果客户端是远程（非本机）那么底层是通过TCP/IP的Socket方式进行交互。但是如果客户
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/10/02/2020-10-01-Mysql的两种连接方式总结/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    <div>
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/27/2020-09-27-Spark任务依赖jar包总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/27/2020-09-27-Spark任务依赖jar包总结/" class="post-title-link" itemprop="url">Spark任务依赖jar包总结</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-27 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-27T13:30:00+08:00">2020-09-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-10-12 22:33:42" itemprop="dateModified" datetime="2020-10-12T22:33:42+08:00">2020-10-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/27/2020-09-27-Spark任务依赖jar包总结/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/27/2020-09-27-Spark任务依赖jar包总结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">6.5k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">6 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              目录
+背景
 第一部分  常用快捷键
 参考文献及资料
 
-背景参考文献及资料1、https://www.cnblogs.com/wenbronk/p/6433178.html
-
-              
+背景编写了Spark批任务（Java），使用maven打包成jar包，提交到Yarn集群，报jar包冲突的错误。查阅资料了解一下背后的原理。
+https://stackoverflow.com/questions/16222748/buildin
+              ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2020/09/03/2020-09-17-Java中定时任务/#more" rel="contents">
+              <a class="btn" href="/2020/09/27/2020-09-27-Spark任务依赖jar包总结/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -653,7 +1589,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/03/2020-09-03-Maven项目中resources配置总结/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/12/2020-09-12-布隆过滤算法总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -673,7 +1609,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/09/03/2020-09-03-Maven项目中resources配置总结/" class="post-title-link" itemprop="url">Maven项目中resources配置总结</a>
+                <a href="/2020/09/12/2020-09-12-布隆过滤算法总结/" class="post-title-link" itemprop="url">布隆过滤算法总结</a>
               
             
           </h1>
@@ -698,7 +1634,7 @@
                 
               
 
-              <time title="创建时间：2020-09-03 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-03T13:30:00+08:00">2020-09-03</time>
+              <time title="创建时间：2020-09-12 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-12T13:30:00+08:00">2020-09-12</time>
             
 
             
@@ -715,7 +1651,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-03-30 21:46:20" itemprop="dateModified" datetime="2021-03-30T21:46:20+08:00">2021-03-30</time>
+                <time title="修改时间：2020-09-19 19:44:21" itemprop="dateModified" datetime="2020-09-19T19:44:21+08:00">2020-09-19</time>
               
             
           </span>
@@ -732,7 +1668,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Maven/" itemprop="url" rel="index"><span itemprop="name">Maven</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
 
                 
                 
@@ -747,9 +1683,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/09/03/2020-09-03-Maven项目中resources配置总结/#comments" itemprop="discussionUrl">
+                <a href="/2020/09/12/2020-09-12-布隆过滤算法总结/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/03/2020-09-03-Maven项目中resources配置总结/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/12/2020-09-12-布隆过滤算法总结/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -771,7 +1707,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">19k</span>
+                <span title="本文字数">11k</span>
               
 
               
@@ -785,7 +1721,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">18 分钟</span>
+                <span title="阅读时长">10 分钟</span>
               
             </div>
           
@@ -810,19 +1746,19 @@
             <p>
               目录
 背景
-第一部分  基本配置介绍
-第二部分 具体配置和注意事项
-第三部分 读取resources资源
+第一部分   
+第二部分 
+第三部分 
 参考文献及资料
 
-背景通常Maven项目的文件目录结构如下：
-# Maven项目的标准目录结构src main   java         #源文件    resources    #资源文件
+背景在数据处理中，我们经常有这样的需求，判断某个元素是否在一个指定集合中。最朴素的处理方法是首先存储指定集合中数据，然后查找集合中数据，如有数据和查找元素相等即归属于该集合。
+在数学中，如果只利用集合的定义属性，查找只能通过穷举遍
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2020/09/03/2020-09-03-Maven项目中resources配置总结/#more" rel="contents">
+              <a class="btn" href="/2020/09/12/2020-09-12-布隆过滤算法总结/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -886,7 +1822,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/03/2020-09-03-提交Spark任务到kerberos安全集群/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/12/2020-09-13-HDFS小文件治理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -906,7 +1842,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/09/03/2020-09-03-提交Spark任务到kerberos安全集群/" class="post-title-link" itemprop="url">提交Spark任务到kerberos安全集群</a>
+                <a href="/2020/09/12/2020-09-13-HDFS小文件治理/" class="post-title-link" itemprop="url">HDFS小文件治理总结</a>
               
             
           </h1>
@@ -931,226 +1867,7 @@
                 
               
 
-              <time title="创建时间：2020-09-03 13:30:00 / 修改时间：19:54:07" itemprop="dateCreated datePublished" datetime="2020-09-03T13:30:00+08:00">2020-09-03</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/09/03/2020-09-03-提交Spark任务到kerberos安全集群/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/03/2020-09-03-提交Spark任务到kerberos安全集群/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">2.3k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">2 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              目录
-背景
-第一部分  常用快捷键
-参考文献及资料
-
-背景在生产Hadoop集群上，通常配置了kerberos认证服务，需要通过认证后，才能和集群中其他服务进行交互。例如像安全集群提交Spark任务。
-第一部分 实现方式1UserGroupInformation.setConfiguration(S
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2020/09/03/2020-09-03-提交Spark任务到kerberos安全集群/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    <div>
-      
-    </div>
-    
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/03/2020-09-03-配置kerberos认证的Kafka集群交互介绍/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rong xiang">
-      <meta itemprop="description" content="Keep a Pure Curiosity">
-      <meta itemprop="image" content="/images/avatar/person.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="RongXiang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/09/03/2020-09-03-配置kerberos认证的Kafka集群交互介绍/" class="post-title-link" itemprop="url">配置kerberos认证的Kafka集群交互介绍</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-09-03 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-03T13:30:00+08:00">2020-09-03</time>
+              <time title="创建时间：2020-09-12 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-12T13:30:00+08:00">2020-09-12</time>
             
 
             
@@ -1167,7 +1884,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-10-01 15:36:22" itemprop="dateModified" datetime="2020-10-01T15:36:22+08:00">2020-10-01</time>
+                <time title="修改时间：2021-05-13 00:48:59" itemprop="dateModified" datetime="2021-05-13T00:48:59+08:00">2021-05-13</time>
               
             
           </span>
@@ -1184,7 +1901,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/HDFS/" itemprop="url" rel="index"><span itemprop="name">HDFS</span></a></span>
 
                 
                 
@@ -1199,9 +1916,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/09/03/2020-09-03-配置kerberos认证的Kafka集群交互介绍/#comments" itemprop="discussionUrl">
+                <a href="/2020/09/12/2020-09-13-HDFS小文件治理/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/03/2020-09-03-配置kerberos认证的Kafka集群交互介绍/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/12/2020-09-13-HDFS小文件治理/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1223,7 +1940,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">17k</span>
+                <span title="本文字数">30k</span>
               
 
               
@@ -1237,7 +1954,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">16 分钟</span>
+                <span title="阅读时长">27 分钟</span>
               
             </div>
           
@@ -1262,17 +1979,19 @@
             <p>
               目录
 背景
-第一部分  
+第一部分   回本溯源
+第二部分  HDFS大量小文件的危害
+第三部分  小文件治理方案总结
+第四部分 总结
 参考文献及资料
 
-背景https://docs.spring.io/spring-kafka/api/org/springframework/kafka/core/KafkaTemplate.html
-https://blog.csdn.net/justry_deng/ar
+背景企业级Hadoop大数据平台在实际使用过程中，可能大部分会遭遇小文件问题，并体验它的破坏性。HDFS文件系统的 inode 信息和 block 信息以及 b
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2020/09/03/2020-09-03-配置kerberos认证的Kafka集群交互介绍/#more" rel="contents">
+              <a class="btn" href="/2020/09/12/2020-09-13-HDFS小文件治理/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1336,7 +2055,7 @@ https://blog.csdn.net/justry_deng/ar
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/03/2020-09-03-Spring框架下Kafka交互总结/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/12/2020-09-13-HDFS命令使用总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -1356,7 +2075,7 @@ https://blog.csdn.net/justry_deng/ar
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/09/03/2020-09-03-Spring框架下Kafka交互总结/" class="post-title-link" itemprop="url">Spring框架下Kafka交互总结</a>
+                <a href="/2020/09/12/2020-09-13-HDFS命令使用总结/" class="post-title-link" itemprop="url">HDFS小文件治理总结</a>
               
             
           </h1>
@@ -1381,7 +2100,7 @@ https://blog.csdn.net/justry_deng/ar
                 
               
 
-              <time title="创建时间：2020-09-03 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-03T13:30:00+08:00">2020-09-03</time>
+              <time title="创建时间：2020-09-12 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-12T13:30:00+08:00">2020-09-12</time>
             
 
             
@@ -1398,7 +2117,7 @@ https://blog.csdn.net/justry_deng/ar
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-10-01 19:47:23" itemprop="dateModified" datetime="2020-10-01T19:47:23+08:00">2020-10-01</time>
+                <time title="修改时间：2021-05-05 22:13:53" itemprop="dateModified" datetime="2021-05-05T22:13:53+08:00">2021-05-05</time>
               
             
           </span>
@@ -1415,7 +2134,7 @@ https://blog.csdn.net/justry_deng/ar
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/HDFS/" itemprop="url" rel="index"><span itemprop="name">HDFS</span></a></span>
 
                 
                 
@@ -1430,9 +2149,9 @@ https://blog.csdn.net/justry_deng/ar
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/09/03/2020-09-03-Spring框架下Kafka交互总结/#comments" itemprop="discussionUrl">
+                <a href="/2020/09/12/2020-09-13-HDFS命令使用总结/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/03/2020-09-03-Spring框架下Kafka交互总结/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/12/2020-09-13-HDFS命令使用总结/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1454,7 +2173,7 @@ https://blog.csdn.net/justry_deng/ar
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">5.6k</span>
+                <span title="本文字数">474</span>
               
 
               
@@ -1468,7 +2187,7 @@ https://blog.csdn.net/justry_deng/ar
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">5 分钟</span>
+                <span title="阅读时长">1 分钟</span>
               
             </div>
           
@@ -1493,25 +2212,252 @@ https://blog.csdn.net/justry_deng/ar
             <p>
               目录
 背景
-第一部分  
+第一部分   
+第二部分 
+第三部分 
 参考文献及资料
 
-背景Java中与Kafka交互的API类包有：
+背景https://hadoop.apache.org/docs/r1.0.4/cn/hdfs_shell.html
+参考文献及资料
+              
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/09/12/2020-09-13-HDFS命令使用总结/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
 
-Kafka client
-Spring for Apache Kafka
+    
 
-Spring Integration Kafka
+    <div>
+      
+    </div>
+    
+    
+    
+    
 
-Spring Cloud stream binder Kafka
+    
 
-本文主要介
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/09/12/2020-09-13-Yarn集群调度原理总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/12/2020-09-13-Yarn集群调度原理总结/" class="post-title-link" itemprop="url">布隆过滤算法总结</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-12 13:30:00" itemprop="dateCreated datePublished" datetime="2020-09-12T13:30:00+08:00">2020-09-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-09-13 23:32:06" itemprop="dateModified" datetime="2020-09-13T23:32:06+08:00">2020-09-13</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/12/2020-09-13-Yarn集群调度原理总结/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/12/2020-09-13-Yarn集群调度原理总结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">1.1k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">1 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              目录
+背景
+第一部分   
+第二部分 
+第三部分 
+参考文献及资料
+
+背景https://blog.csdn.net/zhanyuanlin/article/details/78799341
+https://blog.csdn.net/zhanyuanlin/article/details/7879
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2020/09/03/2020-09-03-Spring框架下Kafka交互总结/#more" rel="contents">
+              <a class="btn" href="/2020/09/12/2020-09-13-Yarn集群调度原理总结/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1637,7 +2583,7 @@ Spring Cloud stream binder Kafka
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-10-01 17:17:30" itemprop="dateModified" datetime="2020-10-01T17:17:30+08:00">2020-10-01</time>
+                <time title="修改时间：2021-07-13 21:34:37" itemprop="dateModified" datetime="2021-07-13T21:34:37+08:00">2021-07-13</time>
               
             
           </span>
@@ -1693,7 +2639,7 @@ Spring Cloud stream binder Kafka
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">764</span>
+                <span title="本文字数">1.3k</span>
               
 
               
@@ -1735,9 +2681,12 @@ Spring Cloud stream binder Kafka
 第一部分  
 参考文献及资料
 
-背景https://www.cnblogs.com/qlqwjy/p/9275415.html参考文献及资料1、Spring for Apache Kafka，链接：https://spring.io/projects/spring-kafka
+背景对于一个应用程序来说日志记录是必不可少的一部分。线上问题追踪，基于日志的业务逻辑统计分析等都离不日志。
+第一部分 日志分类1.1 接口类只提供API定义，没有提供具体实现。目的是为应用层提供标准化的使用方式。
 
-              
+SLF4J
+J.C.L(commons-
+              ...
             </p>
           <!--noindex-->
           
@@ -1791,942 +2740,11 @@ Spring Cloud stream binder Kafka
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/08/15/2020-08-15-Intellij IDEA编辑器中Java代码块的快捷方式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rong xiang">
-      <meta itemprop="description" content="Keep a Pure Curiosity">
-      <meta itemprop="image" content="/images/avatar/person.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="RongXiang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/08/15/2020-08-15-Intellij IDEA编辑器中Java代码块的快捷方式/" class="post-title-link" itemprop="url">Intellij IDEA编辑器中Java代码块的快捷方式</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-08-15 13:30:00" itemprop="dateCreated datePublished" datetime="2020-08-15T13:30:00+08:00">2020-08-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-10-01 15:21:09" itemprop="dateModified" datetime="2020-10-01T15:21:09+08:00">2020-10-01</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/08/15/2020-08-15-Intellij IDEA编辑器中Java代码块的快捷方式/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/08/15/2020-08-15-Intellij IDEA编辑器中Java代码块的快捷方式/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">3.5k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">3 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              目录
-背景
-第一部分  常用快捷键
-参考文献及资料
-
-背景记录常用的ideal快捷输入；
-第一部分 常用快捷键1.1 mian主函数快捷键psvm
-public static void main(String[] args) &#123;            &#125;
-1.2 输出快捷键sou
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2020/08/15/2020-08-15-Intellij IDEA编辑器中Java代码块的快捷方式/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    <div>
-      
-    </div>
-    
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/05/12/2020-05-11-Kafka系列文章（第三篇Kafka可视化管理界面）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rong xiang">
-      <meta itemprop="description" content="Keep a Pure Curiosity">
-      <meta itemprop="image" content="/images/avatar/person.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="RongXiang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/12/2020-05-11-Kafka系列文章（第三篇Kafka可视化管理界面）/" class="post-title-link" itemprop="url">Kafka系列文章(第三篇 Kafka可视化管理界面)</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-05-12 13:30:00" itemprop="dateCreated datePublished" datetime="2020-05-12T13:30:00+08:00">2020-05-12</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2021-06-16 20:51:58" itemprop="dateModified" datetime="2021-06-16T20:51:58+08:00">2021-06-16</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/05/12/2020-05-11-Kafka系列文章（第三篇Kafka可视化管理界面）/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/05/12/2020-05-11-Kafka系列文章（第三篇Kafka可视化管理界面）/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">41k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">37 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              目录
-背景
-第一部分  kafka-manager安装
-第二部分  kafka-manager配置
-第三部分  kafka-manager管理
-第四部分  总结
-参考文献及资料
-
-背景在Kafka的监控系统中有很多优秀的开源监控系统。比如Kafka-manager，open-faclcon，zabb
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2020/05/12/2020-05-11-Kafka系列文章（第三篇Kafka可视化管理界面）/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    <div>
-      
-    </div>
-    
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/05/07/2020-05-07-Linux系统远程执行shell命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rong xiang">
-      <meta itemprop="description" content="Keep a Pure Curiosity">
-      <meta itemprop="image" content="/images/avatar/person.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="RongXiang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/05/07/2020-05-07-Linux系统远程执行shell命令/" class="post-title-link" itemprop="url">Linux系统远程执行shell命令</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-05-07 12:42:00 / 修改时间：22:18:15" itemprop="dateCreated datePublished" datetime="2020-05-07T12:42:00+08:00">2020-05-07</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/05/07/2020-05-07-Linux系统远程执行shell命令/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/05/07/2020-05-07-Linux系统远程执行shell命令/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">616</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">1 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              目录
-背景
-
-第一部分  远程执行shell命令 
-
-参考文献及资料
-
-
-背景第一部分 远程执行shell命令第二部分 Python实现远程执行shell命令参考文献及资料1、iptables命令详解，链接
-
-              
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2020/05/07/2020-05-07-Linux系统远程执行shell命令/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    <div>
-      
-    </div>
-    
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2020/04/21/2020-04-21-Linux系统中的shell介绍/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rong xiang">
-      <meta itemprop="description" content="Keep a Pure Curiosity">
-      <meta itemprop="image" content="/images/avatar/person.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="RongXiang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/21/2020-04-21-Linux系统中的shell介绍/" class="post-title-link" itemprop="url">Linux系统中的shell解释器介绍</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-21 12:42:00" itemprop="dateCreated datePublished" datetime="2020-04-21T12:42:00+08:00">2020-04-21</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2021-01-16 16:44:33" itemprop="dateModified" datetime="2021-01-16T16:44:33+08:00">2021-01-16</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/04/21/2020-04-21-Linux系统中的shell介绍/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/21/2020-04-21-Linux系统中的shell介绍/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">14k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">12 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              目录
-背景
-
-第一部分  shell解释器种类
-
-第二部分 shell执行命令模式
-
-第三部分 shell命令的类型
-
-第四部分 shell初始化和调用
-
-第五部分 启动文件介绍
-
-第六部分 生产运维注意事项
-
-参考文献及资料
-
-
-背景shell是用C语言编写的程序，用户用它来和Linux进行交互。
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2020/04/21/2020-04-21-Linux系统中的shell介绍/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    <div>
-      
-    </div>
-    
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2771,7 +2789,7 @@ public static void main(String[] args) &#123;            &#125;
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">162</span>
+                    <span class="site-state-item-count">186</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2912,7 +2930,13 @@ public static void main(String[] args) &#123;            &#125;
                     
                       
                     
-                    <span class="site-state-item-count">64</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">67</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2963,7 +2987,9 @@ public static void main(String[] args) &#123;            &#125;
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -3073,7 +3099,7 @@ public static void main(String[] args) &#123;            &#125;
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">525k</span>
+    <span title="站点总字数">577k</span>
   
 
   
@@ -3082,7 +3108,7 @@ public static void main(String[] args) &#123;            &#125;
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">7:57</span>
+    <span title="站点阅读时长">8:45</span>
   
 </div>
 

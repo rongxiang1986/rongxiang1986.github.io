@@ -129,7 +129,7 @@
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/python的模块学习/picture/ReceiverWAL.png">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/python的模块学习/picture/Direct.png">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/python的模块学习/picture/spark-streaming-checkpoint-in-apache-spark-1.jpg">
-<meta property="og:updated_time" content="2020-12-03T13:28:29.523Z">
+<meta property="og:updated_time" content="2021-08-16T18:54:34.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PySpark和Kafka交互介绍">
 <meta name="twitter:description" content="目录 背景  第一部分  Receiver接口模式  第二部分  Direct接口模式  第三部分  PySpark和Kafka交互  第四部分   任务提交  参考文献及资料   背景Apache Kafka项目是大数据处理中重要的消息引擎。Spark Streaming作为重要的流处理计算框架通常和Kafka结合使用。Spark Streaming（新旧版本）支持Kafka的编程模型有两种：R">
@@ -488,7 +488,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-12-03 21:28:29" itemprop="dateModified" datetime="2020-12-03T21:28:29+08:00">2020-12-03</time>
+                <time title="修改时间：2021-08-17 02:54:34" itemprop="dateModified" datetime="2021-08-17T02:54:34+08:00">2021-08-17</time>
               
             
           </span>
@@ -611,8 +611,7 @@
 </ul>
 <p>两个客户端的主要差异就是：谁来负责管理offset状态。但是高级的不一定就好，需要具体架构场景具体分析，适合才是最好的，哈哈（扯远了）。</p>
 <p>Kafka项目组在<code>0.8.1</code>版本开始重写生产者API，在<code>0.9</code>版本完成新版本API的发版。新版的Consumer API使用原生Java编写（居然不用scala了，啧啧）。当然新版本API也不依赖于Zookeeper。详细细节可以参考官方文章：《<a href="https://www.confluent.io/blog/tutorial-getting-started-with-the-new-apache-kafka-0-9-consumer-client/" target="_blank" rel="noopener">Introducing the Kafka Consumer: Getting Started with the New Apache Kafka 0.9 Consumer Client</a>》。</p>
-<p>##第一部分  Receiver模式</p>
-<h3 id="1-1-原始方式"><a href="#1-1-原始方式" class="headerlink" title="1.1 原始方式"></a>1.1 原始方式</h3><p>最开始Kafka和Spark Streaming集成是通过Receiver。即在每个Spark Executor中实例化Apache Kafka”高级版” Consumer API，启动一个Receiver，实现异步消费Kafka消息，并存储在执行程序的内存中，同时更新在Zookeeper中偏移量（offset）。接着Spark Streaming Driver启动作业（jobs）处理已经接受到的缓存数据。</p>
+<h2 id="第一部分-Receiver模式"><a href="#第一部分-Receiver模式" class="headerlink" title="第一部分  Receiver模式"></a>第一部分  Receiver模式</h2><h3 id="1-1-原始方式"><a href="#1-1-原始方式" class="headerlink" title="1.1 原始方式"></a>1.1 原始方式</h3><p>最开始Kafka和Spark Streaming集成是通过Receiver。即在每个Spark Executor中实例化Apache Kafka”高级版” Consumer API，启动一个Receiver，实现异步消费Kafka消息，并存储在执行程序的内存中，同时更新在Zookeeper中偏移量（offset）。接着Spark Streaming Driver启动作业（jobs）处理已经接受到的缓存数据。</p>
 <p><img src="C:\Users\rongxiang\Desktop\python的模块学习\picture\ReceiverOld.png" alt="ReceiverOld"></p>
 <p>这种方式是朴素和高效的，但是不具备容错性，遇到故障或者Executor重启任务，均会导致缓存消息的丢失和offset状态的滞后。对于一些重要业务数据处理场景，这是无法容忍的架构缺陷。</p>
 <h3 id="1-2-预写日志（WAL）模式"><a href="#1-2-预写日志（WAL）模式" class="headerlink" title="1.2 预写日志（WAL）模式"></a>1.2 预写日志（WAL）模式</h3><p>为了保证容错性，最简单的架构思路就是”存储状态”。Spark项目组引入了预写日志机制（WAL，Write Ahead Logs）。主要思想是：每个Spark Executor中Receiver接受到的数据持久化到分布式文件系统（HDFS）中，数据只有完成持久化，Receiver才会发起更新Zookeeper中的偏移量状态。当发生故障或者Executor重启时，从持久化的预写日志中恢复数据。</p>
@@ -922,7 +921,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">162</span>
+                    <span class="site-state-item-count">186</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1063,7 +1062,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">64</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">67</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1114,7 +1119,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1208,7 +1215,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-0-Kafka的Consumer-API"><span class="nav-number">2.1.</span> <span class="nav-text">0.0 Kafka的Consumer API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-原始方式"><span class="nav-number">2.2.</span> <span class="nav-text">1.1 原始方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-预写日志（WAL）模式"><span class="nav-number">2.3.</span> <span class="nav-text">1.2 预写日志（WAL）模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Direct模式"><span class="nav-number">3.</span> <span class="nav-text">第二部分  Direct模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Direct模式介绍"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 Direct模式介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-两种方式的比较"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 两种方式的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-PySpark和Kafka交互"><span class="nav-number">4.</span> <span class="nav-text">第三部分  PySpark和Kafka交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-PySpark中Receiver接口"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 PySpark中Receiver接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-接口说明"><span class="nav-number">4.1.1.</span> <span class="nav-text">3.1.1 接口说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-案例介绍"><span class="nav-number">4.1.2.</span> <span class="nav-text">3.1.2 案例介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-PySpark中Direct接口"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 PySpark中Direct接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-接口说明"><span class="nav-number">4.2.1.</span> <span class="nav-text">3.2.1 接口说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-案例介绍"><span class="nav-number">4.2.2.</span> <span class="nav-text">3.2.2 案例介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-checkpoint机制"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 checkpoint机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-持久化（persist）和Checkpoint机制"><span class="nav-number">4.3.1.</span> <span class="nav-text">3.3.1 持久化（persist）和Checkpoint机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-2-Checkpoint机制的实现"><span class="nav-number">4.3.2.</span> <span class="nav-text">3.3.2 Checkpoint机制的实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-其他持久化实现方式"><span class="nav-number">4.4.</span> <span class="nav-text">3.4 其他持久化实现方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-任务的提交"><span class="nav-number">5.</span> <span class="nav-text">第四部分 任务的提交</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-兼容性"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 兼容性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-任务提交案例"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 任务提交案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-参数调优建议"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 参数调优建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">6.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-0-Kafka的Consumer-API"><span class="nav-number">2.1.</span> <span class="nav-text">0.0 Kafka的Consumer API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Receiver模式"><span class="nav-number">3.</span> <span class="nav-text">第一部分  Receiver模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-原始方式"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 原始方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-预写日志（WAL）模式"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 预写日志（WAL）模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Direct模式"><span class="nav-number">4.</span> <span class="nav-text">第二部分  Direct模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Direct模式介绍"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 Direct模式介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-两种方式的比较"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 两种方式的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-PySpark和Kafka交互"><span class="nav-number">5.</span> <span class="nav-text">第三部分  PySpark和Kafka交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-PySpark中Receiver接口"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 PySpark中Receiver接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-接口说明"><span class="nav-number">5.1.1.</span> <span class="nav-text">3.1.1 接口说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-案例介绍"><span class="nav-number">5.1.2.</span> <span class="nav-text">3.1.2 案例介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-PySpark中Direct接口"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 PySpark中Direct接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-接口说明"><span class="nav-number">5.2.1.</span> <span class="nav-text">3.2.1 接口说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-案例介绍"><span class="nav-number">5.2.2.</span> <span class="nav-text">3.2.2 案例介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-checkpoint机制"><span class="nav-number">5.3.</span> <span class="nav-text">3.3 checkpoint机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-持久化（persist）和Checkpoint机制"><span class="nav-number">5.3.1.</span> <span class="nav-text">3.3.1 持久化（persist）和Checkpoint机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-2-Checkpoint机制的实现"><span class="nav-number">5.3.2.</span> <span class="nav-text">3.3.2 Checkpoint机制的实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-其他持久化实现方式"><span class="nav-number">5.4.</span> <span class="nav-text">3.4 其他持久化实现方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-任务的提交"><span class="nav-number">6.</span> <span class="nav-text">第四部分 任务的提交</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-兼容性"><span class="nav-number">6.1.</span> <span class="nav-text">4.1 兼容性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-任务提交案例"><span class="nav-number">6.2.</span> <span class="nav-text">4.2 任务提交案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-参数调优建议"><span class="nav-number">6.3.</span> <span class="nav-text">4.3 参数调优建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">7.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1241,7 +1248,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">525k</span>
+    <span title="站点总字数">577k</span>
   
 
   
@@ -1250,7 +1257,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">7:57</span>
+    <span title="站点阅读时长">8:45</span>
   
 </div>
 

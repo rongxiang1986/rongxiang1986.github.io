@@ -117,18 +117,22 @@
 
 
 
-  <meta name="description" content="背景Orange v0.6.0版本是一个重构版本， 着重为了解决之前版本在有大量规则配置时性能损耗的问题。 基本的设计思路是将原来的规则细分成两层， 第一层叫做selector, 用于将流量进行第一步划分， 在进入某个selector后才按照之前的设计进行规则匹配， 匹配到后进行相关处理。 https://lengrongfu.github.io/2019/05/21/orange-%E5%8E%">
+  <meta name="description" content="背景Orange 属于流量网关（Api Geteway），项目托管在Github（https://github.com/orlabs/orange）上，目前活跃度较弱（2年未更新）。通常将`orange`和另一个流行的网关项目`Kong`进行比较，其实`orange`大部分组件都是参考`Kong`实现的，但是活跃度远不及`Kong`。 orange和Kong本质上都是OpenResty 应用，Lu">
 <meta name="keywords" content="orange">
 <meta property="og:type" content="article">
-<meta property="og:title" content="orange网关原理的源码分析">
+<meta property="og:title" content="orange网关原理和源码分析">
 <meta property="og:url" content="https://zjrongxiang.github.io/2021/04/15/2021-05-29-orange网关原理的源码分析/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="背景Orange v0.6.0版本是一个重构版本， 着重为了解决之前版本在有大量规则配置时性能损耗的问题。 基本的设计思路是将原来的规则细分成两层， 第一层叫做selector, 用于将流量进行第一步划分， 在进入某个selector后才按照之前的设计进行规则匹配， 匹配到后进行相关处理。 https://lengrongfu.github.io/2019/05/21/orange-%E5%8E%">
+<meta property="og:description" content="背景Orange 属于流量网关（Api Geteway），项目托管在Github（https://github.com/orlabs/orange）上，目前活跃度较弱（2年未更新）。通常将`orange`和另一个流行的网关项目`Kong`进行比较，其实`orange`大部分组件都是参考`Kong`实现的，但是活跃度远不及`Kong`。 orange和Kong本质上都是OpenResty 应用，Lu">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-06-17T12:17:33.339Z">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1021265/201703/1021265-20170321104014236-44049900.png">
+<meta property="og:image" content="d:/myblog/source/_posts/images/picture/orangeCode/arch.png">
+<meta property="og:image" content="d:/myblog/source/_posts/images/picture/orangeCode/git.PNG">
+<meta property="og:updated_time" content="2021-07-18T12:51:15.705Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="orange网关原理的源码分析">
-<meta name="twitter:description" content="背景Orange v0.6.0版本是一个重构版本， 着重为了解决之前版本在有大量规则配置时性能损耗的问题。 基本的设计思路是将原来的规则细分成两层， 第一层叫做selector, 用于将流量进行第一步划分， 在进入某个selector后才按照之前的设计进行规则匹配， 匹配到后进行相关处理。 https://lengrongfu.github.io/2019/05/21/orange-%E5%8E%">
+<meta name="twitter:title" content="orange网关原理和源码分析">
+<meta name="twitter:description" content="背景Orange 属于流量网关（Api Geteway），项目托管在Github（https://github.com/orlabs/orange）上，目前活跃度较弱（2年未更新）。通常将`orange`和另一个流行的网关项目`Kong`进行比较，其实`orange`大部分组件都是参考`Kong`实现的，但是活跃度远不及`Kong`。 orange和Kong本质上都是OpenResty 应用，Lu">
+<meta name="twitter:image" content="https://images2015.cnblogs.com/blog/1021265/201703/1021265-20170321104014236-44049900.png">
 
 
 
@@ -147,7 +151,7 @@
   };
 </script>
 
-  <title>orange网关原理的源码分析 | RongXiang</title>
+  <title>orange网关原理和源码分析 | RongXiang</title>
   
 
 
@@ -440,7 +444,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">orange网关原理的源码分析
+          <h1 class="post-title" itemprop="name headline">orange网关原理和源码分析
 
               
             
@@ -483,7 +487,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-06-17 20:17:33" itemprop="dateModified" datetime="2021-06-17T20:17:33+08:00">2021-06-17</time>
+                <time title="修改时间：2021-07-18 20:51:15" itemprop="dateModified" datetime="2021-07-18T20:51:15+08:00">2021-07-18</time>
               
             
           </span>
@@ -546,7 +550,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">4.1k</span>
+                <span title="本文字数">21k</span>
               
 
               
@@ -560,7 +564,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">4 分钟</span>
+                <span title="阅读时长">19 分钟</span>
               
             </div>
           
@@ -580,16 +584,75 @@
       
 
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Orange v0.6.0版本是一个重构版本， 着重为了解决之前版本在有大量规则配置时性能损耗的问题。 基本的设计思路是将原来的规则细分成两层， 第一层叫做<a href="http://orange.sumory.com/docs/concept/selector/" target="_blank" rel="noopener">selector</a>, 用于将流量进行第一步划分， 在进入某个selector后才按照之前的设计进行<a href="http://orange.sumory.com/docs/concept/rule/" target="_blank" rel="noopener">规则</a>匹配， 匹配到后进行相关处理。</p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><code>Orange</code> 属于流量网关（<code>Api Geteway</code>），项目托管在<code>Github</code>（<a href="https://github.com/orlabs/orange）上，目前活跃度较弱（2年未更新）。通常将`orange`和另一个流行的网关项目`Kong`进行比较，其实`orange`大部分组件都是参考`Kong`实现的，但是活跃度远不及`Kong`。" target="_blank" rel="noopener">https://github.com/orlabs/orange）上，目前活跃度较弱（2年未更新）。通常将`orange`和另一个流行的网关项目`Kong`进行比较，其实`orange`大部分组件都是参考`Kong`实现的，但是活跃度远不及`Kong`。</a></p>
+<p><code>orange</code>和<code>Kong</code>本质上都是<code>OpenResty</code> 应用，<code>Lua</code>语言编写，<code>Lua</code>在葡萄牙语里代表美丽的月亮。<code>Openresty</code>和<code>Lua</code>语言的关系类似<code>JVM</code>虚拟机和<code>Java</code>语言的关系。<code>OpenResty</code>可以理解为一个集成了很多模块的定制版<code>nginx</code>。</p>
+<p>本文以<code>orange 0.7.0</code>版本介绍项目的整体架构和原理，最后通过案例介绍如何研发实现一个<code>orange</code>插件。</p>
+<h2 id="第一部分-知识准备"><a href="#第一部分-知识准备" class="headerlink" title="第一部分 知识准备"></a>第一部分 知识准备</h2><h3 id="1-1-Openresty介绍"><a href="#1-1-Openresty介绍" class="headerlink" title="1.1 Openresty介绍"></a>1.1 <code>Openresty</code>介绍</h3><p><code>Nginx</code>组件已经被广泛应用在web应用架构中，例如：负载均衡、反向代理、代理缓存以及流量限流等场景。<code>Nginx</code>开发则需要C/C++语言，还需要了解底层接口，学习门槛较高。2009年，淘宝的章亦春和王晓哲一起设计了第二代的 <code>OpenResty</code>。在王晓哲的提议下，选择了小而美的脚本语言 <code>lua</code> 进行开发。这就是<code>ngx_lua</code> 模块，并且将<code>Nginx</code>核心、<code>LuaJIT</code>、<code>ngx_lua</code>模块、许多有用的<code>Lua</code>库和常用的第三方<code>Nginx</code>模块组合在一起成为<code>OpenResty</code>。</p>
+<p><code>Lua</code>脚本语言，不需要编译就可以执行，更加灵活。而且 <code>OpenResty</code> 还把 <code>Lua</code> 自身的协程与 <code>Nginx</code> 的事件机制完美结合在一起，优雅地实现了许多其他语言所没有的同步非阻塞编程范式，能够轻松开发出高性能的 Web 应用。</p>
+<p>我们知道<code>Nginx</code>的配置文件是文件存储，修改后需要<code>reload</code>。而<code>Lua</code> 有代码热加载特性，不需要重启进程，就能够从磁盘、<code>Redis</code> 或者任何其他地方加载数据，随时替换内存里的代码片段。这就带来了“动态配置”，让 <code>OpenResty</code> 能够永不停机，在微秒、毫秒级别实现配置和业务逻辑的实时更新，比起 <code>Nginx</code> 秒级的重启是一个极大的进步。</p>
+<p><code>OpenResty</code> 还选用了<code>LuaJIT</code>作为 <code>Lua</code> 语言的运行时（<code>Runtime</code>），提升效率。<code>LuaJIT</code> 是一个高效的 <code>Lua</code> 虚拟机，支持 <code>JIT（Just In Time）</code>技术，可以把 <code>Lua</code> 代码即时编译成“本地机器码”，这样就消除了脚本语言解释运行的劣势，让<code>Lua</code> 脚本跑得和原生 C 代码一样快。</p>
+<h3 id="1-2-Openresty阶段式处理"><a href="#1-2-Openresty阶段式处理" class="headerlink" title="1.2 Openresty阶段式处理"></a>1.2 <code>Openresty</code>阶段式处理</h3><p><code>Nginx</code> 处理请求的过程一共划分为 11 个阶段，按照执行顺序依次是 <code>post-read、server-rewrite、find-config、rewrite、post-rewrite、preaccess、access、post-access、try-files、content</code> 以及 <code>log</code>。</p>
+<p>基于<code>Nginx</code>底层的阶段处理，<code>OpenResty</code> 也使用“流水线”来处理 <code>HTTP</code> 请求。<code>Nginx</code> 的处理流水线是由一个个 C 模块组成的，只能在静态文件里配置，开发困难，配置麻烦（相对而言）。而 <code>OpenResty</code> 的处理流水线则是由一个个的 <code>Lua</code> 脚本组成的，不仅可以从磁盘上加载，也可以从<code>Redis</code>、<code>MySQL</code> 里加载，而且编写、调试的过程非常方便快捷。</p>
+<p>Nginx 把一个请求分成了很多阶段，这样第三方模块就可以根据自己行为，挂载到不同阶段进行处理达到目的。OpenResty 也应用了同样的特性。所不同的是，OpenResty 挂载的是我们编写的 Lua 代码。OpenResty 的阶段，比起 Nginx，OpenResty 的阶段更注重对 HTTP 请求响应报文的加工和处理。</p>
+<p><img src="https://images2015.cnblogs.com/blog/1021265/201703/1021265-20170321104014236-44049900.png" alt="img"></p>
+<p>​    OpenResty 里有几个阶段与 Nginx 是相同的，比如 rewrite、access、content、filter，这些都是标准的 HTTP 处理。</p>
+<p>​    在这几个阶段里可以用“xxx_by_lua”指令嵌入 Lua 代码，执行重定向跳转、访问控制、产生响应、负载均衡、过滤报文等功能。因为 Lua 的脚本语言特性，不用考虑内存分配、资源回收释放等底层的细节问题，可以专注于编写非常复杂的业务逻辑，比 C 模块的开发效率高很多，即易于扩展又易于维护。</p>
+<h2 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h2><p>版本是一个重构版本， 着重为了解决之前版本在有大量规则配置时性能损耗的问题。 基本的设计思路是将原来的规则细分成两层， 第一层叫做<a href="http://orange.sumory.com/docs/concept/selector/" target="_blank" rel="noopener">selector</a>, 用于将流量进行第一步划分， 在进入某个selector后才按照之前的设计进行<a href="http://orange.sumory.com/docs/concept/rule/" target="_blank" rel="noopener">规则</a>匹配， 匹配到后进行相关处理。</p>
 <p><a href="https://lengrongfu.github.io/2019/05/21/orange-%E5%8E%9F%E7%90%86/" target="_blank" rel="noopener">https://lengrongfu.github.io/2019/05/21/orange-%E5%8E%9F%E7%90%86/</a></p>
 <p><a href="https://book.aikaiyuan.com/openresty/understanding-orange.html" target="_blank" rel="noopener">https://book.aikaiyuan.com/openresty/understanding-orange.html</a></p>
 <p><a href="https://zhuanlan.zhihu.com/p/67481992" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/67481992</a></p>
 <h2 id="网关优化项目"><a href="#网关优化项目" class="headerlink" title="网关优化项目"></a>网关优化项目</h2><p><a href="https://github.com/starjiang/xorange" target="_blank" rel="noopener">https://github.com/starjiang/xorange</a></p>
-<h2 id="orange-中设计概念"><a href="#orange-中设计概念" class="headerlink" title="orange 中设计概念"></a>orange 中设计概念</h2><h3 id="orange-缓存"><a href="#orange-缓存" class="headerlink" title="orange 缓存"></a>orange 缓存</h3><p>在<code>nginx.conf</code>文件中：</p>
+<p><code>orange</code>运行后根据<code>nginx.conf</code>文件中<code>location</code>配置来进行顺序匹配流量。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> / &#123;</span><br><span class="line">    <span class="attribute">set</span> <span class="variable">$upstream_host</span> <span class="variable">$host</span>;</span><br><span class="line">    <span class="attribute">set</span> <span class="variable">$upstream_request_uri</span> <span class="string">''</span>;</span><br><span class="line">    <span class="attribute">set</span> <span class="variable">$upstream_url</span> <span class="string">''</span>;</span><br><span class="line">    <span class="attribute">set</span> <span class="variable">$upstream_scheme</span> <span class="string">''</span>;</span><br><span class="line">    <span class="attribute">set</span> <span class="variable">$target</span> <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line">    <span class="section">rewrite_by_lua_block</span> &#123;</span><br><span class="line">        <span class="attribute">local</span> orange = context.orange</span><br><span class="line">        orange.<span class="literal">redirect</span>()</span><br><span class="line">        orange.rewrite()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    access_by_lua_block &#123;</span><br><span class="line">        <span class="attribute">local</span> orange = context.orange</span><br><span class="line">        orange.access()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># proxy</span></span><br><span class="line">    proxy_set_header Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Connection <span class="variable">$connection_upgrade</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Forwarded-Scheme <span class="variable">$scheme</span>;</span><br><span class="line">    <span class="attribute">proxy_pass</span> <span class="variable">$upstream_scheme</span><span class="variable">$upstream_url</span><span class="variable">$upstream_request_uri</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="section">header_filter_by_lua_block</span> &#123;</span><br><span class="line">        <span class="attribute">local</span> orange = context.orange</span><br><span class="line">        orange.header_filter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    body_filter_by_lua_block &#123;</span><br><span class="line">        <span class="attribute">local</span> orange = context.orange</span><br><span class="line">        orange.body_filter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    log_by_lua_block &#123;</span><br><span class="line">        <span class="attribute">local</span> orange = context.orange</span><br><span class="line">        orange.log()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="D:\myblog\source\_posts\images\picture\orangeCode\arch.png" alt="arch"></p>
+<h2 id="第一部分-orange-中设计概念"><a href="#第一部分-orange-中设计概念" class="headerlink" title="第一部分 orange 中设计概念"></a>第一部分 orange 中设计概念</h2><p>Nginx 的请求处理阶段共有 11 个之多，我们先介绍其中 3 个比较常见的。按照它们执行时的先后顺序，依次是 <code>rewrite</code> 阶段、<code>access</code> 阶段以及 <code>content</code> 阶段（后面我们还有机会见到其他更多的处理阶段）。</p>
+<h3 id="orange-缓存"><a href="#orange-缓存" class="headerlink" title="orange 缓存"></a>orange 缓存</h3><p>在<code>nginx.conf</code>文件中：</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">lua_code_cache</span> <span class="literal">on</span>;</span><br><span class="line"></span><br><span class="line"><span class="attribute">lua_shared_dict</span> orange_data <span class="number">20m</span>; <span class="comment"># should not removed. used for orange data, e.g. plugins configurations..</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">lua_shared_dict</span> status <span class="number">1m</span>; <span class="comment"># used for global statistic, see plugin: stat</span></span><br><span class="line"><span class="attribute">lua_shared_dict</span> waf_status <span class="number">1m</span>; <span class="comment"># used for waf statistic, see plugin: waf</span></span><br><span class="line"><span class="attribute">lua_shared_dict</span> monitor <span class="number">10m</span>; <span class="comment"># used for url monitor statistic, see plugin: monitor</span></span><br><span class="line"><span class="attribute">lua_shared_dict</span> rate_limit <span class="number">10m</span>; <span class="comment"># used for rate limiting count, see plugin: rate_limiting</span></span><br><span class="line"><span class="attribute">lua_shared_dict</span> property_rate_limiting <span class="number">10m</span>; <span class="comment"># used for rate limiting count, see plugin: rate_limiting</span></span><br><span class="line"><span class="attribute">lua_shared_dict</span> consul_upstream <span class="number">5m</span>; <span class="comment"># used for consul_upstream, see plugin consul_balancer</span></span><br><span class="line"><span class="attribute">lua_shared_dict</span> consul_upstream_watch <span class="number">5m</span>; <span class="comment"># used for consul_upstream_watch, consul_balancer</span></span><br></pre></td></tr></table></figure>
 <p>这些配置是插件缓存数据。</p>
-<h2 id="如何开发一个插件"><a href="#如何开发一个插件" class="headerlink" title="如何开发一个插件"></a>如何开发一个插件</h2><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>[1] Orange官网，链接：<a href="http://orange.sumory.com/" target="_blank" rel="noopener">http://orange.sumory.com/</a></p>
-<p>[2] Orange网关官网docker，链接：<a href="https://hub.docker.com/r/syhily/orange" target="_blank" rel="noopener">https://hub.docker.com/r/syhily/orange</a></p>
+<h3 id="orange中数据持久化"><a href="#orange中数据持久化" class="headerlink" title="orange中数据持久化"></a>orange中数据持久化</h3><h3 id="orange中插件基本构成"><a href="#orange中插件基本构成" class="headerlink" title="orange中插件基本构成"></a>orange中插件基本构成</h3><h4 id="选择器（selector）"><a href="#选择器（selector）" class="headerlink" title="选择器（selector）"></a>选择器（selector）</h4><h4 id="规则（rule）"><a href="#规则（rule）" class="headerlink" title="规则（rule）"></a>规则（rule）</h4><h2 id="第二部分-orange的启动过程"><a href="#第二部分-orange的启动过程" class="headerlink" title="第二部分 orange的启动过程"></a>第二部分 orange的启动过程</h2><h3 id="2-1"><a href="#2-1" class="headerlink" title="2.1"></a>2.1</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">init_by_lua_block</span> &#123;</span><br><span class="line">    <span class="attribute">local</span> orange = require(<span class="string">"orange.orange"</span>)</span><br><span class="line">    local env_orange_conf = os.getenv(<span class="string">"ORANGE_CONF"</span>)</span><br><span class="line">    print(string.char(<span class="number">27</span>) .. <span class="string">"[34m"</span> .. <span class="string">"[INFO]"</span> .. string.char(<span class="number">27</span>).. <span class="string">"[0m"</span>, [[the env[ORANGE_CONF] is ]], env_orange_conf)</span><br><span class="line"></span><br><span class="line">    local config_file = env_orange_conf or ngx.config.prefix().. <span class="string">"/conf/orange.conf"</span></span><br><span class="line">    local config, store = orange.init(&#123;</span><br><span class="line">        <span class="attribute">config</span> = config_file</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    -- the orange context</span><br><span class="line">    context = &#123;</span><br><span class="line">        <span class="attribute">orange</span> = orange,</span><br><span class="line">        store = store,</span><br><span class="line">        config = config</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="第三部分-orange中的插件"><a href="#第三部分-orange中的插件" class="headerlink" title="第三部分 orange中的插件"></a>第三部分 orange中的插件</h3><h2 id="第四部分-如何开发一个orange插件"><a href="#第四部分-如何开发一个orange插件" class="headerlink" title="第四部分 如何开发一个orange插件"></a>第四部分 如何开发一个<code>orange</code>插件</h2><p>通常一个插件的代码分为两个部分：后端和前端。</p>
+<h3 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h3><h3 id="业务逻辑介绍"><a href="#业务逻辑介绍" class="headerlink" title="业务逻辑介绍"></a>业务逻辑介绍</h3><p>插件对过滤后的目标流量访问的接口进行验签认证（SignatureAuth）。</p>
+<ul>
+<li>插件支持多用户，在实际线上环境，对于一个借口，通常是多用户需要访问该接口。就需要我们针对不同用户分配密钥（accessKey）；</li>
+<li>插件支持用户将认证字段放在header还是query中；</li>
+<li>插件支持用户自由添加字段；</li>
+</ul>
+<h4 id="客户端包装认证参数"><a href="#客户端包装认证参数" class="headerlink" title="客户端包装认证参数"></a>客户端包装认证参数</h4><ul>
+<li>传入参数：accessKey,accessSecret</li>
+<li>生成参数<ul>
+<li>paramStr：method=akauth&amp;client=$UUID&amp;rand=Math.rand()</li>
+<li>timeStr：String.valueOf(System.currentTimeMillis()/1000)</li>
+<li>sginStr：accessKey+timeStr+paramStr</li>
+</ul>
+</li>
+<li>签名计算：signature=base64(HmacSHA1.init(accessSecret).doFinal(signStr))</li>
+<li>传递参数：accessKey,timeStr,paramStr,signature</li>
+</ul>
+<p>参数放在header中。新增三个字段，分别是：timestamp、sign、appName</p>
+<p>其中timestamp 作为判断密钥的有效期。</p>
+<h4 id="服务端转发认证参数"><a href="#服务端转发认证参数" class="headerlink" title="服务端转发认证参数"></a>服务端转发认证参数</h4><ul>
+<li>接收参数：accessKey,timeStr,paramStr,signature</li>
+<li>请求 认证服务接口</li>
+</ul>
+<h3 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h3><p>后端代码位于：<code>orange/pligins</code>中，在源码中创建新增插件名称命名的子目录，例如：<code>signature_auth_header</code>。</p>
+<p>每个插件的子目录中约定必须有两个文件（<code>api.lua</code>、<code>handler.lua</code>）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">signature_auth_header/</span><br><span class="line">api.lua</span><br><span class="line">handler.lua</span><br><span class="line">README.md</span><br></pre></td></tr></table></figure>
+<p>其中</p>
+<p>下面的函数可以从流量请求中提取header表。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> headers = ngx.req.get_headers()</span><br><span class="line">real = headers[condition.name]</span><br></pre></td></tr></table></figure>
+<h3 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h3><p>插件前后端使用经典MVC模式。前端代码文件在<code>dashboad</code>中，目录结构如下：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">routes <span class="meta"># 路由</span></span><br><span class="line"><span class="keyword">static</span> <span class="meta"># js及静态资源路径</span></span><br><span class="line">views <span class="meta"># 前端展示</span></span><br></pre></td></tr></table></figure>
+<p>在<code>views</code>中主页中增加插件：</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dashboard<span class="symbol">\v</span>iews<span class="symbol">\c</span>ommon<span class="symbol">\l</span>eft_nav.html</span><br></pre></td></tr></table></figure>
+<p>代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">li</span> <span class="attr">id</span>=<span class="string">"nav-signature-auth-header"</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/signature_auth_header"</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-minus-circle"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"nav-label"</span>&gt;</span>Signature Auth In Header<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最后提交git的清单如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="D:\myblog\source\_posts\images\picture\orangeCode\git.PNG" alt="git"></p>
+<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>[1] <code>Orange</code>官网，链接：<a href="http://orange.sumory.com/" target="_blank" rel="noopener">http://orange.sumory.com/</a></p>
+<p>[2] <code>Orange</code>网关官网<code>docker</code>，链接：<a href="https://hub.docker.com/r/syhily/orange" target="_blank" rel="noopener">https://hub.docker.com/r/syhily/orange</a></p>
+<p>[3] <code>agentzh</code> 的 <code>Nginx</code> 教程（版本 2020.03.19）,链接：<a href="http://openresty.org/download/agentzh-nginx-tutorials-zhcn.html" target="_blank" rel="noopener">http://openresty.org/download/agentzh-nginx-tutorials-zhcn.html</a></p>
+<p>[4] <code>OpenResty</code>最佳实践，链接：<a href="https://moonbingbing.gitbooks.io/openresty-best-practices/content/" target="_blank" rel="noopener">https://moonbingbing.gitbooks.io/openresty-best-practices/content/</a></p>
 
       
     </div>
@@ -632,8 +695,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/04/12/2021-04-12-Elasticsearch系列文章-Elasticsearch中Mapping总结/" rel="next" title="Elasticsearch中Mapping总结">
-                <i class="fa fa-chevron-left"></i> Elasticsearch中Mapping总结
+              <a href="/2021/04/15/2021-06-06-sparkSql使用总结/" rel="next" title="sparkSql使用总结">
+                <i class="fa fa-chevron-left"></i> sparkSql使用总结
               </a>
             
           </div>
@@ -723,7 +786,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">162</span>
+                    <span class="site-state-item-count">186</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -864,7 +927,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">64</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">67</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -915,7 +984,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1009,7 +1080,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网关优化项目"><span class="nav-number">2.</span> <span class="nav-text">网关优化项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#orange-中设计概念"><span class="nav-number">3.</span> <span class="nav-text">orange 中设计概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orange-缓存"><span class="nav-number">3.1.</span> <span class="nav-text">orange 缓存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何开发一个插件"><span class="nav-number">4.</span> <span class="nav-text">如何开发一个插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">5.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-知识准备"><span class="nav-number">2.</span> <span class="nav-text">第一部分 知识准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Openresty介绍"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 Openresty介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Openresty阶段式处理"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 Openresty阶段式处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分"><span class="nav-number">3.</span> <span class="nav-text">第二部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网关优化项目"><span class="nav-number">4.</span> <span class="nav-text">网关优化项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-orange-中设计概念"><span class="nav-number">5.</span> <span class="nav-text">第一部分 orange 中设计概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orange-缓存"><span class="nav-number">5.1.</span> <span class="nav-text">orange 缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orange中数据持久化"><span class="nav-number">5.2.</span> <span class="nav-text">orange中数据持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orange中插件基本构成"><span class="nav-number">5.3.</span> <span class="nav-text">orange中插件基本构成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选择器（selector）"><span class="nav-number">5.3.1.</span> <span class="nav-text">选择器（selector）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#规则（rule）"><span class="nav-number">5.3.2.</span> <span class="nav-text">规则（rule）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-orange的启动过程"><span class="nav-number">6.</span> <span class="nav-text">第二部分 orange的启动过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1"><span class="nav-number">6.1.</span> <span class="nav-text">2.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三部分-orange中的插件"><span class="nav-number">6.2.</span> <span class="nav-text">第三部分 orange中的插件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-如何开发一个orange插件"><span class="nav-number">7.</span> <span class="nav-text">第四部分 如何开发一个orange插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求分析"><span class="nav-number">7.1.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#业务逻辑介绍"><span class="nav-number">7.2.</span> <span class="nav-text">业务逻辑介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端包装认证参数"><span class="nav-number">7.2.1.</span> <span class="nav-text">客户端包装认证参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务端转发认证参数"><span class="nav-number">7.2.2.</span> <span class="nav-text">服务端转发认证参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后端"><span class="nav-number">7.3.</span> <span class="nav-text">后端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前端"><span class="nav-number">7.4.</span> <span class="nav-text">前端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">8.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1042,7 +1113,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">525k</span>
+    <span title="站点总字数">577k</span>
   
 
   
@@ -1051,7 +1122,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">7:57</span>
+    <span title="站点阅读时长">8:45</span>
   
 </div>
 
@@ -1199,7 +1270,7 @@
   var disqus_config = function () {
     this.page.url = "https://zjrongxiang.github.io/2021/04/15/2021-05-29-orange网关原理的源码分析/";
     this.page.identifier = "2021/04/15/2021-05-29-orange网关原理的源码分析/";
-    this.page.title = 'orange网关原理的源码分析';
+    this.page.title = 'orange网关原理和源码分析';
     };
   function loadComments () {
     var d = document, s = d.createElement('script');

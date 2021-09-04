@@ -117,17 +117,17 @@
 
 
 
-  <meta name="description" content="目录 背景  第一部分 su命令  第二部分 su 和 su -区别  参考文献及资料   背景一、协议API与用户的通信协议，总是使用HTTPs协议。 二、域名应该尽量将API部署在专用域名之下。  12&amp;gt; https://api.example.com&amp;gt;  如果确定API很简单，不会有进一步扩展，可以考虑放在主域名下。  12&amp;gt; https://example.org/api">
+  <meta name="description" content="目录 背景  第一部分 su命令  第二部分 su 和 su -区别  参考文献及资料   背景一、协议API与用户的通信协议，使用HTTP协议。有互联网交互需要使用HTTPS协议。 二、域名应该尽量将API部署在专用域名之下。  12&amp;gt; http://api.example.com&amp;gt;  或者放在放在主域名下。  12&amp;gt; http://example.org/api&amp;gt;  域">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RestFul接口规范总结">
 <meta property="og:url" content="https://zjrongxiang.github.io/2021/06/14/2021-06-24-RestFul接口规范总结/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="目录 背景  第一部分 su命令  第二部分 su 和 su -区别  参考文献及资料   背景一、协议API与用户的通信协议，总是使用HTTPs协议。 二、域名应该尽量将API部署在专用域名之下。  12&amp;gt; https://api.example.com&amp;gt;  如果确定API很简单，不会有进一步扩展，可以考虑放在主域名下。  12&amp;gt; https://example.org/api">
+<meta property="og:description" content="目录 背景  第一部分 su命令  第二部分 su 和 su -区别  参考文献及资料   背景一、协议API与用户的通信协议，使用HTTP协议。有互联网交互需要使用HTTPS协议。 二、域名应该尽量将API部署在专用域名之下。  12&amp;gt; http://api.example.com&amp;gt;  或者放在放在主域名下。  12&amp;gt; http://example.org/api&amp;gt;  域">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-06-24T06:38:35.964Z">
+<meta property="og:updated_time" content="2021-07-01T01:03:39.502Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RestFul接口规范总结">
-<meta name="twitter:description" content="目录 背景  第一部分 su命令  第二部分 su 和 su -区别  参考文献及资料   背景一、协议API与用户的通信协议，总是使用HTTPs协议。 二、域名应该尽量将API部署在专用域名之下。  12&amp;gt; https://api.example.com&amp;gt;  如果确定API很简单，不会有进一步扩展，可以考虑放在主域名下。  12&amp;gt; https://example.org/api">
+<meta name="twitter:description" content="目录 背景  第一部分 su命令  第二部分 su 和 su -区别  参考文献及资料   背景一、协议API与用户的通信协议，使用HTTP协议。有互联网交互需要使用HTTPS协议。 二、域名应该尽量将API部署在专用域名之下。  12&amp;gt; http://api.example.com&amp;gt;  或者放在放在主域名下。  12&amp;gt; http://example.org/api&amp;gt;  域">
 
 
 
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-06-24 14:38:35" itemprop="dateModified" datetime="2021-06-24T14:38:35+08:00">2021-06-24</time>
+                <time title="修改时间：2021-07-01 09:03:39" itemprop="dateModified" datetime="2021-07-01T09:03:39+08:00">2021-07-01</time>
               
             
           </span>
@@ -589,23 +589,22 @@
 <li><p>参考文献及资料</p>
 </li>
 </ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h2 id="一、协议"><a href="#一、协议" class="headerlink" title="一、协议"></a>一、协议</h2><p>API与用户的通信协议，总是使用<a href="https://www.ruanyifeng.com/blog/2014/02/ssl_tls.html" target="_blank" rel="noopener">HTTPs协议</a>。</p>
-<h2 id="二、域名"><a href="#二、域名" class="headerlink" title="二、域名"></a>二、域名</h2><p>应该尽量将API部署在专用域名之下。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="一、协议"><a href="#一、协议" class="headerlink" title="一、协议"></a>一、协议</h3><p><code>API</code>与用户的通信协议，使用<code>HTTP</code>协议。有互联网交互需要使用<code>HTTPS</code>协议。</p>
+<h2 id="二、域名"><a href="#二、域名" class="headerlink" title="二、域名"></a>二、域名</h2><p>应该尽量将<code>API</code>部署在专用域名之下。</p>
 <blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; https:<span class="comment">//api.example.com</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> http://api.example.com</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
 </blockquote>
-<p>如果确定API很简单，不会有进一步扩展，可以考虑放在主域名下。</p>
+<p>或者放在放在主域名下。</p>
 <blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; https:<span class="comment">//example.org/api/</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> http://example.org/api</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
 </blockquote>
-<h2 id="三、版本（Versioning）"><a href="#三、版本（Versioning）" class="headerlink" title="三、版本（Versioning）"></a>三、版本（Versioning）</h2><p>应该将API的版本号放入URL。</p>
+<p>域名背后建议接口高可用部署。</p>
+<h2 id="三、版本"><a href="#三、版本" class="headerlink" title="三、版本"></a>三、版本</h2><p>将<code>API</code>的版本号放入URL，例如：</p>
 <blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; https:<span class="comment">//api.example.com/v1/</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; http:<span class="comment">//api.example.com/v1</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
-<p>另一种做法是，将版本号放在HTTP头信息中，但不如放入URL方便和直观。<a href="https://developer.github.com/v3/media/#request-specific-version" target="_blank" rel="noopener">Github</a>采用这种做法。</p>
-<h2 id="四、路径（Endpoint）"><a href="#四、路径（Endpoint）" class="headerlink" title="四、路径（Endpoint）"></a>四、路径（Endpoint）</h2><p>路径又称”终点”（endpoint），表示API的具体网址。</p>
-<p>在RESTful架构中，每个网址代表一种资源（resource），所以网址中不能有动词，只能有名词，而且所用的名词往往与数据库的表格名对应。一般来说，数据库中的表都是同种记录的”集合”（collection），所以API中的名词也应该使用复数。</p>
-<p>举例来说，有一个API提供动物园（zoo）的信息，还包括各种动物和雇员的信息，则它的路径应该设计成下面这样。</p>
+<h2 id="四、路径"><a href="#四、路径" class="headerlink" title="四、路径"></a>四、路径</h2><p>路径又称”终点”（endpoint），表示API的具体网址。在RESTful架构中，每个网址代表一种资源（resource），所以网址中不能有动词，只能有名词，而且所用的名词往往与数据库的表格名对应。一般来说，数据库中的表都是同种记录的”集合”（collection），所以API中的名词也应该使用复数。</p>
+<p>举例来说，有一个<code>API</code>提供动物园（zoo）的信息，还包括各种动物和雇员的信息，则它的路径应该设计成下面这样。</p>
 <blockquote>
 <ul>
 <li><a href="https://api.example.com/v1/zoos" target="_blank" rel="noopener">https://api.example.com/v1/zoos</a></li>
@@ -613,8 +612,7 @@
 <li><a href="https://api.example.com/v1/employees" target="_blank" rel="noopener">https://api.example.com/v1/employees</a></li>
 </ul>
 </blockquote>
-<h2 id="五、HTTP动词"><a href="#五、HTTP动词" class="headerlink" title="五、HTTP动词"></a>五、HTTP动词</h2><p>对于资源的具体操作类型，由HTTP动词表示。</p>
-<p>常用的HTTP动词有下面五个（括号里是对应的SQL命令）。</p>
+<h2 id="五、HTTP动词"><a href="#五、HTTP动词" class="headerlink" title="五、HTTP动词"></a>五、HTTP动词</h2><p>对于资源的具体操作类型，由HTTP动词表示。常用的HTTP动词有下面五个（括号里是对应的SQL命令）。</p>
 <blockquote>
 <ul>
 <li>GET（SELECT）：从服务器取出资源（一项或多项）。</li>
@@ -624,7 +622,6 @@
 <li>DELETE（DELETE）：从服务器删除资源。</li>
 </ul>
 </blockquote>
-<p>还有两个不常用的HTTP动词。</p>
 <blockquote>
 <ul>
 <li>HEAD：获取资源的元数据。</li>
@@ -644,7 +641,7 @@
 <li>DELETE /zoos/ID/animals/ID：删除某个指定动物园的指定动物</li>
 </ul>
 </blockquote>
-<h2 id="六、过滤信息（Filtering）"><a href="#六、过滤信息（Filtering）" class="headerlink" title="六、过滤信息（Filtering）"></a>六、过滤信息（Filtering）</h2><p>如果记录数量很多，服务器不可能都将它们返回给用户。API应该提供参数，过滤返回结果。</p>
+<h2 id="六、过滤信息"><a href="#六、过滤信息" class="headerlink" title="六、过滤信息"></a>六、过滤信息</h2><p>如果记录数量很多，服务器不可能都将它们返回给用户。<code>API</code>应该提供参数，过滤返回结果。</p>
 <p>下面是一些常见的参数。</p>
 <blockquote>
 <ul>
@@ -655,8 +652,8 @@
 <li>?animal_type_id=1：指定筛选条件</li>
 </ul>
 </blockquote>
-<p>参数的设计允许存在冗余，即允许API路径和URL参数偶尔有重复。比如，GET /zoo/ID/animals 与 GET /animals?zoo_id=ID 的含义是相同的。</p>
-<h2 id="七、状态码（Status-Codes）"><a href="#七、状态码（Status-Codes）" class="headerlink" title="七、状态码（Status Codes）"></a>七、状态码（Status Codes）</h2><p>服务器向用户返回的状态码和提示信息，常见的有以下一些（方括号中是该状态码对应的HTTP动词）。</p>
+<p>参数的设计允许存在冗余，即允许<code>API</code>路径和URL参数偶尔有重复。比如，GET /zoo/ID/animals 与 GET /animals?zoo_id=ID 的含义是相同的。</p>
+<h2 id="七、状态码"><a href="#七、状态码" class="headerlink" title="七、状态码"></a>七、状态码</h2><p>服务器向用户返回的状态码和提示信息。</p>
 <blockquote>
 <ul>
 <li>200 OK - [GET]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。</li>
@@ -673,7 +670,6 @@
 <li>500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。</li>
 </ul>
 </blockquote>
-<p>状态码的完全列表参见<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html" target="_blank" rel="noopener">这里</a>。</p>
 <h2 id="八、错误处理（Error-handling）"><a href="#八、错误处理（Error-handling）" class="headerlink" title="八、错误处理（Error handling）"></a>八、错误处理（Error handling）</h2><p>如果状态码是4xx，就应该向用户返回出错信息。一般来说，返回的信息中将error作为键名，出错信息作为键值即可。</p>
 <blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; &#123;</span><br><span class="line">&gt;     error: <span class="string">"Invalid API key"</span></span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
@@ -689,13 +685,13 @@
 <li>DELETE /collection/resource：返回一个空文档</li>
 </ul>
 </blockquote>
-<h2 id="十、Hypermedia-API"><a href="#十、Hypermedia-API" class="headerlink" title="十、Hypermedia API"></a>十、Hypermedia API</h2><p>RESTful API最好做到Hypermedia，即返回结果中提供链接，连向其他API方法，使得用户不查文档，也知道下一步应该做什么。</p>
-<p>比如，当用户向api.example.com的根目录发出请求，会得到这样一个文档。</p>
+<h2 id="十、Hypermedia-API"><a href="#十、Hypermedia-API" class="headerlink" title="十、Hypermedia API"></a>十、Hypermedia API</h2><p><code>RESTful API</code>最好做到<code>Hypermedia</code>，即返回结果中提供链接，连向其他API方法，使得用户不查文档，也知道下一步应该做什么。</p>
+<p>比如，当用户向<code>api.example.com</code>的根目录发出请求，会得到这样一个文档。</p>
 <blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; &#123;<span class="string">"link"</span>: &#123;</span><br><span class="line">&gt;   <span class="string">"rel"</span>:   <span class="string">"collection https://www.example.com/zoos"</span>,</span><br><span class="line">&gt;   <span class="string">"href"</span>:  <span class="string">"https://api.example.com/zoos"</span>,</span><br><span class="line">&gt;   <span class="string">"title"</span>: <span class="string">"List of zoos"</span>,</span><br><span class="line">&gt;   <span class="string">"type"</span>:  <span class="string">"application/vnd.yourformat+json"</span></span><br><span class="line">&gt; &#125;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
 <p>上面代码表示，文档中有一个link属性，用户读取这个属性就知道下一步该调用什么API了。rel表示这个API与当前网址的关系（collection关系，并给出该collection的网址），href表示API的路径，title表示API的标题，type表示返回类型。</p>
-<p>Hypermedia API的设计被称为<a href="https://en.wikipedia.org/wiki/HATEOAS" target="_blank" rel="noopener">HATEOAS</a>。Github的API就是这种设计，访问<a href="https://api.github.com/" target="_blank" rel="noopener">api.github.com</a>会得到一个所有可用API的网址列表。</p>
+<p>Hypermedia API的设计被称为<a href="https://en.wikipedia.org/wiki/HATEOAS" target="_blank" rel="noopener">HATEOAS</a>。例如Github的API就是这种设计，访问<a href="https://api.github.com/" target="_blank" rel="noopener">api.github.com</a>会得到一个所有可用API的网址列表。</p>
 <blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; &#123;</span><br><span class="line">&gt;   <span class="string">"current_user_url"</span>: <span class="string">"https://api.github.com/user"</span>,</span><br><span class="line">&gt;   <span class="string">"authorizations_url"</span>: <span class="string">"https://api.github.com/authorizations"</span>,</span><br><span class="line">&gt;   <span class="comment">// ...</span></span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
@@ -704,8 +700,16 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; &#123;</span><br><span class="line">&gt;   <span class="string">"message"</span>: <span class="string">"Requires authentication"</span>,</span><br><span class="line">&gt;   <span class="string">"documentation_url"</span>: <span class="string">"https://developer.github.com/v3"</span></span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
 <p>上面代码表示，服务器给出了提示信息，以及文档的网址。</p>
-<h2 id="十一、其他"><a href="#十一、其他" class="headerlink" title="十一、其他"></a>十一、其他</h2><p>（1）API的身份认证应该使用<a href="https://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html" target="_blank" rel="noopener">OAuth 2.0</a>框架。</p>
-<p>（2）服务器返回的数据格式，应该尽量使用JSON，避免使用XML。</p>
+<h2 id="十一、其他"><a href="#十一、其他" class="headerlink" title="十一、其他"></a>十一、其他</h2><ul>
+<li><p>服务器返回的数据格式，应该使用<code>JSON</code>，避免使用XML</p>
+</li>
+<li><p>URI结尾不应包含（/）</p>
+</li>
+<li>正斜杠分隔符（/）必须用来指示层级关系</li>
+<li>应使用连字符（ - ）来提高URI的可读性</li>
+<li>不得在URI中使用下划线（_）</li>
+<li>URI路径中全都使用小写字母</li>
+</ul>
 <h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、Su Command in Linux (Switch User)，链接：<a href="https://linuxize.com/post/su-command-in-linux/" target="_blank" rel="noopener">https://linuxize.com/post/su-command-in-linux/</a></p>
 
       
@@ -725,7 +729,7 @@
   <p><span>本文标题:</span><a href="/2021/06/14/2021-06-24-RestFul接口规范总结/">RestFul接口规范总结</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
   <p><span>发布时间:</span>2021年06月14日 - 12:06</p>
-  <p><span>最后更新:</span>2021年06月24日 - 14:06</p>
+  <p><span>最后更新:</span>2021年07月01日 - 09:07</p>
   <p><span>原始链接:</span><a href="/2021/06/14/2021-06-24-RestFul接口规范总结/" title="RestFul接口规范总结">https://zjrongxiang.github.io/2021/06/14/2021-06-24-RestFul接口规范总结/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/2021/06/14/2021-06-24-RestFul接口规范总结/" aria-label="复制成功！"></i></span>
   </p>
@@ -773,8 +777,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/05/23/2021-05-27-Lua语言系列--语言基础/" rel="next" title="Lua语言系列--语言基础">
-                <i class="fa fa-chevron-left"></i> Lua语言系列--语言基础
+              <a href="/2021/06/14/2021-07-11-Flink DataStream AP总结/" rel="next" title="Flink DataStream AP总结">
+                <i class="fa fa-chevron-left"></i> Flink DataStream AP总结
               </a>
             
           </div>
@@ -783,8 +787,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/06/14/2021-06-23-Flink Table API & SQL编程总结/" rel="prev" title="Flink Table API & SQL编程总结">
-                Flink Table API & SQL编程总结 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/06/14/2021-06-14-Linux系统中的su命令/" rel="prev" title="Linux系统中的su命令">
+                Linux系统中的su命令 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -864,7 +868,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">162</span>
+                    <span class="site-state-item-count">186</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1005,7 +1009,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">64</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">67</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1056,7 +1066,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1150,7 +1162,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、协议"><span class="nav-number">3.</span> <span class="nav-text">一、协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、域名"><span class="nav-number">4.</span> <span class="nav-text">二、域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、版本（Versioning）"><span class="nav-number">5.</span> <span class="nav-text">三、版本（Versioning）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、路径（Endpoint）"><span class="nav-number">6.</span> <span class="nav-text">四、路径（Endpoint）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、HTTP动词"><span class="nav-number">7.</span> <span class="nav-text">五、HTTP动词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、过滤信息（Filtering）"><span class="nav-number">8.</span> <span class="nav-text">六、过滤信息（Filtering）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、状态码（Status-Codes）"><span class="nav-number">9.</span> <span class="nav-text">七、状态码（Status Codes）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、错误处理（Error-handling）"><span class="nav-number">10.</span> <span class="nav-text">八、错误处理（Error handling）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、返回结果"><span class="nav-number">11.</span> <span class="nav-text">九、返回结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、Hypermedia-API"><span class="nav-number">12.</span> <span class="nav-text">十、Hypermedia API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十一、其他"><span class="nav-number">13.</span> <span class="nav-text">十一、其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">14.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、协议"><span class="nav-number">2.1.</span> <span class="nav-text">一、协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、域名"><span class="nav-number">3.</span> <span class="nav-text">二、域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、版本"><span class="nav-number">4.</span> <span class="nav-text">三、版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、路径"><span class="nav-number">5.</span> <span class="nav-text">四、路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、HTTP动词"><span class="nav-number">6.</span> <span class="nav-text">五、HTTP动词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、过滤信息"><span class="nav-number">7.</span> <span class="nav-text">六、过滤信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、状态码"><span class="nav-number">8.</span> <span class="nav-text">七、状态码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、错误处理（Error-handling）"><span class="nav-number">9.</span> <span class="nav-text">八、错误处理（Error handling）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、返回结果"><span class="nav-number">10.</span> <span class="nav-text">九、返回结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、Hypermedia-API"><span class="nav-number">11.</span> <span class="nav-text">十、Hypermedia API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十一、其他"><span class="nav-number">12.</span> <span class="nav-text">十一、其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">13.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1183,7 +1195,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">525k</span>
+    <span title="站点总字数">577k</span>
   
 
   
@@ -1192,7 +1204,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">7:57</span>
+    <span title="站点阅读时长">8:45</span>
   
 </div>
 

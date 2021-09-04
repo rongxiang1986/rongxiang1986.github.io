@@ -126,7 +126,7 @@
 <meta property="og:description" content="目录 背景 第一部分  编译安装 第二部分 高版本安装 第三部分 docker安装 第四部分 总结 参考文献及资料  背景orange是基于Nginx+lua研发的API网关项目。该项目为国人自研项目，大部分组件参考Kong网关项目。但是项目活跃性不大，文档不够丰富详细（至今官网文档还是0.6.4版本，大量issue状态open），插件缺少详细的说明。另外项目部署自动化较低，文档不够详细，部署有一">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://zjrongxiang.github.io/2021/01/02/2021-01-18-Orange%20API%20网关部署安装/images/picture/orange_install/orange_install.png">
-<meta property="og:updated_time" content="2021-06-13T08:06:56.066Z">
+<meta property="og:updated_time" content="2021-06-26T06:37:53.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Orange API 网关部署安装总结">
 <meta name="twitter:description" content="目录 背景 第一部分  编译安装 第二部分 高版本安装 第三部分 docker安装 第四部分 总结 参考文献及资料  背景orange是基于Nginx+lua研发的API网关项目。该项目为国人自研项目，大部分组件参考Kong网关项目。但是项目活跃性不大，文档不够丰富详细（至今官网文档还是0.6.4版本，大量issue状态open），插件缺少详细的说明。另外项目部署自动化较低，文档不够详细，部署有一">
@@ -485,7 +485,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-06-13 16:06:56" itemprop="dateModified" datetime="2021-06-13T16:06:56+08:00">2021-06-13</time>
+                <time title="修改时间：2021-06-26 14:37:53" itemprop="dateModified" datetime="2021-06-26T14:37:53+08:00">2021-06-26</time>
               
             
           </span>
@@ -706,7 +706,7 @@
 <h3 id="5-3-动态调整"><a href="#5-3-动态调整" class="headerlink" title="5.3 动态调整"></a>5.3 动态调整</h3><p>低版本<code>orange</code>项目还不支持动态<code>upstream</code>配置功能。需要通过在<code>nginx</code>配置文件中新增。新增完成后需要使用下面的命令动态加载：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> orange reload</span></span><br></pre></td></tr></table></figure>
 <p>高版本中有<code>Dynamic Upstream</code>组件实现动态<code>upstream</code>配置功能。</p>
-<h3 id="5-4-域名问题"><a href="#5-4-域名问题" class="headerlink" title="5.4 域名问题"></a>5.4 域名问题</h3><p>在实际生产线上环境，<code>orange</code>背后的持久化数据库对外地址通常是高可用的域名模式，另外网关代理的<code>API</code>地址通常也是内部域名。操作系统配置的<code>DNS</code>并不会被<code>nginx</code>读取，本地是<code>hosts</code>是有效的。</p>
+<h3 id="5-4-域名问题"><a href="#5-4-域名问题" class="headerlink" title="5.4 域名问题"></a>5.4 域名问题</h3><p>在实际生产线上环境，<code>orange</code>背后的持久化数据库对外地址通常是高可用的域名模式，另外网关代理的<code>API</code>地址通常也是内部域名。操作系统配置的<code>DNS</code>并不会被<code>nginx</code>读取，本地<code>hosts</code>是有效的。</p>
 <p>这时候就需要将内部<code>DNS</code>地址配置在<code>conf/nginx.conf</code>文件中，例如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">resolver 192.168.12.1 192.168.12.2 ipv6=off;</span><br></pre></td></tr></table></figure>
 <p>上面两个<code>DNS</code>地址以轮询方式请求，解析间隔默认是3600秒。</p>
@@ -756,8 +756,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/01/02/2021-01-31-Kong API 网关使用/" rel="next" title="Kong API 网关使用">
-                <i class="fa fa-chevron-left"></i> Kong API 网关使用
+              <a href="/2021/01/02/2021-01-03-elasticsearch夸集群数据同步/" rel="next" title="开源大数据调度平台调研报告">
+                <i class="fa fa-chevron-left"></i> 开源大数据调度平台调研报告
               </a>
             
           </div>
@@ -766,8 +766,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/01/02/2021-01-03-Airflow数据调度平台调研/" rel="prev" title="Airflow数据调度平台调研">
-                Airflow数据调度平台调研 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/01/02/2021-08-14-Apache DolphinScheduler调度平台/" rel="prev" title="Apache DolphinScheduler调度平台调研">
+                Apache DolphinScheduler调度平台调研 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -847,7 +847,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">162</span>
+                    <span class="site-state-item-count">186</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -988,7 +988,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">64</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">67</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1039,7 +1045,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1166,7 +1174,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">525k</span>
+    <span title="站点总字数">577k</span>
   
 
   
@@ -1175,7 +1183,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">7:57</span>
+    <span title="站点阅读时长">8:45</span>
   
 </div>
 
