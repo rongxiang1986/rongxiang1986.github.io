@@ -126,7 +126,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://zjrongxiang.github.io/images/picture/cloudera-manager1.jpg">
 <meta property="og:image" content="https://zjrongxiang.github.io/images/picture/cloudera-manager2.jpg">
-<meta property="og:updated_time" content="2021-05-15T16:28:16.711Z">
+<meta property="og:updated_time" content="2022-01-02T12:25:23.632Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Cloudera Quickstart Docker镜像快速部署hadoop集群">
 <meta name="twitter:description" content="目录 背景 第一部分   Docker镜像准备 第二部分   运行容器 第三部分   cloudera-manager管理 第四部分   组件使用测试 第五部分   总结 参考文献及资料  背景通常在个人笔记本上部署Hadoop测试集群（含生态圈各组件）是个很耗时的工作。Cloudera公司提供一个快速部署的Docker镜像，可以快速启动一个测试集群。  测试环境为Ubuntu服务器  第一部分">
@@ -485,7 +485,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-05-16 00:28:16" itemprop="dateModified" datetime="2021-05-16T00:28:16+08:00">2021-05-16</time>
+                <time title="修改时间：2022-01-02 20:25:23" itemprop="dateModified" datetime="2022-01-02T20:25:23+08:00">2022-01-02</time>
               
             
           </span>
@@ -548,7 +548,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">22k</span>
+                <span title="本文字数">28k</span>
               
 
               
@@ -562,7 +562,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">20 分钟</span>
+                <span title="阅读时长">26 分钟</span>
               
             </div>
           
@@ -696,7 +696,7 @@
 <p>然后执行：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">client.upload(<span class="string">"/tmp"</span>, <span class="string">"/root/jupyter/nohup.out"</span>)</span><br><span class="line"><span class="comment"># '/tmp/nohup.out'</span></span><br><span class="line"><span class="comment"># 返回路径信息</span></span><br></pre></td></tr></table></figure>
 <h4 id="4-1-3-下载hdfs文件"><a href="#4-1-3-下载hdfs文件" class="headerlink" title="4.1.3 下载hdfs文件"></a>4.1.3 下载hdfs文件</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">client.download(<span class="string">"/tmp/nohup.out"</span>, <span class="string">"/tmp"</span>)</span><br><span class="line"><span class="comment"># 返回路径'/tmp/nohup.out'</span></span><br></pre></td></tr></table></figure>
-<h2 id="第五部分-启用安全模式（Kerberos）"><a href="#第五部分-启用安全模式（Kerberos）" class="headerlink" title="第五部分 启用安全模式（Kerberos）"></a><strong>第五部分 启用安全模式（Kerberos）</strong></h2><p>默认情况下集群是非安全模式，如果测试需要安全集群模式，可以在菜单：管理-安全中开始Kerberos。需要注意的是需要在容器中安装Kerberos。安装步骤如下：</p>
+<h2 id="第五部分-启用安全模式（Kerberos）"><a href="#第五部分-启用安全模式（Kerberos）" class="headerlink" title="第五部分 启用安全模式（Kerberos）"></a><strong>第五部分 启用安全模式（Kerberos）</strong></h2><p>默认情况下集群是非安全模式，如果测试需要安全集群模式，可以在菜单：管理-安全中开启Kerberos。需要注意的是需要在容器中安装Kerberos。安装步骤如下：</p>
 <ul>
 <li><p>注释到无关源（docker容器执行）；</p>
 <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># cd /etc/yum.repos.d</span></span><br><span class="line"><span class="meta"># mv cloudera-manager.repo cloudera-manager.repo.bak</span></span><br></pre></td></tr></table></figure>
@@ -725,7 +725,37 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@quickstart keytab]# kadmin.local</span><br><span class="line">Authenticating as principal admin/admin@HADOOP.COM with password.</span><br><span class="line">kadmin.local:  xst -norandkey -k admin.keytab admin/admin@HADOOP.COM</span><br></pre></td></tr></table></figure>
 <p>这样就生成了admin.keytab文件。然后使用下面的命令测试一下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kinit -kt admin.keytab admin/admin@HADOOP.COM</span><br></pre></td></tr></table></figure>
-<h2 id="第六部分-总结"><a href="#第六部分-总结" class="headerlink" title="第六部分 总结"></a>第六部分 总结</h2><p>1、Cloudera 的 docker 版本分成两部分启动。(1)启动各组件启动,使用命令为： /usr/bin/docker-quickstart，(2) 启动Cloudera manager 管理服务，启动命令为：/home/cloudera/cloudera-manager。docker启动时选择启动一项。</p>
+<h2 id="第六部分-测试运行Spark"><a href="#第六部分-测试运行Spark" class="headerlink" title="第六部分 测试运行Spark"></a>第六部分 测试运行Spark</h2><p>我们只测试Spark on Yarn场景。</p>
+<h3 id="6-1-运行Spark-1-6-0"><a href="#6-1-运行Spark-1-6-0" class="headerlink" title="6.1 运行Spark 1.6.0"></a>6.1 运行Spark 1.6.0</h3><p>CDH 5.7.0 版本自带Spark版本是1.6.0的。所以我们不需要部署相关运行依赖。例如下面的命令运行一个pyspark的任务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/usr/lib/spark/bin/spark-submit \</span><br><span class="line">--master yarn \</span><br><span class="line">--deploy-mode cluster \</span><br><span class="line">--archives hdfs:///user/admin/python/python3.5.2.zip \</span><br><span class="line">--conf spark.yarn.appMasterEnv.PYSPARK_PYTHON=./python3.5.2.zip/conda/bin/python \</span><br><span class="line">test.py</span><br></pre></td></tr></table></figure>
+<h3 id="6-2-运行Spark-2-3-0"><a href="#6-2-运行Spark-2-3-0" class="headerlink" title="6.2 运行Spark 2.3.0"></a>6.2 运行Spark 2.3.0</h3><p>对于Spark 2.3.0 需要下载官网相关的版本的介质包。并且由于Spark 2.3.0的编译是java 8，所以需要配置JAVA_HOME环境变量为1.8。</p>
+<p>具体命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">export YARN_CONF_DIR=/etc/hadoop/conf</span><br><span class="line">/home/spark-2.3.0/bin/spark-submit \</span><br><span class="line">--conf "spark.executorEnv.JAVA_HOME=/home/openjdk" \</span><br><span class="line">--conf "spark.yarn.appMasterEnv.JAVA_HOME=/home/openjdk" \</span><br><span class="line">--master yarn \</span><br><span class="line">--deploy-mode cluster \</span><br><span class="line">--class org.apache.spark.examples.SparkPi \</span><br><span class="line">/home/spark-2.3.0/examples/jars/spark-examples_2.11-2.3.0.jar</span><br></pre></td></tr></table></figure>
+<p>需要主要点有：</p>
+<ul>
+<li>配置YARN_CONF_DIR环境变量</li>
+<li>需要指定Driver和Excutor运行的JDK环境。需要注意的是对于分布式集群前提就是所有节点上均有相同路径jdk，或者需要配置一致的JAVA_HOME。</li>
+</ul>
+<p>另外一种方法还没验证：</p>
+<p>某些特殊的场景下，我们对集群没有管理权限，只能通过YARN提交Application，并且集群里没有部署我们需要的JDK版本，这种情形就需要将JDK的安装包也一并提交了。</p>
+<p>这里要求我们的JDK安装包必须为gz格式的，和你代码打包后的jar包放在同一目录下，假设我们下载的JDK的安装包为：jdk-8u141-linux-x64.tar.gz。</p>
+<p>关键配置如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">SPARK_HOME/bin/spark-submit \</span></span><br><span class="line">    --conf "spark.yarn.dist.archives=jdk-8u141-linux-x64.tar.gz" \</span><br><span class="line">    --conf "spark.executorEnv.JAVA_HOME=./jdk-8u141-linux-x64.tar.gz/jdk1.8.0_141" \</span><br><span class="line">    --conf "spark.yarn.appMasterEnv.JAVA_HOME=./jdk-8u141-linux-x64.tar.gz/jdk1.8.0_141" \</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>我们可以通过指定<code>spark.yarn.dist.archives</code>配置，将JDK的安装包分发到所有Executor的工作目录下（包括Application Master的Executor），另外tar.gz的压缩包也会被自动解压，假设<code>jdk-8u141-linux-x64.tar.gz</code>解压后的目录为<code>jdk1.8.0_141</code>，那么我们特定的JDK的目录就是：<code>./jdk-8u141-linux-x64.tar.gz/jdk1.8.0_141</code>，不同的JDK版本以此类推即可。</p>
+<blockquote>
+<p>注意：由于Spark Standalone没有提供分发JDK安装包并自动解压的功能，所以，这种方式只能用在YARN下。</p>
+</blockquote>
+<h2 id="第七部分-测试运行Flink"><a href="#第七部分-测试运行Flink" class="headerlink" title="第七部分 测试运行Flink"></a>第七部分 测试运行Flink</h2><p>我们测试使用Flink 1.7.2和Flink 1.12.7两个版本进行测试。两个版本类似。</p>
+<h3 id="7-1-运行Flink-1-7-2"><a href="#7-1-运行Flink-1-7-2" class="headerlink" title="7.1 运行Flink 1.7.2"></a>7.1 运行Flink 1.7.2</h3><p>部署好Flink介质后，使用下面的命令运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/flink run -m yarn-cluster examples/batch/WordCount.jar</span><br></pre></td></tr></table></figure>
+<p>结果报错了，报错如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">org.apache.flink.client.program.ProgramInvocationException: The main method caused an error: Could not deploy Yarn job cluster.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 参看yarn日志</span></span><br><span class="line">Unrecognized VM option 'MaxMetaspaceSize=268435456'</span><br><span class="line">Error: Could not create the Java Virtual Machine.</span><br><span class="line">Error: A fatal exception has occurred. Program will exit.</span><br></pre></td></tr></table></figure>
+<p>上面的报错是JDK的兼容性报错。Flink运行需要在JDK 1.8版本下运行，但是集群的JDK为1.7版本。</p>
+<p>这个报错Spark同样会出现这个问题。但是Spark可以通过<code>spark.executorEnv.JAVA_HOME</code>和<code>spark.yarn.appMasterEnv.JAVA_HOME</code>两个参数设置执行器和AM容器的java运行环境。</p>
+<p>但是对于Flink查看了官方各种资料没有找到规避方法。其中有方案说通过<code>flink-conf.yaml</code>配置下面的参数。笔者实践后，证实是无效的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env.java.home: /home/openjdk</span><br></pre></td></tr></table></figure>
+<p>所以最后的解决方案是调整集群的JDK的版本为1.8版本。</p>
+<h2 id="第八部分-总结"><a href="#第八部分-总结" class="headerlink" title="第八部分 总结"></a>第八部分 总结</h2><p>1、Cloudera 的 docker 版本分成两部分启动。(1)启动各组件启动,使用命令为： /usr/bin/docker-quickstart，(2) 启动Cloudera manager 管理服务，启动命令为：/home/cloudera/cloudera-manager。docker启动时选择启动一项。</p>
 <h2 id="参考文献及材料"><a href="#参考文献及材料" class="headerlink" title="参考文献及材料"></a>参考文献及材料</h2><p>1、cloudera/quickstart镜像地址：<a href="https://hub.docker.com/r/cloudera/quickstart" target="_blank" rel="noopener">https://hub.docker.com/r/cloudera/quickstart</a></p>
 <p>2、cloudera/quickstart镜像部署指引：<a href="https://www.cloudera.com/documentation/enterprise/5-6-x/topics/quickstart_docker_container.html" target="_blank" rel="noopener">https://www.cloudera.com/documentation/enterprise/5-6-x/topics/quickstart_docker_container.html</a></p>
 <p>3、<a href="https://www.cnblogs.com/piperck/p/9917118.html" target="_blank" rel="noopener">利用 Docker 搭建单机的 Cloudera CDH 以及使用实践</a></p>
@@ -747,7 +777,7 @@
   <p><span>本文标题:</span><a href="/2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/">使用Cloudera Quickstart Docker镜像快速部署hadoop集群</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
   <p><span>发布时间:</span>2018年06月25日 - 19:06</p>
-  <p><span>最后更新:</span>2021年05月16日 - 00:05</p>
+  <p><span>最后更新:</span>2022年01月02日 - 20:01</p>
   <p><span>原始链接:</span><a href="/2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/" title="使用Cloudera Quickstart Docker镜像快速部署hadoop集群">https://zjrongxiang.github.io/2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/" aria-label="复制成功！"></i></span>
   </p>
@@ -795,8 +825,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/25/2018-06-26-机器学习系列文章-聚类算法总结/" rel="next" title="机器学习系列文章-聚类算法总结">
-                <i class="fa fa-chevron-left"></i> 机器学习系列文章-聚类算法总结
+              <a href="/2018/06/25/2019-07-27-在Minikube上运行Kafka集群/" rel="next" title="在Minikube上运行Kafka集群">
+                <i class="fa fa-chevron-left"></i> 在Minikube上运行Kafka集群
               </a>
             
           </div>
@@ -805,8 +835,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/25/2018-08-06-关于正则表达式使用和总结/" rel="prev" title="关于正则表达式使用和总结">
-                关于正则表达式使用和总结 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/25/2018-08-06-在Minikube上运行Spark集群/" rel="prev" title="在Minikube上运行Spark集群">
+                在Minikube上运行Spark集群 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -886,7 +916,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">186</span>
+                    <span class="site-state-item-count">204</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1033,7 +1063,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">67</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">70</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1180,7 +1216,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Docker镜像准备"><span class="nav-number">3.</span> <span class="nav-text">第一部分 Docker镜像准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-拉取Docker镜像"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 拉取Docker镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-检查镜像库"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 检查镜像库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-运行容器"><span class="nav-number">4.</span> <span class="nav-text">第二部分 运行容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-使用镜像启动容器"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 使用镜像启动容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-时钟同步问题"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 时钟同步问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-使用集群服务"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 使用集群服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-cloudera-manager管理"><span class="nav-number">5.</span> <span class="nav-text">第三部分 cloudera-manager管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-启动管理服务"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 启动管理服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-启动集群组件服务"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 启动集群组件服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-组件使用测试"><span class="nav-number">6.</span> <span class="nav-text">第四部分 组件使用测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-HDFS组件使用"><span class="nav-number">6.1.</span> <span class="nav-text">4.1 HDFS组件使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-1-查看文件系统"><span class="nav-number">6.1.1.</span> <span class="nav-text">4.1.1 查看文件系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-2-上传新增文件"><span class="nav-number">6.1.2.</span> <span class="nav-text">4.1.2 上传新增文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-3-下载hdfs文件"><span class="nav-number">6.1.3.</span> <span class="nav-text">4.1.3 下载hdfs文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五部分-启用安全模式（Kerberos）"><span class="nav-number">7.</span> <span class="nav-text">第五部分 启用安全模式（Kerberos）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六部分-总结"><span class="nav-number">8.</span> <span class="nav-text">第六部分 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及材料"><span class="nav-number">9.</span> <span class="nav-text">参考文献及材料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Docker镜像准备"><span class="nav-number">3.</span> <span class="nav-text">第一部分 Docker镜像准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-拉取Docker镜像"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 拉取Docker镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-检查镜像库"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 检查镜像库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-运行容器"><span class="nav-number">4.</span> <span class="nav-text">第二部分 运行容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-使用镜像启动容器"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 使用镜像启动容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-时钟同步问题"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 时钟同步问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-使用集群服务"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 使用集群服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-cloudera-manager管理"><span class="nav-number">5.</span> <span class="nav-text">第三部分 cloudera-manager管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-启动管理服务"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 启动管理服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-启动集群组件服务"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 启动集群组件服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-组件使用测试"><span class="nav-number">6.</span> <span class="nav-text">第四部分 组件使用测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-HDFS组件使用"><span class="nav-number">6.1.</span> <span class="nav-text">4.1 HDFS组件使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-1-查看文件系统"><span class="nav-number">6.1.1.</span> <span class="nav-text">4.1.1 查看文件系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-2-上传新增文件"><span class="nav-number">6.1.2.</span> <span class="nav-text">4.1.2 上传新增文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-3-下载hdfs文件"><span class="nav-number">6.1.3.</span> <span class="nav-text">4.1.3 下载hdfs文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五部分-启用安全模式（Kerberos）"><span class="nav-number">7.</span> <span class="nav-text">第五部分 启用安全模式（Kerberos）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六部分-测试运行Spark"><span class="nav-number">8.</span> <span class="nav-text">第六部分 测试运行Spark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-运行Spark-1-6-0"><span class="nav-number">8.1.</span> <span class="nav-text">6.1 运行Spark 1.6.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-运行Spark-2-3-0"><span class="nav-number">8.2.</span> <span class="nav-text">6.2 运行Spark 2.3.0</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第七部分-测试运行Flink"><span class="nav-number">9.</span> <span class="nav-text">第七部分 测试运行Flink</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-运行Flink-1-7-2"><span class="nav-number">9.1.</span> <span class="nav-text">7.1 运行Flink 1.7.2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第八部分-总结"><span class="nav-number">10.</span> <span class="nav-text">第八部分 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及材料"><span class="nav-number">11.</span> <span class="nav-text">参考文献及材料</span></a></li></ol></div>
             
 
           </div>
@@ -1201,7 +1237,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; 2014 – <span itemprop="copyrightYear">2021</span>
+<div class="copyright">&copy; 2014 – <span itemprop="copyrightYear">2022</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -1213,7 +1249,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">577k</span>
+    <span title="站点总字数">666k</span>
   
 
   
@@ -1222,7 +1258,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">8:45</span>
+    <span title="站点阅读时长">10:05</span>
   
 </div>
 
