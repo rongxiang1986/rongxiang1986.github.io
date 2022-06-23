@@ -124,13 +124,13 @@
 <meta property="og:site_name" content="RongXiang">
 <meta property="og:description" content="目录 背景  第一部分   安装  第二部分   命令格式  第三部分   案例  参考文献及资料   背景Jupyter notebook是数据科学常用的代码交互式工具。通常在server端启jupyter进程（web服务），client端打开浏览器，jupyter提供代码编写和调试交互环境。非常方便。 但是jupyter提供的默认界面不够美观，特别是windows操作系统默认字体为浏览器默认字">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://zjrongxiang.github.io/images/picture/jupyter01.jpg">
-<meta property="og:image" content="https://zjrongxiang.github.io/images/picture/jupyter2.jpg">
-<meta property="og:updated_time" content="2020-03-22T03:10:27.720Z">
+<meta property="og:image" content="https://zjrongxiang.github.io/2018/03/19/2018-03-26-JupyterNotebook主题和字体的美化/images/picture/jupyter01.jpg">
+<meta property="og:image" content="https://zjrongxiang.github.io/2018/03/19/2018-03-26-JupyterNotebook主题和字体的美化/images/picture/jupyter2.jpg">
+<meta property="og:updated_time" content="2022-05-22T05:08:35.068Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jupyter notebook:主题和字体的美化">
 <meta name="twitter:description" content="目录 背景  第一部分   安装  第二部分   命令格式  第三部分   案例  参考文献及资料   背景Jupyter notebook是数据科学常用的代码交互式工具。通常在server端启jupyter进程（web服务），client端打开浏览器，jupyter提供代码编写和调试交互环境。非常方便。 但是jupyter提供的默认界面不够美观，特别是windows操作系统默认字体为浏览器默认字">
-<meta name="twitter:image" content="https://zjrongxiang.github.io/images/picture/jupyter01.jpg">
+<meta name="twitter:image" content="https://zjrongxiang.github.io/2018/03/19/2018-03-26-JupyterNotebook主题和字体的美化/images/picture/jupyter01.jpg">
 
 
 
@@ -485,7 +485,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-22 11:10:27" itemprop="dateModified" datetime="2020-03-22T11:10:27+08:00">2020-03-22</time>
+                <time title="修改时间：2022-05-22 13:08:35" itemprop="dateModified" datetime="2022-05-22T13:08:35+08:00">2022-05-22</time>
               
             
           </span>
@@ -548,7 +548,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">8.4k</span>
+                <span title="本文字数">8.3k</span>
               
 
               
@@ -596,7 +596,7 @@
 </ul>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Jupyter notebook是数据科学常用的代码交互式工具。通常在server端启jupyter进程（web服务），client端打开浏览器，jupyter提供代码编写和调试交互环境。非常方便。</p>
 <p>但是jupyter提供的默认界面不够美观，特别是windows操作系统默认字体为浏览器默认字体–宋体（下图），另外默认主题太难看了，没有通常IDE提供的主题美观。</p>
-<p><img src="\images\picture\jupyter01.jpg" alt></p>
+<p><img src="images\picture\jupyter01.jpg" alt></p>
 <p>发现一个Jupyter的美化工具：<strong><a href="https://github.com/dunovank/jupyter-themes" target="_blank" rel="noopener">jupyterthemes</a></strong> ，和大家分享一下。简单介绍一下安装和配置。细节介绍参考项目的介绍文档。</p>
 <h2 id="第一部分-安装"><a href="#第一部分-安装" class="headerlink" title="第一部分 安装"></a>第一部分 安装</h2><p>使用pip安装：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@vultr:~# pip install jupyterthemes</span><br></pre></td></tr></table></figure>
@@ -606,10 +606,10 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">root@vultr:~# jt -h</span><br><span class="line">usage: jt [-h] [-l] [-t THEME] [-f MONOFONT] [-fs MONOSIZE] [-nf NBFONT]</span><br><span class="line">          [-nfs NBFONTSIZE] [-tf TCFONT] [-tfs TCFONTSIZE] [-dfs DFFONTSIZE]</span><br><span class="line">          [-ofs OUTFONTSIZE] [-mathfs MATHFONTSIZE] [-m MARGINS]</span><br><span class="line">          [-cursw CURSORWIDTH] [-cursc CURSORCOLOR] [-cellw CELLWIDTH]</span><br><span class="line">          [-lineh LINEHEIGHT] [-altp] [-altmd] [-altout] [-P] [-T] [-N] [-vim]</span><br><span class="line">          [-r] [-dfonts]</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --help            show this help message and exit</span><br><span class="line"><span class="meta">  #</span><span class="bash">-h，--<span class="built_in">help</span>显示此帮助信息并退出</span></span><br><span class="line">  -l, --list            list available themes</span><br><span class="line"><span class="meta">  #</span><span class="bash">-l， 列出可用主题</span></span><br><span class="line">  -t THEME, --theme THEME</span><br><span class="line">                        theme name to install（配置需要安装的主题）</span><br><span class="line">  -f MONOFONT, --monofont MONOFONT</span><br><span class="line">                        monospace code font（代码的字体）</span><br><span class="line">  -fs MONOSIZE, --monosize MONOSIZE</span><br><span class="line">                        code font-size（代码字体大小）</span><br><span class="line">  -nf NBFONT, --nbfont NBFONT</span><br><span class="line">                        notebook font（notebook 字体）</span><br><span class="line">  -nfs NBFONTSIZE, --nbfontsize NBFONTSIZE</span><br><span class="line">                        notebook fontsize（notebook 字体大小）</span><br><span class="line">  -tf TCFONT, --tcfont TCFONT</span><br><span class="line">                        txtcell font（文本的字体）</span><br><span class="line">  -tfs TCFONTSIZE, --tcfontsize TCFONTSIZE</span><br><span class="line">                        txtcell fontsize（文本的字体大小）</span><br><span class="line">  -dfs DFFONTSIZE, --dffontsize DFFONTSIZE</span><br><span class="line">                        pandas dataframe fontsize（pandas类型的字体大小）</span><br><span class="line">  -ofs OUTFONTSIZE, --outfontsize OUTFONTSIZE</span><br><span class="line">                        output area fontsize（输出区域字体大小）</span><br><span class="line">  -mathfs MATHFONTSIZE, --mathfontsize MATHFONTSIZE</span><br><span class="line">                        mathjax fontsize (in %)（数学公式字体大小）</span><br><span class="line">  -m MARGINS, --margins MARGINS</span><br><span class="line">                        fix margins of main intro page</span><br><span class="line">  -cursw CURSORWIDTH, --cursorwidth CURSORWIDTH</span><br><span class="line">                        set cursorwidth (px)（设置光标宽度）</span><br><span class="line">  -cursc CURSORCOLOR, --cursorcolor CURSORCOLOR</span><br><span class="line">                        cursor color (r, b, g, p)（设置光标颜色）</span><br><span class="line">  -cellw CELLWIDTH, --cellwidth CELLWIDTH</span><br><span class="line">                        set cell width (px or %)（单元的宽度）</span><br><span class="line">  -lineh LINEHEIGHT, --lineheight LINEHEIGHT</span><br><span class="line">                        code/text line-height (%)（行高）</span><br><span class="line">  -altp, --altprompt    alt input prompt style</span><br><span class="line">  -altmd, --altmarkdown</span><br><span class="line">                        alt markdown cell style</span><br><span class="line">  -altout, --altoutput  set output bg color to notebook bg</span><br><span class="line">  -P, --hideprompt      hide cell input prompt</span><br><span class="line">  -T, --toolbar         make toolbar visible（工具栏可见）</span><br><span class="line">  -N, --nbname          nb name/logo visible</span><br><span class="line">  -vim, --vimext        toggle styles for vim</span><br><span class="line">  -r, --reset           reset to default theme（设置成默认主题）</span><br><span class="line">  -dfonts, --defaultfonts</span><br><span class="line">                        force fonts to browser default（设置成浏览器默认字体）</span><br></pre></td></tr></table></figure>
 <h2 id="第三部分-案例"><a href="#第三部分-案例" class="headerlink" title="第三部分 案例"></a>第三部分 案例</h2><p>例如下面的命令完成效果：</p>
 <p>使用的主题是：monokai，工具栏可见，命名笔记本的选项，代码的字体为13，代码的字体为consolamono。</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@vultr</span><span class="symbol">:~</span><span class="comment"># jt -t monokai -T -N -fs 13 -f consolamono</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@vultr:~# jt -t monokai -T -N -fs 13 -f consolamono</span><br></pre></td></tr></table></figure>
 <p>如果jupyter进程已启，需要重新启进程后生效。</p>
 <p>实现的效果截图：</p>
-<p><img src="\images\picture\jupyter2.jpg" alt></p>
+<p><img src="images\picture\jupyter2.jpg" alt></p>
 <p>其他主题效果大家可以自己尝试。</p>
 <h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、jupyter官网，链接：<a href="https://jupyter.org/" target="_blank" rel="noopener">https://jupyter.org/</a></p>
 
@@ -630,7 +630,7 @@
   <p><span>本文标题:</span><a href="/2018/03/19/2018-03-26-JupyterNotebook主题和字体的美化/">jupyter notebook:主题和字体的美化</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
   <p><span>发布时间:</span>2018年03月19日 - 19:03</p>
-  <p><span>最后更新:</span>2020年03月22日 - 11:03</p>
+  <p><span>最后更新:</span>2022年05月22日 - 13:05</p>
   <p><span>原始链接:</span><a href="/2018/03/19/2018-03-26-JupyterNotebook主题和字体的美化/" title="jupyter notebook:主题和字体的美化">https://zjrongxiang.github.io/2018/03/19/2018-03-26-JupyterNotebook主题和字体的美化/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/2018/03/19/2018-03-26-JupyterNotebook主题和字体的美化/" aria-label="复制成功！"></i></span>
   </p>
@@ -769,7 +769,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">204</span>
+                    <span class="site-state-item-count">279</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -922,7 +922,21 @@
                     
                       
                     
-                    <span class="site-state-item-count">70</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -975,7 +989,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1102,7 +1118,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">666k</span>
+    <span title="站点总字数">878k</span>
   
 
   
@@ -1111,7 +1127,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">10:05</span>
+    <span title="站点阅读时长">13:19</span>
   
 </div>
 

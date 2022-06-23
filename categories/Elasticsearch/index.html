@@ -449,9 +449,9 @@
 
       <h2 class="post-title">
         
-          <a class="post-title-link" href="/2020/01/27/2021-05-01-Spark中的Watermark/" itemprop="url">
+          <a class="post-title-link" href="/2020/01/27/2021-05-01-Elasticsearch系列文章-数据的写入/" itemprop="url">
             
-              <span itemprop="name">Spark中的Watermark</span>
+              <span itemprop="name">Elasticsearch系列文章-数据的写入</span>
             
           </a>
         
@@ -475,9 +475,9 @@
 
       <h2 class="post-title">
         
-          <a class="post-title-link" href="/2020/01/27/2021-05-01-Elasticsearch系列文章-数据的写入/" itemprop="url">
+          <a class="post-title-link" href="/2020/01/27/2021-05-01-Spark中的Watermark/" itemprop="url">
             
-              <span itemprop="name">Elasticsearch系列文章-数据的写入</span>
+              <span itemprop="name">Spark中的Watermark</span>
             
           </a>
         
@@ -545,7 +545,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">204</span>
+                    <span class="site-state-item-count">279</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -698,7 +698,21 @@
                     
                       
                     
-                    <span class="site-state-item-count">70</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -751,7 +765,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -861,7 +877,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">666k</span>
+    <span title="站点总字数">878k</span>
   
 
   
@@ -870,7 +886,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">10:05</span>
+    <span title="站点阅读时长">13:19</span>
   
 </div>
 
@@ -1471,7 +1487,127 @@
 
 </body>
 </html>
-#eee);
+sultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
       border: 1px solid #d5d5d5;
       border-radius: 3px;
       user-select: none;

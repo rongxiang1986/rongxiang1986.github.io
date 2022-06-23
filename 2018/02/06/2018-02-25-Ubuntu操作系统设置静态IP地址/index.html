@@ -124,7 +124,7 @@
 <meta property="og:site_name" content="RongXiang">
 <meta property="og:description" content="目录 背景 第一部分  编辑interfaces文件 第二部分   添加静态IP信息及DNS信息 第三部分   重启服务生效 参考文献及资料  背景有一台Linux台式机（Ubuntu 16.04.3 LTS (GNU/Linux 4.13.0-32-generic x86_64)）。之前IP是DHCP服务分配的。准备给服务器分配静态IP，方便使用。 ubuntu的网络参数保存在文件/etc/ne">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-22T02:30:10.218Z">
+<meta property="og:updated_time" content="2022-05-28T02:25:54.343Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu操作系统设置静态IP地址">
 <meta name="twitter:description" content="目录 背景 第一部分  编辑interfaces文件 第二部分   添加静态IP信息及DNS信息 第三部分   重启服务生效 参考文献及资料  背景有一台Linux台式机（Ubuntu 16.04.3 LTS (GNU/Linux 4.13.0-32-generic x86_64)）。之前IP是DHCP服务分配的。准备给服务器分配静态IP，方便使用。 ubuntu的网络参数保存在文件/etc/ne">
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-22 10:30:10" itemprop="dateModified" datetime="2020-03-22T10:30:10+08:00">2020-03-22</time>
+                <time title="修改时间：2022-05-28 10:25:54" itemprop="dateModified" datetime="2022-05-28T10:25:54+08:00">2022-05-28</time>
               
             
           </span>
@@ -545,7 +545,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">4.1k</span>
+                <span title="本文字数">5.2k</span>
               
 
               
@@ -559,7 +559,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">4 分钟</span>
+                <span title="阅读时长">5 分钟</span>
               
             </div>
           
@@ -592,6 +592,9 @@
 <h2 id="第二部分-添加静态IP信息及DNS信息"><a href="#第二部分-添加静态IP信息及DNS信息" class="headerlink" title="第二部分 添加静态IP信息及DNS信息"></a>第二部分 添加静态IP信息及DNS信息</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> interfaces(5) file used by ifup(8) and ifdown(8)</span></span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto enp0s31f6</span><br><span class="line">iface enp0s31f6 inet static</span><br><span class="line">address 192.168.31.62</span><br><span class="line">gateway 192.168.31.254</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">dns-nameservers 192.168.31.1 8.8.8.8</span><br></pre></td></tr></table></figure>
 <h2 id="第三部分-重启服务生效"><a href="#第三部分-重启服务生效" class="headerlink" title="第三部分 重启服务生效"></a>第三部分 重启服务生效</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">root@vultr:~# service systemd-networkd status</span><br><span class="line">● systemd-networkd.service - Network Service</span><br><span class="line">   Loaded: loaded (/lib/systemd/system/systemd-networkd.service; enabled-runtime; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Wed 2020-03-18 09:18:58 UTC; 3 days ago</span><br><span class="line">     Docs: man:systemd-networkd.service(8)</span><br><span class="line"> Main PID: 843 (systemd-network)</span><br><span class="line">   Status: "Processing requests..."</span><br><span class="line">    Tasks: 1 (limit: 1108)</span><br><span class="line">   CGroup: /system.slice/systemd-networkd.service</span><br><span class="line">           └─843 /lib/systemd/systemd-networkd</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
 <p>如果如法生效，尝试reboot服务器。</p>
+<h2 id="第四部分-命令行方式（临时，os重启失效）"><a href="#第四部分-命令行方式（临时，os重启失效）" class="headerlink" title="第四部分 命令行方式（临时，os重启失效）"></a>第四部分 命令行方式（临时，os重启失效）</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@vultr:~# ifconfig ens33 192.168.1.31 netmask 255.255.255.0</span><br><span class="line"><span class="meta">#</span><span class="bash"> ens33 网卡名</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.1.31 目标地址</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> qita</span></span><br></pre></td></tr></table></figure>
+<p>然后重启<code>networking</code>服务生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@vultr:~# service networking restart</span><br></pre></td></tr></table></figure>
 <h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、Configure static IP address on Ubuntu 16.04 LTS Server，链接：<a href="https://michael.mckinnon.id.au/2016/05/05/configuring-ubuntu-16-04-static-ip-address/" target="_blank" rel="noopener">https://michael.mckinnon.id.au/2016/05/05/configuring-ubuntu-16-04-static-ip-address/</a></p>
 
       
@@ -611,7 +614,7 @@
   <p><span>本文标题:</span><a href="/2018/02/06/2018-02-25-Ubuntu操作系统设置静态IP地址/">Ubuntu操作系统设置静态IP地址</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
   <p><span>发布时间:</span>2018年02月06日 - 19:02</p>
-  <p><span>最后更新:</span>2020年03月22日 - 10:03</p>
+  <p><span>最后更新:</span>2022年05月28日 - 10:05</p>
   <p><span>原始链接:</span><a href="/2018/02/06/2018-02-25-Ubuntu操作系统设置静态IP地址/" title="Ubuntu操作系统设置静态IP地址">https://zjrongxiang.github.io/2018/02/06/2018-02-25-Ubuntu操作系统设置静态IP地址/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/2018/02/06/2018-02-25-Ubuntu操作系统设置静态IP地址/" aria-label="复制成功！"></i></span>
   </p>
@@ -659,8 +662,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/06/2018-02-09-机器学习系列文章-Autoencoder学习总结/" rel="next" title="机器学习系列文章-Autoencoder学习总结">
-                <i class="fa fa-chevron-left"></i> 机器学习系列文章-Autoencoder学习总结
+              <a href="/2018/01/25/2018-01-25-Python系列文章-Python标准库timeit的使用简介/" rel="next" title="Python标准库timeit的使用简介">
+                <i class="fa fa-chevron-left"></i> Python标准库timeit的使用简介
               </a>
             
           </div>
@@ -669,8 +672,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/02/06/2018-02-09-SAS 9.4 部署及SID文件调整/" rel="prev" title="SAS 9.4 部署及SID文件调整">
-                SAS 9.4 部署及SID文件调整 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/02/06/2018-02-09-机器学习系列文章-Autoencoder学习总结/" rel="prev" title="机器学习系列文章-Autoencoder学习总结">
+                机器学习系列文章-Autoencoder学习总结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -750,7 +753,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">204</span>
+                    <span class="site-state-item-count">279</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -903,7 +906,21 @@
                     
                       
                     
-                    <span class="site-state-item-count">70</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -956,7 +973,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1050,7 +1069,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-编辑interfaces文件"><span class="nav-number">3.</span> <span class="nav-text">第一部分 编辑interfaces文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-添加静态IP信息及DNS信息"><span class="nav-number">4.</span> <span class="nav-text">第二部分 添加静态IP信息及DNS信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-重启服务生效"><span class="nav-number">5.</span> <span class="nav-text">第三部分 重启服务生效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">6.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-编辑interfaces文件"><span class="nav-number">3.</span> <span class="nav-text">第一部分 编辑interfaces文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-添加静态IP信息及DNS信息"><span class="nav-number">4.</span> <span class="nav-text">第二部分 添加静态IP信息及DNS信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-重启服务生效"><span class="nav-number">5.</span> <span class="nav-text">第三部分 重启服务生效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-命令行方式（临时，os重启失效）"><span class="nav-number">6.</span> <span class="nav-text">第四部分 命令行方式（临时，os重启失效）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">7.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1083,7 +1102,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">666k</span>
+    <span title="站点总字数">878k</span>
   
 
   
@@ -1092,7 +1111,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">10:05</span>
+    <span title="站点阅读时长">13:19</span>
   
 </div>
 

@@ -117,12 +117,12 @@
 
 
 
-  <meta name="description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark参数说明 第三部分 Spark内存优化 第四部分 常见线上问题解决 参考文献及资料  背景Spark任务目前仍然是大数据生产环境上，最主要的分布式计算引擎（虽然大部分企业都在将技术栈迁移至Flink）。Spark计算框架出现在MapReduce之后，主要优点在于内存计算（本质都是实现Google关于大数据的三篇论文），但是在开发和维">
+  <meta name="description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark内存优化 第三部分 总结 参考文献及资料  背景当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，MapReduce这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spark内存管理和优化">
 <meta property="og:url" content="https://zjrongxiang.github.io/2021/11/16/2021-12-24-Spark内存管理和优化/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark参数说明 第三部分 Spark内存优化 第四部分 常见线上问题解决 参考文献及资料  背景Spark任务目前仍然是大数据生产环境上，最主要的分布式计算引擎（虽然大部分企业都在将技术栈迁移至Flink）。Spark计算框架出现在MapReduce之后，主要优点在于内存计算（本质都是实现Google关于大数据的三篇论文），但是在开发和维">
+<meta property="og:description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark内存优化 第三部分 总结 参考文献及资料  背景当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，MapReduce这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/cluster-overview.png">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/fenji.png">
@@ -132,10 +132,12 @@
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/统一（堆外）.bmp">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/example_ui.PNG">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/20200604212151736.png">
-<meta property="og:updated_time" content="2022-01-19T11:07:44.400Z">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/disk.png">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/shuffleDisk.jpg">
+<meta property="og:updated_time" content="2022-03-19T09:50:02.055Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark内存管理和优化">
-<meta name="twitter:description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark参数说明 第三部分 Spark内存优化 第四部分 常见线上问题解决 参考文献及资料  背景Spark任务目前仍然是大数据生产环境上，最主要的分布式计算引擎（虽然大部分企业都在将技术栈迁移至Flink）。Spark计算框架出现在MapReduce之后，主要优点在于内存计算（本质都是实现Google关于大数据的三篇论文），但是在开发和维">
+<meta name="twitter:description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark内存优化 第三部分 总结 参考文献及资料  背景当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，MapReduce这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背">
 <meta name="twitter:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/cluster-overview.png">
 
 
@@ -491,7 +493,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-01-19 19:07:44" itemprop="dateModified" datetime="2022-01-19T19:07:44+08:00">2022-01-19</time>
+                <time title="修改时间：2022-03-19 17:50:02" itemprop="dateModified" datetime="2022-03-19T17:50:02+08:00">2022-03-19</time>
               
             
           </span>
@@ -508,7 +510,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spark/" itemprop="url" rel="index"><span itemprop="name">Spark</span></a></span>
 
                 
                 
@@ -554,7 +556,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">25k</span>
+                <span title="本文字数">27k</span>
               
 
               
@@ -568,7 +570,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">23 分钟</span>
+                <span title="阅读时长">25 分钟</span>
               
             </div>
           
@@ -591,14 +593,13 @@
         <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
 <li>背景</li>
 <li>第一部分 Spark内存管理详解</li>
-<li>第二部分 Spark参数说明</li>
-<li>第三部分 Spark内存优化</li>
-<li>第四部分 常见线上问题解决</li>
+<li>第二部分 Spark内存优化</li>
+<li>第三部分 总结</li>
 <li>参考文献及资料</li>
 </ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><code>Spark</code>任务目前仍然是大数据生产环境上，最主要的分布式计算引擎（虽然大部分企业都在将技术栈迁移至<code>Flink</code>）。<code>Spark</code>计算框架出现在<code>MapReduce</code>之后，主要优点在于内存计算（本质都是实现<a href="https://uxtuo.github.io/2018/01/03/Google%E4%B8%89%E5%A4%A7%E8%AE%BA%E6%96%87/" target="_blank" rel="noopener">Google关于大数据的三篇论文</a>），但是在开发和维护<code>Spark</code>任务的时候经常出现内存资源问题。所以本文将详细介绍<code>Spark</code>的内存管理原理和各个版本的演进。</p>
-<p>本文讲解主要基于<code>Spark 2.3.0</code>版本。需要读者具备<code>Java JVM</code>基础、<code>Spark RDD</code>、<code>Shuffle</code>等Spark基础知识。前面主要将理论和原理，后面介绍案例。</p>
-<p>本文图片使用<code>visio</code>画图，需要原文件的同学可以私信我提供。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，<code>MapReduce</code>这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背景下出现（其实本质都是实现<a href="https://uxtuo.github.io/2018/01/03/Google%E4%B8%89%E5%A4%A7%E8%AE%BA%E6%96%87/" target="_blank" rel="noopener">Google关于大数据的三篇论文</a>）。虽然现在Flink已然形成流式霸权，但大部分企业（传统行业）中，<code>Spark</code>仍然是大数据生产环境上，最主要的分布式计算引擎。</p>
+<p>但是在开发和维护<code>Spark</code>任务的时候经常出现内存资源问题。本文将详细介绍<code>Spark</code>的内存管理原理和各个版本的演进。内容主要基于<code>Spark 2.3.0</code>版本。需要读者具备<code>Java JVM</code>基础、<code>Spark RDD</code>、<code>Shuffle</code>等<code>Spark</code>基础知识。前面主要将理论和原理，后面介绍案例。</p>
+<p>本文图片使用<code>visio</code>画图，需要原文件的同学可以私信我提供。限于经验等各方面原因，难免有所疏漏或者有失偏颇。如有问题，欢迎联系一起讨论。</p>
 <h2 id="第一部分-Spark-内存管理详解"><a href="#第一部分-Spark-内存管理详解" class="headerlink" title="第一部分 Spark 内存管理详解"></a>第一部分 Spark 内存管理详解</h2><h3 id="1-1-Spark任务运行基础"><a href="#1-1-Spark任务运行基础" class="headerlink" title="1.1 Spark任务运行基础"></a>1.1 Spark任务运行基础</h3><p><code>Spark</code>在运行时，会启动<code>Executor</code>和<code>Driver</code>两种<code>JVM</code>进程。其中<code>Driver</code>为管理容器，负责创建<code>Spark Context</code>、提交<code>Spark</code>作业（<code>job</code>），最后将作业转换成计算任务（<code>Task</code>），并协调、调度、下发给任务集群的<code>Executor</code>容器。<code>Executor</code>容器负责具体的计算任务，执行完成后将结果返回给<code>Driver</code>，并提供对<code>RDD</code>的存储服务。参考下图（对于<code>Spark on Yarn</code>运行模式时，<code>Cluster Manager</code>对应为<code>ResourceManager</code>，<code>Worker Node</code> 对应<code>NodeManager</code>）。</p>
 <p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\cluster-overview.png" alt="cluster-overview"></p>
 <p><code>Spark2.3.0</code>版本前，<code>Driver</code>进程的内存管理即为典型<code>JVM</code>内存管理。主要区别是对于<code>Executor</code>，<code>Spark</code>内存管理引入了堆外内存的概念。</p>
@@ -632,7 +633,7 @@
 </li>
 <li><p><code>Storage</code>内存（存储内存）：</p>
 <p>计算公式（其中 <code>systemMaxMemory</code>取决于当前 <code>JVM</code> 堆内内存的大小）：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">可用的Storage内存 = systemMaxMemory*spark.storage.memoryFraction*spark.storage.safetyFraction</span><br><span class="line"><span class="meta">#</span><span class="bash"> spark.shuffle.memoryFraction 默认为0.6</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">可用的Storage内存 = systemMaxMemory*spark.storage.memoryFraction*spark.storage.safetyFraction</span><br><span class="line"><span class="meta">#</span><span class="bash"> spark.storage.memoryFraction 默认为0.6</span></span><br></pre></td></tr></table></figure>
 <p>用于存储 <code>RDD</code>的缓存（<code>cache</code>）数据 和 广播（<code>Broadcast</code>）。这部分存储对象更多是为将来计算重用的数据。</p>
 </li>
 <li><p><code>Execution</code>内存（执行内存）：</p>
@@ -641,24 +642,25 @@
 <p>用于执行<code>Shuffle</code>时占用的内存，主要用于存放 <code>Shuffles</code>、<code>Joins</code>、<code>Sort</code>、<code>aggregations</code>等计算过程中的临时数据。待完成操作后，就会释放资源，寿命较短。</p>
 </li>
 <li><p>其他内存（<code>Otrher Memory</code>）：</p>
-<p>Spark内部元数据和用户自定义数据类型。</p>
+<p><code>Spark</code>内部元数据和用户自定义数据类型。</p>
 </li>
 </ul>
 <h5 id="1-2-1-2-堆外内存"><a href="#1-2-1-2-堆外内存" class="headerlink" title="1.2.1.2 堆外内存"></a>1.2.1.2 堆外内存</h5><p><code>Spark</code>任务本质还是运行在<code>JVM</code>虚机上的<code>Java</code>进程，所以<code>Executor</code>的内存管理仍然是基于<code>JVM</code>的内存管理。而堆内存受到 <code>JVM</code>统一管理，<code>GC</code>基于一定算法逻辑，当spark任务需要申请和释放内存的时候，并不自由灵活。具体流程如下：</p>
 <ul>
 <li>申请内存：<ul>
-<li>Spark在代码中new一个对象实例</li>
-<li>JVM从堆内内存分配空间，创建对象并返回对象引用</li>
-<li>Spark保存该对象的引用，记录该对象占用的内存</li>
+<li><code>Spark</code>在代码中<code>new</code>一个对象实例;</li>
+<li><code>JVM</code>从堆内内存分配空间，创建对象并返回对象引用;</li>
+<li><code>Spark</code>保存该对象的引用，记录该对象占用的内存;</li>
 </ul>
 </li>
 <li>释放内存：<ul>
-<li>Spark记录该对象释放的内存，删除该对象的引用</li>
-<li>等待JVM的垃圾回收机制释放该对象占用的堆内内存</li>
+<li><code>Spark</code>记录该对象释放的内存，删除该对象的引用;</li>
+<li>等待<code>JVM</code>的垃圾回收机制释放该对象占用的堆内内存;</li>
 </ul>
 </li>
 </ul>
-<p>即<code>Spark</code>不能准确记录实际可用的堆内内存，从而也无法避免内存溢出<code>OOM</code>。所以Spark 从1.6 版本开始引入了<code>Off-heap memory</code>(<a href="https://issues.apache.org/jira/browse/SPARK-11389" target="_blank" rel="noopener">SPARK-11389</a>)。该内存资源不属于<code>JVM</code>内存，而是调用 <code>Java</code> 的 <code>unsafe</code> 相关 <code>API</code> 直接向操作系统申请内存，直接在服务器节点的内存中开辟空间，存储经过序列化的二进制数据。由于这种方式不需要 <code>JVM</code> 内存管理，所以可以避免频繁的 <code>GC</code>，但是缺点是用户必须自行编写内存申请和释放的逻辑。</p>
+<p>所以，对于堆内内存的申请和释放实际是由 <code>JVM</code> 来管理的。因此，在统计堆内内存具体使用量时，考虑性能等各方面原因，<code>Spark</code> 目前采用的是抽样统计的方式来计算已使用的内存。<code>Spark</code>不能准确记录实际可用的堆内内存，当数据量较大时，如果不能及时溢出(<code>Spill</code>)数据到磁盘，也就无法避免内存溢出<code>OOM</code>。</p>
+<p>所以Spark 从1.6 版本开始引入了<code>Off-heap memory</code>(<a href="https://issues.apache.org/jira/browse/SPARK-11389" target="_blank" rel="noopener">SPARK-11389</a>)。该内存资源不属于<code>JVM</code>内存，而是调用 <code>Java</code> 的 <code>unsafe</code> 相关 <code>API</code> 直接向操作系统申请内存，直接在服务器节点的内存中开辟空间，存储经过序列化的二进制数据。由于这种方式不需要 <code>JVM</code> 内存管理，所以可以避免频繁的 <code>GC</code>，但是缺点是用户必须自行编写内存申请和释放的逻辑。</p>
 <p>默认情况下，堆外内存是禁用的。可以通过参数<code>spark.memory.offHeap.enabled</code> 参数启用它 ，并通过<code>spark.memory.offHeap.size</code> 参数设置内存大小，单位为字节 。</p>
 <p>与堆内内存相比，堆外内存模型比较简单，只有<code>Storage memory</code>和<code>Execution memory</code>，其分布如下图所示：</p>
 <p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\静态（堆外）.bmp" alt="静态（堆外）"></p>
@@ -747,19 +749,39 @@
 </tbody>
 </table>
 <h2 id="第二部分-Spark内存优化"><a href="#第二部分-Spark内存优化" class="headerlink" title="第二部分 Spark内存优化"></a>第二部分 Spark内存优化</h2><p>讲完枯燥的理论后，我们要使用这些理论指导日常的研发调优、生产问题的分析定位。即理论指导实践，解决问题才是目的。</p>
-<p>通常我们说<code>Spark</code>是基于内存计算的，但是并不是说所有的数据对象都是缓存在内存中的。如果数据量较大但是内存资源不足的场景下，<code>Spark</code>仍然会把数据缓存在磁盘中。为了提升任务运行效率，需要尽量避免缓存数据溢出（<code>Spill</code>）到磁盘。那么如何判断<code>Spark</code>任务的内存资源管理是合适的？</p>
-<p>（1）Storage界面中发现缓存cache中数据已经开始缓存在磁盘上（Size on Disk）。这时候说明预留在缓存的内存 Storage内存给少了。</p>
-<p>（2）stage执行下的若干个task中，shuffle spill（memory）中，甚至在shuffle spill（disk）的时候，说明给执行Executor的内存少了。</p>
-<p>使用建议<br>首先，建议使用新模式，所以接下来的配置建议都是基于新模式的。</p>
-<p>spark.memory.fraction：如果 application spill 或踢除 block 发生的频率过高（可通过日志观察），可以适当调大该值，这样 execution 和 storage 的总可用内存变大，能有效减少发生 spill 和踢除 block 的频率</p>
-<p>spark.memory.storageFraction：为 storage 占 storage、execution 内存总和的比例。虽然新方案中 storage 和 execution 之间可以发生内存借用，但总的来说，spark.memory.storageFraction 越大，运行过程中，storage 能用的内存就会越多。所以，如果你的 app 是更吃 storage 内存的，把这个值调大一点；如果是更吃 execution 内存的，把这个值调小一点</p>
-<p>spark.memory.offHeap.enabled：堆外内存最大的好处就是可以避免 GC，如果你希望使用堆外内存，将该值置为 true 并设置堆外内存的大小，即设置<br>spark.memory.offHeap.size，这是必须的</p>
-<p>另外，需要特别注意的是，堆外内存的大小不会算在 executor memory 中，也就是说加入你设置了 –executor memory 10G 和 -spark.memory.offHeap.size=10G，那总共可以使用 20G 内存，堆内和堆外分别 10G。</p>
-<p><a href="https://github.com/YunKillerE/troubleshooting-and-optimization/blob/master/Spark%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/spark%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C.md" target="_blank" rel="noopener">https://github.com/YunKillerE/troubleshooting-and-optimization/blob/master/Spark%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/spark%E5%B8%B8%E8%A7%81%E6%95%85%E9%9A%9C.md</a></p>
-<p><a href="http://bcxw.net/article/441.html" target="_blank" rel="noopener">http://bcxw.net/article/441.html</a></p>
-<p><a href="https://xie.infoq.cn/article/bc5aaeac0e80b76ab0e0954e3" target="_blank" rel="noopener">https://xie.infoq.cn/article/bc5aaeac0e80b76ab0e0954e3</a></p>
-<h2 id="第四部分-线上问题排查"><a href="#第四部分-线上问题排查" class="headerlink" title="第四部分 线上问题排查"></a>第四部分 线上问题排查</h2><p>RDD的持久化机制</p>
-<h2 id="第五部分-附录"><a href="#第五部分-附录" class="headerlink" title="第五部分 附录"></a>第五部分 附录</h2><h3 id="5-1-执行内存的管理"><a href="#5-1-执行内存的管理" class="headerlink" title="5.1 执行内存的管理"></a>5.1 执行内存的管理</h3><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、《Deep Dive: Apache Spark Memory Management》介绍视频，链接：<a href="https://youtu.be/dPHrykZL8Cg" target="_blank" rel="noopener">https://youtu.be/dPHrykZL8Cg</a></p>
+<p>通常我们说<code>Spark</code>是基于内存计算的，但是并不是说所有的数据对象都是缓存在内存中。如果数据量较大而内存资源不足的场景下，<code>Spark</code>也会把数据缓存在磁盘中。但是为了提升任务运行效率，需要尽量避免缓存数据溢出（<code>Spill</code>）到磁盘。</p>
+<p>那么如何判断<code>Spark</code>任务的内存资源管理是合适的？通过上文的理论介绍，<code>Spark</code>任务的内存资源主要使用分配有：存储（<code>Storage</code>）内存和执行（<code>Executor</code>）内存，所以我们分别讨论。通常通过<code>Spark</code> UI界面，来查看<code>Spark</code>任务资源实时使用情况。</p>
+<h3 id="2-1-存储（Storage）内存优化"><a href="#2-1-存储（Storage）内存优化" class="headerlink" title="2.1 存储（Storage）内存优化"></a>2.1 存储（Storage）内存优化</h3><p><code>Storage</code>子菜单界面中，如果发现缓存cache中数据开始溢出到磁盘上(<code>Size on Disk</code>)。这时候说明预留给 <code>Storage</code>内存资源不足。例如下图，<code>Size on Disk</code>数值为<code>4.7GB</code>，表示任务中有<code>4.7GB</code>的数据因为资源不足溢出到磁盘进行缓存。</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\disk.png" alt="disk"></p>
+<p>这时候可以尝试先通过适当增加<code>Storage</code>内存资源解决。涉及参数有：</p>
+<ul>
+<li><code>spark.memory.fraction</code>，这是资源比例参数（存储（<code>Storage</code>）内存+执行（<code>Executor</code>）内存资源整体），默认是0.6。可以适当调大该值，这样 <code>Execution</code> 和 <code>Storage</code> 的整体可用内存资源变大。</li>
+<li><code>spark.memory.storageFraction</code>，同样是资源比例参数（<code>Storage</code> 占 <code>Storage+Executor</code> 内存总和的比例）。我们知道在统一内存管理机制下，<code>Storage</code> 和 <code>Executor</code> 之间内存资源可以动态伸缩借用。但是<code>spark.memory.storageFraction</code>越大，任务运行过程中，Storage 能用的内存就会越多。可以适当调大该值。反之，如果任务更吃 <code>Executor</code> 内存，适当把这个值调小。</li>
+</ul>
+<h3 id="2-2-执行（Executor）内存"><a href="#2-2-执行（Executor）内存" class="headerlink" title="2.2 执行（Executor）内存"></a>2.2 执行（Executor）内存</h3><p><code>Stages</code>子菜单界面中，点击最新完成的<code>stage</code>，页面显示<code>stage</code>的运行情况汇总。发现<code>shuffle spill (disk)</code>的数值较大，<code>Executor</code>内存资源不足。例如下图，任务中<code>shuffle</code>的时候，2个<code>Executor</code>平均使用300M的磁盘空间。</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\shuffleDisk.jpg" alt="shuffleDisk"></p>
+<p>这时候通过调整参数，适当增加<code>Executor</code>内存资源解决。</p>
+<h3 id="2-3-其他内存问题"><a href="#2-3-其他内存问题" class="headerlink" title="2.3 其他内存问题"></a>2.3 其他内存问题</h3><h4 id="2-3-1-Driver内存"><a href="#2-3-1-Driver内存" class="headerlink" title="2.3.1 Driver内存"></a>2.3.1 Driver内存</h4><p>报错：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Job aborted due to stage failure: Total size of serialized results of 334502 tasks (1024.0 MB) is bigger than spark.driver.maxResultSize (1024.0 MB)</span><br></pre></td></tr></table></figure>
+<p>处理： 对于collect和一些操作，driver会接收各task执行后的数据，spark.driver.maxResultSize参数控制接收数据大小，建议先检查代码，避免或减少take，collect操作，如果不成功再考虑增大该参数。尽量不要使用collect操作即可。</p>
+<h2 id="第三部分-总结"><a href="#第三部分-总结" class="headerlink" title="第三部分 总结"></a>第三部分 总结</h2><p>Spark引入堆外内存，其实是Spark钨丝计划（Spark Tungsten）的一部分。该计划的细节可以参考databricks公司的官网博客：<a href="https://databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html" target="_blank" rel="noopener">Project Tungsten: Bringing Apache Spark Closer to Bare Metal</a> 。文章总结了目前Spark的瓶颈主要在CPU和内存。以前磁盘和网络I/O随着高速网络和廉价SSD的使用，已经不再是性能瓶颈。</p>
+<p>钨丝计划（Project Tungsten）包含三个方面：</p>
+<ul>
+<li><p>内存管理（Memory Management）和二进制处理（Binary Processing）：利用应用的语义（application semantics）来更明确地管理内存，同时消除JVM对象模型和垃圾回收开销。</p>
+</li>
+<li><p>缓存友好的计算（Cache-aware Computation）：使用算法和数据结构来实现内存分级结构（MemoryHierarchy）。</p>
+</li>
+<li><p>代码生成（Code Generation，CG）：使用代码生成来利用新型编译器和CPU。</p>
+</li>
+</ul>
+<p>其中本文介绍Spark内存优化就是钨丝计划的内存管理部分。</p>
+<p>计划安排：</p>
+<ul>
+<li>Project Tungsten (Spark 1.5 Phase 1)，链接：<a href="https://issues.apache.org/jira/browse/SPARK-7075" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/SPARK-7075</a></li>
+<li>Project Tungsten (Phase 2)，链接：<a href="https://issues.apache.org/jira/browse/SPARK-9697" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/SPARK-9697</a></li>
+</ul>
+<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、《Deep Dive: Apache Spark Memory Management》介绍视频，链接：<a href="https://youtu.be/dPHrykZL8Cg" target="_blank" rel="noopener">https://youtu.be/dPHrykZL8Cg</a></p>
+<p>2、探索Spark Tungsten的秘密，链接：<a href="https://github.com/hustnn/TungstenSecret" target="_blank" rel="noopener">https://github.com/hustnn/TungstenSecret</a></p>
 
       
     </div>
@@ -778,7 +800,7 @@
   <p><span>本文标题:</span><a href="/2021/11/16/2021-12-24-Spark内存管理和优化/">Spark内存管理和优化</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
   <p><span>发布时间:</span>2021年11月16日 - 13:11</p>
-  <p><span>最后更新:</span>2022年01月19日 - 19:01</p>
+  <p><span>最后更新:</span>2022年03月19日 - 17:03</p>
   <p><span>原始链接:</span><a href="/2021/11/16/2021-12-24-Spark内存管理和优化/" title="Spark内存管理和优化">https://zjrongxiang.github.io/2021/11/16/2021-12-24-Spark内存管理和优化/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/2021/11/16/2021-12-24-Spark内存管理和优化/" aria-label="复制成功！"></i></span>
   </p>
@@ -826,8 +848,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/11/16/2021-12-18-Python语言温习总结/" rel="next" title="Python语言温习总结">
-                <i class="fa fa-chevron-left"></i> Python语言温习总结
+              <a href="/2021/11/16/2022-01-18-Hadoop Yarn高可用机制/" rel="next" title="Hadoop Yarn高可用机制">
+                <i class="fa fa-chevron-left"></i> Hadoop Yarn高可用机制
               </a>
             
           </div>
@@ -836,8 +858,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2022/01/16/2022-01-18-Hadoop HDFS高可用机制/" rel="prev" title="Hadoop HDFS高可用机制">
-                Hadoop HDFS高可用机制 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/11/16/2022-03-12-机器学习系列-贝叶斯深度学习综述/" rel="prev" title="机器学习系列-贝叶斯深度学习综述">
+                机器学习系列-贝叶斯深度学习综述 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -917,7 +939,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">204</span>
+                    <span class="site-state-item-count">279</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1070,7 +1092,21 @@
                     
                       
                     
-                    <span class="site-state-item-count">70</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1123,7 +1159,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1217,7 +1255,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Spark-内存管理详解"><span class="nav-number">3.</span> <span class="nav-text">第一部分 Spark 内存管理详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Spark任务运行基础"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 Spark任务运行基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Spark内存管理演进"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 Spark内存管理演进</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-静态管理模式"><span class="nav-number">3.2.1.</span> <span class="nav-text">1.2.1 静态管理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-1-堆内内存"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1.2.1.1 堆内内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-2-堆外内存"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">1.2.1.2 堆外内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-2-总结"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">1.2.1.2 总结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-统一管理模式"><span class="nav-number">3.2.2.</span> <span class="nav-text">1.2.2 统一管理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-1-堆内-On-Heap-内存"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">1.2.2.1 堆内(On-Heap)内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-2-堆外-Off-Heap-内存"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">1.2.2.2 堆外(Off-Heap)内存</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-2-1-Exector堆外内存"><span class="nav-number">3.2.2.2.1.</span> <span class="nav-text">1.2.2.2.1 Exector堆外内存</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-2-2-Driver堆外内存"><span class="nav-number">3.2.2.2.2.</span> <span class="nav-text">1.2.2.2.2 Driver堆外内存</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-3-计算案例"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">1.2.2.3 计算案例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-动态占用模式"><span class="nav-number">3.2.3.</span> <span class="nav-text">1.2.3 动态占用模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-对比"><span class="nav-number">3.2.4.</span> <span class="nav-text">1.2.3 对比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Spark内存优化"><span class="nav-number">4.</span> <span class="nav-text">第二部分 Spark内存优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-线上问题排查"><span class="nav-number">5.</span> <span class="nav-text">第四部分 线上问题排查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五部分-附录"><span class="nav-number">6.</span> <span class="nav-text">第五部分 附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-执行内存的管理"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 执行内存的管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">7.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Spark-内存管理详解"><span class="nav-number">3.</span> <span class="nav-text">第一部分 Spark 内存管理详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Spark任务运行基础"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 Spark任务运行基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Spark内存管理演进"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 Spark内存管理演进</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-静态管理模式"><span class="nav-number">3.2.1.</span> <span class="nav-text">1.2.1 静态管理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-1-堆内内存"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1.2.1.1 堆内内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-2-堆外内存"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">1.2.1.2 堆外内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-2-总结"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">1.2.1.2 总结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-统一管理模式"><span class="nav-number">3.2.2.</span> <span class="nav-text">1.2.2 统一管理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-1-堆内-On-Heap-内存"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">1.2.2.1 堆内(On-Heap)内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-2-堆外-Off-Heap-内存"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">1.2.2.2 堆外(Off-Heap)内存</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-2-1-Exector堆外内存"><span class="nav-number">3.2.2.2.1.</span> <span class="nav-text">1.2.2.2.1 Exector堆外内存</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-2-2-Driver堆外内存"><span class="nav-number">3.2.2.2.2.</span> <span class="nav-text">1.2.2.2.2 Driver堆外内存</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-3-计算案例"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">1.2.2.3 计算案例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-动态占用模式"><span class="nav-number">3.2.3.</span> <span class="nav-text">1.2.3 动态占用模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-对比"><span class="nav-number">3.2.4.</span> <span class="nav-text">1.2.3 对比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Spark内存优化"><span class="nav-number">4.</span> <span class="nav-text">第二部分 Spark内存优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-存储（Storage）内存优化"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 存储（Storage）内存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-执行（Executor）内存"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 执行（Executor）内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-其他内存问题"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 其他内存问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-1-Driver内存"><span class="nav-number">4.3.1.</span> <span class="nav-text">2.3.1 Driver内存</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-总结"><span class="nav-number">5.</span> <span class="nav-text">第三部分 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">6.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1250,7 +1288,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">666k</span>
+    <span title="站点总字数">878k</span>
   
 
   
@@ -1259,7 +1297,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">10:05</span>
+    <span title="站点阅读时长">13:19</span>
   
 </div>
 

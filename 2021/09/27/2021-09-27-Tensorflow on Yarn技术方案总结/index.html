@@ -117,18 +117,19 @@
 
 
 
-  <meta name="description" content="目录 术语说明 背景 第一部分   常见深度学习计算框架在Hadoop集群运行 第一部分   Spark on Yarn 第二部分   Pyspark Application原理 第三部分   业务侧调优 第四部分   总结 参考文献及资料  背景企业级大数据平台通常将大量数据存储在Hadoop集群中。随着机器学习和深度学习的兴起，利用集群中的数据训练机器学习模型成了自然需求。通常有两种方式实现：">
+  <meta name="description" content="目录 术语说明 背景 第一部分   常见深度学习计算框架在Hadoop集群运行 第一部分   Spark on Yarn 第二部分   Pyspark Application原理 第三部分   业务侧调优 第四部分   总结 参考文献及资料  背景企业级大数据平台通常将大量历史数据存储在Hadoop集群中。随着机器学习和深度学习的兴起，利用集群中的数据训练机器学习模型成了自然业务需求。通常有两种架">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tensorflow on Yarn技术方案总结">
+<meta property="og:title" content="Tensorflow on Yarn技术方案调研总结">
 <meta property="og:url" content="https://zjrongxiang.github.io/2021/09/27/2021-09-27-Tensorflow on Yarn技术方案总结/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="目录 术语说明 背景 第一部分   常见深度学习计算框架在Hadoop集群运行 第一部分   Spark on Yarn 第二部分   Pyspark Application原理 第三部分   业务侧调优 第四部分   总结 参考文献及资料  背景企业级大数据平台通常将大量数据存储在Hadoop集群中。随着机器学习和深度学习的兴起，利用集群中的数据训练机器学习模型成了自然需求。通常有两种方式实现：">
+<meta property="og:description" content="目录 术语说明 背景 第一部分   常见深度学习计算框架在Hadoop集群运行 第一部分   Spark on Yarn 第二部分   Pyspark Application原理 第三部分   业务侧调优 第四部分   总结 参考文献及资料  背景企业级大数据平台通常将大量历史数据存储在Hadoop集群中。随着机器学习和深度学习的兴起，利用集群中的数据训练机器学习模型成了自然业务需求。通常有两种架">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="c:/Users/rongxiang/AppData/Roaming/Typora/typora-user-images/1553924486498.png">
-<meta property="og:updated_time" content="2021-09-26T15:22:39.028Z">
+<meta property="og:image" content="c:/Users/rongxiang/AppData/Roaming/Typora/typora-user-images/image-20220423172911107.png">
+<meta property="og:updated_time" content="2022-04-24T02:17:15.264Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tensorflow on Yarn技术方案总结">
-<meta name="twitter:description" content="目录 术语说明 背景 第一部分   常见深度学习计算框架在Hadoop集群运行 第一部分   Spark on Yarn 第二部分   Pyspark Application原理 第三部分   业务侧调优 第四部分   总结 参考文献及资料  背景企业级大数据平台通常将大量数据存储在Hadoop集群中。随着机器学习和深度学习的兴起，利用集群中的数据训练机器学习模型成了自然需求。通常有两种方式实现：">
+<meta name="twitter:title" content="Tensorflow on Yarn技术方案调研总结">
+<meta name="twitter:description" content="目录 术语说明 背景 第一部分   常见深度学习计算框架在Hadoop集群运行 第一部分   Spark on Yarn 第二部分   Pyspark Application原理 第三部分   业务侧调优 第四部分   总结 参考文献及资料  背景企业级大数据平台通常将大量历史数据存储在Hadoop集群中。随着机器学习和深度学习的兴起，利用集群中的数据训练机器学习模型成了自然业务需求。通常有两种架">
 <meta name="twitter:image" content="c:/Users/rongxiang/AppData/Roaming/Typora/typora-user-images/1553924486498.png">
 
 
@@ -148,7 +149,7 @@
   };
 </script>
 
-  <title>Tensorflow on Yarn技术方案总结 | RongXiang</title>
+  <title>Tensorflow on Yarn技术方案调研总结 | RongXiang</title>
   
 
 
@@ -441,7 +442,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Tensorflow on Yarn技术方案总结
+          <h1 class="post-title" itemprop="name headline">Tensorflow on Yarn技术方案调研总结
 
               
             
@@ -484,7 +485,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-09-26 23:22:39" itemprop="dateModified" datetime="2021-09-26T23:22:39+08:00">2021-09-26</time>
+                <time title="修改时间：2022-04-24 10:17:15" itemprop="dateModified" datetime="2022-04-24T10:17:15+08:00">2022-04-24</time>
               
             
           </span>
@@ -547,7 +548,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">9.4k</span>
+                <span title="本文字数">12k</span>
               
 
               
@@ -561,7 +562,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">9 分钟</span>
+                <span title="阅读时长">11 分钟</span>
               
             </div>
           
@@ -591,19 +592,21 @@
 <li>第四部分   总结</li>
 <li>参考文献及资料</li>
 </ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>企业级大数据平台通常将大量数据存储在Hadoop集群中。随着机器学习和深度学习的兴起，利用集群中的数据训练机器学习模型成了自然需求。通常有两种方式实现：</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>企业级大数据平台通常将大量历史数据存储在<code>Hadoop</code>集群中。随着机器学习和深度学习的兴起，利用集群中的数据训练机器学习模型成了自然业务需求。通常有两种架构方式实现：</p>
 <ul>
-<li>建设单独的深度学习计算集群</li>
-<li>基于现有的Hadoop集群</li>
+<li>建设单独的深度学习计算集群；</li>
+<li>基于现有的<code>Hadoop</code>集群建设实现；</li>
 </ul>
-<h3 id="1、双集群架构"><a href="#1、双集群架构" class="headerlink" title="1、双集群架构"></a>1、双集群架构</h3><p>在现有Hadoop/Spark大数据集群基础上，新增新的机器学习集群。由Hadoop集群提供历史数据存储服务，机器学习训练集群提供模型训练计算服务。架构数据流参考下图。</p>
+<h3 id="1、双集群架构"><a href="#1、双集群架构" class="headerlink" title="1、双集群架构"></a>1、双集群架构</h3><p>在现有<code>Hadoop/Spark</code>大数据集群基础上，新增新的机器学习集群。由<code>Hadoop</code>集群提供历史数据存储服务，机器学习训练集群提供模型训练计算服务。架构数据流参考下图。</p>
 <ul>
-<li>优点：这种架构将计算和存储功能解耦。由Hadoop集群提供数据的存储和ETL服务，而机器学习计算特点为迭代式计算，需要高性能计算节点（比如配置GPU）。各自发挥自己的计算专长。</li>
-<li>缺点：集群之间存在大量数据的传输会增加系统之间的IO传输，另外对于模型的应用会产生模型端到端的学习应用延迟。</li>
+<li>优点：这种架构将计算和存储功能解耦。由<code>Hadoop</code>集群提供数据的存储和<code>ETL</code>服务，而机器学习计算特点为迭代式计算，需要高性能计算节点（比如配置<code>GPU</code>）。各自发挥自己的计算专长。</li>
+<li>缺点：集群之间存在大量数据的网络传输，会增加系统之间的IO传输，另外对于模型的应用会产生模型端到端的学习应用上线的延迟。</li>
 </ul>
 <p><img src="C:\Users\rongxiang\AppData\Roaming\Typora\typora-user-images\1553924486498.png" alt="1553924486498"></p>
-<h3 id="2、混合部署"><a href="#2、混合部署" class="headerlink" title="2、混合部署"></a>2、混合部署</h3><p>考虑到双集群架构的缺点，架构上将两个功能集群混合部署，即将机器学习、深度学习任务跑在Hadoop/Spark集群上。随着Tensorflow 1.0版本开始对HDFS的支持，使得技术上有了可行性。在同一个集群上运行深度学习（机器学习）可以显著提高数据/计算资源共享的效率。而考虑到数据和计算资源贴近的原则，我们需要将常见机器学习或深度学习计算框架跑在Hadoop集群上。</p>
-<h2 id="第一部分-开源框架介绍"><a href="#第一部分-开源框架介绍" class="headerlink" title="第一部分 开源框架介绍"></a>第一部分 开源框架介绍</h2><p>目前有不少大厂开源自己的方案，主要有：</p>
+<h3 id="2、混合部署"><a href="#2、混合部署" class="headerlink" title="2、混合部署"></a>2、混合部署</h3><p>考虑到双集群架构的缺点，架构上将两个功能集群混合部署，即将机器学习、深度学习任务跑在<code>Hadoop/Spark</code>集群上。随着<code>Tensorflow 1.0</code>版本开始对<code>HDFS</code>的支持，使得技术上有了可行性。在同一个集群上运行深度学习（机器学习）可以显著提高数据/计算资源共享的效率。而考虑到数据和计算资源贴近的原则，我们需要将常见机器学习或深度学习计算框架跑在<code>Hadoop</code>集群上。</p>
+<p><img src="C:\Users\rongxiang\AppData\Roaming\Typora\typora-user-images\image-20220423172911107.png" alt="image-20220423172911107"></p>
+<h2 id="第一部分-分布式机器学习"><a href="#第一部分-分布式机器学习" class="headerlink" title="第一部分 分布式机器学习"></a>第一部分 分布式机器学习</h2><h3 id="1-1-分布式机器学习"><a href="#1-1-分布式机器学习" class="headerlink" title="1.1 分布式机器学习"></a>1.1 分布式机器学习</h3><h3 id="1-2-分布式TensorFlow"><a href="#1-2-分布式TensorFlow" class="headerlink" title="1.2  分布式TensorFlow"></a>1.2  分布式<code>TensorFlow</code></h3><p><a href="https://zhuanlan.zhihu.com/p/56991108" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/56991108</a></p>
+<h3 id="1-3-开源框架梳理"><a href="#1-3-开源框架梳理" class="headerlink" title="1.3 开源框架梳理"></a>1.3 开源框架梳理</h3><p>目前有不少大厂开源自己的方案，主要有：</p>
 <table>
 <thead>
 <tr>
@@ -673,58 +676,74 @@
 <tr>
 <th>框架名称</th>
 <th>Docker</th>
+<th>深度学习框架</th>
+<th>语言</th>
 <th>GPU</th>
 <th>HDFS</th>
 <th>DNS</th>
-<th>原生代码</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>TensorFlowOnSpark</td>
 <td></td>
+<td>TensorFlow</td>
 <td></td>
 <td>是</td>
-<td></td>
+<td>是</td>
 <td></td>
 </tr>
 <tr>
 <td>TensorFlowOnYARN</td>
 <td></td>
+<td>TensorFlow</td>
+<td></td>
 <td></td>
 <td>是</td>
-<td></td>
 <td></td>
 </tr>
 <tr>
 <td>spark-deep-learning</td>
 <td></td>
 <td></td>
-<td>是</td>
 <td></td>
+<td></td>
+<td>是</td>
 <td></td>
 </tr>
 <tr>
 <td>XLearning</td>
 <td></td>
-<td>是</td>
-<td>是</td>
 <td></td>
+<td></td>
+<td>是</td>
+<td>是</td>
 <td></td>
 </tr>
 <tr>
 <td>Kubeflow</td>
 <td>是</td>
+<td></td>
+<td></td>
 <td>是</td>
 <td></td>
 <td>是</td>
+</tr>
+<tr>
+<td>TonY</td>
+<td>是</td>
+<td>TensorFlow、Pytorch、MXNet and Horovod</td>
+<td>java</td>
+<td></td>
+<td></td>
 <td></td>
 </tr>
 <tr>
 <td>tf-yarn</td>
 <td></td>
-<td></td>
-<td></td>
+<td>TensorFlow、Pytorch</td>
+<td>Python</td>
+<td>是</td>
 <td></td>
 </tr>
 </tbody>
@@ -742,27 +761,30 @@
 <li><p>支持HDFS的读写；由于YARN原生支持HDFS delegation token来访问Kerberorized HDFS, 下面文档里面提到了怎样可以方便地在运行时把所需要的配置文件mount到Docker container里面以支持访问Kerberorized HDFS. </p>
 </li>
 </ul>
-<h3 id="1-1-tf-yarn项目介绍"><a href="#1-1-tf-yarn项目介绍" class="headerlink" title="1.1 tf-yarn项目介绍"></a>1.1 tf-yarn项目介绍</h3><p>仅需几行代码即可在YARN上训练TensorFlow模型</p>
+<h2 id="第二部分-tf-yarn项目介绍"><a href="#第二部分-tf-yarn项目介绍" class="headerlink" title="第二部分 tf-yarn项目介绍"></a>第二部分 tf-yarn项目介绍</h2><p><code>tf-yarn</code>项目是<code>Criteo</code>公司（广告公司）开源的<code>Python</code>库，用来在<code>Hadoop/Yarn</code>上训练<code>Pytorch</code> 和<code>TensorFlow</code>模型。支持单机和分布式机器学习训练，支持<code>CPU</code>和<code>GPU</code>两种模式的计算资源。</p>
+<p>仅需几行代码即可在YARN上训练TensorFlow模型</p>
 <p><a href="https://medium.com/criteo-labs/train-tensorflow-models-on-yarn-in-just-a-few-lines-of-code-ba0f354f38e3" target="_blank" rel="noopener">https://medium.com/criteo-labs/train-tensorflow-models-on-yarn-in-just-a-few-lines-of-code-ba0f354f38e3</a></p>
-<h3 id="1-2-TonY项目介绍"><a href="#1-2-TonY项目介绍" class="headerlink" title="1.2 TonY项目介绍"></a>1.2 TonY项目介绍</h3><p>Open Sourcing TonY: Native Support of TensorFlow on Hadoop</p>
+<h2 id="第三部分-TonY项目介绍"><a href="#第三部分-TonY项目介绍" class="headerlink" title="第三部分 TonY项目介绍"></a>第三部分 <code>TonY</code>项目介绍</h2><p>Open Sourcing TonY: Native Support of TensorFlow on Hadoop</p>
 <p><a href="https://engineering.linkedin.com/blog/2018/09/open-sourcing-tony--native-support-of-tensorflow-on-hadoop" target="_blank" rel="noopener">https://engineering.linkedin.com/blog/2018/09/open-sourcing-tony--native-support-of-tensorflow-on-hadoop</a></p>
-<p>Yahoo的开源框架TensorFlowOnSpark（TFoS）支持在Spark和Hadoop集群上执行分布式Tensorflow。</p>
+<h2 id="第四部分-TensorFlowOnSpark项目介绍"><a href="#第四部分-TensorFlowOnSpark项目介绍" class="headerlink" title="第四部分 TensorFlowOnSpark项目介绍"></a>第四部分 TensorFlowOnSpark项目介绍</h2><p><a href="https://developer.yahoo.com/blogs/157196317141/" target="_blank" rel="noopener">https://developer.yahoo.com/blogs/157196317141/</a></p>
+<h2 id="第五部分-TensorFlowOnYARN项目介绍"><a href="#第五部分-TensorFlowOnYARN项目介绍" class="headerlink" title="第五部分 TensorFlowOnYARN项目介绍"></a>第五部分 TensorFlowOnYARN项目介绍</h2><h2 id="第六部分-TensorFlowOnSpark项目介绍"><a href="#第六部分-TensorFlowOnSpark项目介绍" class="headerlink" title="第六部分 TensorFlowOnSpark项目介绍"></a>第六部分 TensorFlowOnSpark项目介绍</h2><p>Yahoo的开源框架TensorFlowOnSpark（TFoS）支持在Spark和Hadoop集群上执行分布式Tensorflow。</p>
 <p>报错讨论：<a href="https://github.com/yahoo/TensorFlowOnSpark/issues/33" target="_blank" rel="noopener">https://github.com/yahoo/TensorFlowOnSpark/issues/33</a></p>
-<p><a href="https://www.cnblogs.com/heimianshusheng/p/6768019.html" target="_blank" rel="noopener">基于Hadoop分布式集群YARN模式下的TensorFlowOnSpark平台搭建</a></p>
+<h2 id="第七部分-spark-deep-learning"><a href="#第七部分-spark-deep-learning" class="headerlink" title="第七部分 spark-deep-learning"></a>第七部分 spark-deep-learning</h2><h2 id="第八部分-XLearning"><a href="#第八部分-XLearning" class="headerlink" title="第八部分 XLearning"></a>第八部分 XLearning</h2><p><a href="https://www.cnblogs.com/heimianshusheng/p/6768019.html" target="_blank" rel="noopener">基于Hadoop分布式集群YARN模式下的TensorFlowOnSpark平台搭建</a></p>
 <p><a href="https://www.cnblogs.com/libinggen/p/7824753.html" target="_blank" rel="noopener">学习笔记TF065:TensorFlowOnSpark</a></p>
-<p>yahoo <a href="https://www.tumblr.com/register/follow/yahoohadoop" target="_blank" rel="noopener">https://www.tumblr.com/register/follow/yahoohadoop</a></p>
+<h2 id="第九部分-Kubeflow项目介绍"><a href="#第九部分-Kubeflow项目介绍" class="headerlink" title="第九部分 Kubeflow项目介绍"></a>第九部分 Kubeflow项目介绍</h2><p>yahoo <a href="https://www.tumblr.com/register/follow/yahoohadoop" target="_blank" rel="noopener">https://www.tumblr.com/register/follow/yahoohadoop</a></p>
 <p>文章：</p>
 <p><a href="https://runitao.github.io/distributed-tensorflow.html" target="_blank" rel="noopener">https://runitao.github.io/distributed-tensorflow.html</a></p>
 <p><a href="https://blog.csdn.net/ChaosJ/article/details/104786247" target="_blank" rel="noopener">https://blog.csdn.net/ChaosJ/article/details/104786247</a></p>
 <p><a href="https://blog.csdn.net/karamos/article/details/80130751" target="_blank" rel="noopener">https://blog.csdn.net/karamos/article/details/80130751</a></p>
 <p><a href="https://www.infoq.cn/article/k4ulimanccimgfuqk_cd" target="_blank" rel="noopener">https://www.infoq.cn/article/k4ulimanccimgfuqk_cd</a></p>
-<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、Tensorflow on YARN Native Service - 可能目前最好的跑分布式Tensorflow训练的选择 <a href="https://www.jianshu.com/p/288b484d838b" target="_blank" rel="noopener">https://www.jianshu.com/p/288b484d838b</a></p>
+<h2 id="第十部分-总结"><a href="#第十部分-总结" class="headerlink" title="第十部分 总结"></a>第十部分 总结</h2><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、Tensorflow on YARN Native Service - 可能目前最好的跑分布式Tensorflow训练的选择 <a href="https://www.jianshu.com/p/288b484d838b" target="_blank" rel="noopener">https://www.jianshu.com/p/288b484d838b</a></p>
 <p>2、<a href="http://yahoohadoop.tumblr.com/post/157196317141/open-sourcing-tensorflowonspark-distributed-deep" target="_blank" rel="noopener">Open Sourcing TensorFlowOnSpark: Distributed Deep Learning on Big-Data Clusters</a> </p>
 <p>3、<a href="https://github.com/yahoo/TensorFlowOnSpark/wiki/GetStarted_YARN" target="_blank" rel="noopener">https://github.com/yahoo/TensorFlowOnSpark/wiki/GetStarted_YARN</a></p>
 <p>4、TensorFlowOnSpark 源码解析 链接：<a href="https://www.jianshu.com/p/72d153c284cd" target="_blank" rel="noopener">https://www.jianshu.com/p/72d153c284cd</a></p>
 <p>5、Tensorflow on Spark爬坑指南 链接：<a href="https://www.jianshu.com/p/72cb5816a0f7" target="_blank" rel="noopener">https://www.jianshu.com/p/72cb5816a0f7</a></p>
 <p>6、使用TensorFlowOnSpark进行深度学习 链接：<a href="https://kitwaicloud.github.io/tensorflow_on_spark/tensorflow_on_spark.html" target="_blank" rel="noopener">https://kitwaicloud.github.io/tensorflow_on_spark/tensorflow_on_spark.html</a></p>
 <p>7、学习笔记TF065: TensorFlowOnSpark 链接：<a href="https://cloud.tencent.com/developer/article/1006361" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1006361</a></p>
+<p>8、分布式机器学习：算法、理论与实践，链接：<a href="https://item.jd.com/12444377.html" target="_blank" rel="noopener">https://item.jd.com/12444377.html</a></p>
 
       
     </div>
@@ -799,8 +821,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/09/27/2021-10-01-信息论和位进制/" rel="next" title="信息论和位进制">
-                <i class="fa fa-chevron-left"></i> 信息论和位进制
+              <a href="/2021/09/27/2021-10-08-Redis集群部署和使用总结/" rel="next" title="Redis集群部署和使用总结">
+                <i class="fa fa-chevron-left"></i> Redis集群部署和使用总结
               </a>
             
           </div>
@@ -809,8 +831,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/09/27/2021-10-01-Consul集群搭建/" rel="prev" title="Consul集群搭建">
-                Consul集群搭建 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/09/27/2021-10-01-信息论和位进制/" rel="prev" title="信息论和位进制">
+                信息论和位进制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -890,7 +912,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">204</span>
+                    <span class="site-state-item-count">279</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1043,7 +1065,21 @@
                     
                       
                     
-                    <span class="site-state-item-count">70</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1096,7 +1132,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1190,7 +1228,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、双集群架构"><span class="nav-number">2.1.</span> <span class="nav-text">1、双集群架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、混合部署"><span class="nav-number">2.2.</span> <span class="nav-text">2、混合部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-开源框架介绍"><span class="nav-number">3.</span> <span class="nav-text">第一部分 开源框架介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-tf-yarn项目介绍"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 tf-yarn项目介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-TonY项目介绍"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 TonY项目介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">4.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、双集群架构"><span class="nav-number">2.1.</span> <span class="nav-text">1、双集群架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、混合部署"><span class="nav-number">2.2.</span> <span class="nav-text">2、混合部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-分布式机器学习"><span class="nav-number">3.</span> <span class="nav-text">第一部分 分布式机器学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-分布式机器学习"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 分布式机器学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-分布式TensorFlow"><span class="nav-number">3.2.</span> <span class="nav-text">1.2  分布式TensorFlow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-开源框架梳理"><span class="nav-number">3.3.</span> <span class="nav-text">1.3 开源框架梳理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-tf-yarn项目介绍"><span class="nav-number">4.</span> <span class="nav-text">第二部分 tf-yarn项目介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-TonY项目介绍"><span class="nav-number">5.</span> <span class="nav-text">第三部分 TonY项目介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-TensorFlowOnSpark项目介绍"><span class="nav-number">6.</span> <span class="nav-text">第四部分 TensorFlowOnSpark项目介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五部分-TensorFlowOnYARN项目介绍"><span class="nav-number">7.</span> <span class="nav-text">第五部分 TensorFlowOnYARN项目介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六部分-TensorFlowOnSpark项目介绍"><span class="nav-number">8.</span> <span class="nav-text">第六部分 TensorFlowOnSpark项目介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第七部分-spark-deep-learning"><span class="nav-number">9.</span> <span class="nav-text">第七部分 spark-deep-learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第八部分-XLearning"><span class="nav-number">10.</span> <span class="nav-text">第八部分 XLearning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第九部分-Kubeflow项目介绍"><span class="nav-number">11.</span> <span class="nav-text">第九部分 Kubeflow项目介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十部分-总结"><span class="nav-number">12.</span> <span class="nav-text">第十部分 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">13.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1223,7 +1261,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">666k</span>
+    <span title="站点总字数">878k</span>
   
 
   
@@ -1232,7 +1270,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">10:05</span>
+    <span title="站点阅读时长">13:19</span>
   
 </div>
 
@@ -1380,7 +1418,7 @@
   var disqus_config = function () {
     this.page.url = "https://zjrongxiang.github.io/2021/09/27/2021-09-27-Tensorflow on Yarn技术方案总结/";
     this.page.identifier = "2021/09/27/2021-09-27-Tensorflow on Yarn技术方案总结/";
-    this.page.title = 'Tensorflow on Yarn技术方案总结';
+    this.page.title = 'Tensorflow on Yarn技术方案调研总结';
     };
   function loadComments () {
     var d = document, s = d.createElement('script');

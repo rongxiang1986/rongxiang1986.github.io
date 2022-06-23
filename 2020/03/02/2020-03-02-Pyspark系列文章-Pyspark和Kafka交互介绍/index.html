@@ -119,7 +119,7 @@
 
   <meta name="description" content="目录 背景  第一部分  Receiver接口模式  第二部分  Direct接口模式  第三部分  PySpark和Kafka交互  第四部分   任务提交  参考文献及资料   背景Apache Kafka项目是大数据处理中重要的消息引擎。Spark Streaming作为重要的流处理计算框架通常和Kafka结合使用。Spark Streaming（新旧版本）支持Kafka的编程模型有两种：R">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PySpark和Kafka交互介绍">
+<meta property="og:title" content="PySpark和Kafka交互总结">
 <meta property="og:url" content="https://zjrongxiang.github.io/2020/03/02/2020-03-02-Pyspark系列文章-Pyspark和Kafka交互介绍/index.html">
 <meta property="og:site_name" content="RongXiang">
 <meta property="og:description" content="目录 背景  第一部分  Receiver接口模式  第二部分  Direct接口模式  第三部分  PySpark和Kafka交互  第四部分   任务提交  参考文献及资料   背景Apache Kafka项目是大数据处理中重要的消息引擎。Spark Streaming作为重要的流处理计算框架通常和Kafka结合使用。Spark Streaming（新旧版本）支持Kafka的编程模型有两种：R">
@@ -129,9 +129,9 @@
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/python的模块学习/picture/ReceiverWAL.png">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/python的模块学习/picture/Direct.png">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/python的模块学习/picture/spark-streaming-checkpoint-in-apache-spark-1.jpg">
-<meta property="og:updated_time" content="2021-08-16T18:54:34.028Z">
+<meta property="og:updated_time" content="2022-06-23T08:45:50.885Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PySpark和Kafka交互介绍">
+<meta name="twitter:title" content="PySpark和Kafka交互总结">
 <meta name="twitter:description" content="目录 背景  第一部分  Receiver接口模式  第二部分  Direct接口模式  第三部分  PySpark和Kafka交互  第四部分   任务提交  参考文献及资料   背景Apache Kafka项目是大数据处理中重要的消息引擎。Spark Streaming作为重要的流处理计算框架通常和Kafka结合使用。Spark Streaming（新旧版本）支持Kafka的编程模型有两种：R">
 <meta name="twitter:image" content="c:/Users/rongxiang/Desktop/python的模块学习/picture/SparkStreamingHistory.png">
 
@@ -152,7 +152,7 @@
   };
 </script>
 
-  <title>PySpark和Kafka交互介绍 | RongXiang</title>
+  <title>PySpark和Kafka交互总结 | RongXiang</title>
   
 
 
@@ -445,7 +445,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PySpark和Kafka交互介绍
+          <h1 class="post-title" itemprop="name headline">PySpark和Kafka交互总结
 
               
             
@@ -488,7 +488,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-08-17 02:54:34" itemprop="dateModified" datetime="2021-08-17T02:54:34+08:00">2021-08-17</time>
+                <time title="修改时间：2022-06-23 16:45:50" itemprop="dateModified" datetime="2022-06-23T16:45:50+08:00">2022-06-23</time>
               
             
           </span>
@@ -551,7 +551,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">47k</span>
+                <span title="本文字数">56k</span>
               
 
               
@@ -565,7 +565,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">42 分钟</span>
+                <span title="阅读时长">51 分钟</span>
               
             </div>
           
@@ -702,7 +702,7 @@
 <p><code>StreamingContext.getOrCreate(checkpointDirectory, lambda: functionToCreateContext())</code></p>
 <p>函数参数的具体含义就是：首先检查是否有checkpoint（即checkpointDirectory）。如果非空，StreamingContext从checkpointDirectory加载启动。如果没有执行函数<code>functionToCreateContext()</code>创建（函数中已经声明了创建逻辑）。具体数据流参考下图：</p>
 <p><img src="C:\Users\rongxiang\Desktop\python的模块学习\picture\spark-streaming-checkpoint-in-apache-spark-1.jpg" alt="spark-streaming-checkpoint-in-apache-spark-1"></p>
-<h3 id="3-4-其他持久化实现方式"><a href="#3-4-其他持久化实现方式" class="headerlink" title="3.4 其他持久化实现方式"></a>3.4 其他持久化实现方式</h3><p>除了checkpoint机制，例如下面代码将offset信息持久化到本地文件系统。需要注意的是该持久方式需要任务为Client模式提交集群，否则保存在Drive中本地文件系统会被集群回收。</p>
+<h3 id="3-4-自行管理offset状态"><a href="#3-4-自行管理offset状态" class="headerlink" title="3.4 自行管理offset状态"></a>3.4 自行管理offset状态</h3><p>除了checkpoint机制，例如下面代码将offset信息持久化到本地文件系统。需要注意的是该持久方式需要任务为Client模式提交集群，否则保存在Drive中本地文件系统会被集群回收。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> SparkContext</span><br><span class="line"><span class="keyword">from</span> pyspark.streaming <span class="keyword">import</span> StreamingContext</span><br><span class="line"><span class="keyword">from</span> pyspark.streaming.kafka <span class="keyword">import</span> KafkaUtils, TopicAndPartition</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line">broker_list = <span class="string">"xxxx"</span></span><br><span class="line">topic_name = <span class="string">"xxxx"</span></span><br><span class="line">timer = <span class="number">60</span></span><br><span class="line">offsetRanges = []</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">store_offset_ranges</span><span class="params">(rdd)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> offsetRanges</span><br><span class="line">    offsetRanges = rdd.offsetRanges()</span><br><span class="line">    <span class="keyword">return</span> rdd</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_offset_ranges</span><span class="params">(rdd)</span>:</span></span><br><span class="line">    root_path = os.path.dirname(os.path.realpath(__file__))</span><br><span class="line">    record_path = os.path.join(root_path, <span class="string">"offset.txt"</span>)</span><br><span class="line">    data = dict()</span><br><span class="line">    f = open(record_path, <span class="string">"w"</span>)</span><br><span class="line">    <span class="keyword">for</span> o <span class="keyword">in</span> offsetRanges:</span><br><span class="line">        data = &#123;<span class="string">"topic"</span>: o.topic, <span class="string">"partition"</span>: o.partition, <span class="string">"fromOffset"</span>: o.fromOffset, <span class="string">"untilOffset"</span>: o.untilOffset&#125;</span><br><span class="line">    f.write(json.dumps(data))</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">deal_data</span><span class="params">(rdd)</span>:</span></span><br><span class="line">    data = rdd.collect()</span><br><span class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> data:</span><br><span class="line">        <span class="comment"># do something</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_by_spark_streaming</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># 定义本地文件系统</span></span><br><span class="line">    root_path = os.path.dirname(os.path.realpath(__file__))</span><br><span class="line">    record_path = os.path.join(root_path, <span class="string">"offset.txt"</span>)</span><br><span class="line">    <span class="comment"># from_offsets = &#123;&#125;</span></span><br><span class="line">    <span class="comment"># 获取已有的offset，没有记录文件时则用默认值即最大值</span></span><br><span class="line">    <span class="keyword">if</span> os.path.exists(record_path):</span><br><span class="line">        f = open(record_path, <span class="string">"r"</span>)</span><br><span class="line">        offset_data = json.loads(f.read())</span><br><span class="line">        f.close()</span><br><span class="line">        <span class="keyword">if</span> offset_data[<span class="string">"topic"</span>] != topic_name:</span><br><span class="line">            <span class="keyword">raise</span> Exception(<span class="string">"the topic name in offset.txt is incorrect"</span>)</span><br><span class="line"></span><br><span class="line">        topic_partion = TopicAndPartition(offset_data[<span class="string">"topic"</span>], offset_data[<span class="string">"partition"</span>])</span><br><span class="line">        from_offsets = &#123;topic_partion: long(offset_data[<span class="string">"untilOffset"</span>])&#125;  </span><br><span class="line">        <span class="comment"># 注意设置起始offset时的方法</span></span><br><span class="line">        print(<span class="string">"start from offsets: %s"</span> % from_offsets)</span><br><span class="line"></span><br><span class="line">    sc = SparkContext(appName=<span class="string">"Realtime-Analytics-Engine"</span>)</span><br><span class="line">    ssc = StreamingContext(sc, int(timer))</span><br><span class="line"></span><br><span class="line">    kafkaStreams = KafkaUtils.createDirectStream(ssc=ssc, topics=[topic_name], fromOffsets=from_offsets,kafkaParams=&#123;<span class="string">"metadata.broker.list"</span>: broker_list&#125;)</span><br><span class="line">    kafkaStreams.foreachRDD(<span class="keyword">lambda</span> rec: deal_data(rec))</span><br><span class="line">    kafkaStreams.transform(store_offset_ranges).foreachRDD(save_offset_ranges)</span><br><span class="line"></span><br><span class="line">    ssc.start()</span><br><span class="line">    ssc.awaitTermination()</span><br><span class="line">    <span class="comment">#ssc.stop()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    save_by_spark_streaming()</span><br></pre></td></tr></table></figure>
 <p>上面的例子中，将offset信息以json格式持久化到文件系统中。实际生产中建议以二维表形式存储在Mysql等数据库中进行持久化（不再详细举例）。</p>
 <p>java 保存在mysql的例子</p>
@@ -710,6 +710,7 @@
 <p><a href="https://blog.csdn.net/lxb1022/article/details/78041168" target="_blank" rel="noopener">https://blog.csdn.net/lxb1022/article/details/78041168</a></p>
 <p>其他交互接口：</p>
 <p><a href="https://www.cnblogs.com/yanshw/p/11929180.html" target="_blank" rel="noopener">https://www.cnblogs.com/yanshw/p/11929180.html</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> SimpleClient</span><br><span class="line"><span class="keyword">from</span> kafka.structs <span class="keyword">import</span> OffsetRequestPayload</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pyspark.streaming.kafka <span class="keyword">import</span> KafkaUtils, TopicAndPartition</span><br><span class="line"><span class="keyword">from</span> pyspark.streaming <span class="keyword">import</span> StreamingContext</span><br><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> SparkContext</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> algo_core.utils.hbase_util <span class="keyword">import</span> HappyBaseUtil  <span class="comment"># 自己封装的happybase包</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_offsets</span><span class="params">(topic_name, group_id, offset_ranges, hbase_table_name)</span>:</span></span><br><span class="line">    happybase_util = HappyBaseUtil()</span><br><span class="line">    <span class="keyword">for</span> offset <span class="keyword">in</span> offset_ranges:</span><br><span class="line">        happybase_util.put(hbase_table_name, topic_name+<span class="string">"_"</span>+group_id, &#123;<span class="string">"offsets:"</span>+str(offset.partition): str(offset.untilOffset)&#125;)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_last_committed_offsets</span><span class="params">(topic_name, group_id, hbase_table_name)</span>:</span></span><br><span class="line">    <span class="comment"># client = SimpleClient('localhost:9092')</span></span><br><span class="line">    client = SimpleClient([<span class="string">"xxxxx:9092"</span>,<span class="string">"xxxxx:9092"</span>,<span class="string">"xxxxx:9092"</span>])</span><br><span class="line">    <span class="comment"># 获取zookeeper中kafka topic的partition</span></span><br><span class="line">    topic_partition_ids = client.get_partition_ids_for_topic(topic_name)</span><br><span class="line"></span><br><span class="line">    happybase_util = HappyBaseUtil()</span><br><span class="line">    <span class="comment"># 获取hbase存放的kafka topic的partition</span></span><br><span class="line">    partition_offset_values = happybase_util.get_row(hbase_table_name, row=topic_name+<span class="string">"_"</span>+group_id)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(partition_offset_values) == <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># 第一次运行处理</span></span><br><span class="line">        partitions = client.topic_partitions[topic_name]</span><br><span class="line">        offset_requests = [OffsetRequestPayload(topic_name, p, <span class="number">-1</span>, <span class="number">1</span>) <span class="keyword">for</span> p <span class="keyword">in</span> partitions.keys()]</span><br><span class="line">        offsets_responses = client.send_offset_request(offset_requests)</span><br><span class="line">        offsets = dict((TopicAndPartition(topic_name, r.partition), r.offsets[<span class="number">0</span>]) <span class="keyword">for</span> r <span class="keyword">in</span> offsets_responses)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">elif</span> len(partition_offset_values) &lt; len(topic_partition_ids):</span><br><span class="line">        <span class="comment"># 如果hbase中partition个数小于zookeeper中partition的个数，说明有新增的partition，新增的partition偏移量设为0</span></span><br><span class="line">        offsets = dict((TopicAndPartition(topic_name, int(k.decode(<span class="string">"utf-8"</span>).split(<span class="string">":"</span>)[<span class="number">1</span>])), int(v))</span><br><span class="line">                       <span class="keyword">for</span> k, v <span class="keyword">in</span> partition_offset_values.items())</span><br><span class="line">        extra_partitions = dict((TopicAndPartition(topic_name, i), <span class="number">0</span>)</span><br><span class="line">                                <span class="keyword">for</span> i <span class="keyword">in</span> range(len(topic_partition_ids), len(partition_offset_values)))</span><br><span class="line">        offsets.update(extra_partitions)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        offsets = dict((TopicAndPartition(topic_name, int(k.decode(<span class="string">"utf-8"</span>).split(<span class="string">":"</span>)[<span class="number">1</span>])), int(v))</span><br><span class="line">                       <span class="keyword">for</span> k, v <span class="keyword">in</span> partition_offset_values.items())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> offsets</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    sc = SparkContext(appName=<span class="string">"test"</span>)</span><br><span class="line">    sc.setLogLevel(<span class="string">"WARN"</span>)</span><br><span class="line">    ssc = StreamingContext(sc, <span class="number">5</span>)</span><br><span class="line">    <span class="comment"># kafka_params = &#123;"metadata.broker.list": "localhost:9092"&#125;</span></span><br><span class="line">    kafka_params = &#123;<span class="string">"metadata.broker.list"</span>: <span class="string">"xxxxx:9092,xxxxx:9092,xxxxx:9092"</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># fromOffset = get_last_committed_offsets("test", "test-id", "stream_kafka_offsets")</span></span><br><span class="line">    fromOffset = get_last_committed_offsets(<span class="string">"mytopic"</span>, <span class="string">"test-group-2"</span>, <span class="string">"stream_kafka_offsets"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># kafkaStream = KafkaUtils.createDirectStream(ssc, ["test"], kafka_params, fromOffsets=fromOffset)</span></span><br><span class="line">    kafkaStream = KafkaUtils.createDirectStream(ssc, [<span class="string">"mytopic"</span>], kafka_params, fromOffsets=fromOffset)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">inner_func</span><span class="params">(rdd)</span>:</span></span><br><span class="line">        rdd.foreach(<span class="keyword">lambda</span> x: print(x))</span><br><span class="line">        save_offsets(<span class="string">"mytopic"</span>, <span class="string">"test-group-2"</span>, rdd.offsetRanges(),<span class="string">"stream_kafka_offsets"</span>)</span><br><span class="line"></span><br><span class="line">    kafkaStream.foreachRDD(inner_func)</span><br><span class="line"></span><br><span class="line">    ssc.start()</span><br><span class="line">    ssc.awaitTermination()</span><br></pre></td></tr></table></figure>
 <h2 id="第四部分-任务的提交"><a href="#第四部分-任务的提交" class="headerlink" title="第四部分 任务的提交"></a>第四部分 任务的提交</h2><h3 id="4-1-兼容性"><a href="#4-1-兼容性" class="headerlink" title="4.1 兼容性"></a>4.1 兼容性</h3><p>Spark 针对 Kafka 的不同版本（主要还是以<code>0.8</code>版本为重要分界线），提供了两种方案：<code>spark-streaming-kafka-0-8</code> 和 <code>spark-streaming-kafka-0-10</code>，其主要区别如下：</p>
 <table>
 <thead>
@@ -840,8 +841,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/03/07/2020-03-07-Elasticsearch系列文章-集群升级指引/" rel="prev" title="Elasticsearch集群升级指引">
-                Elasticsearch集群升级指引 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/03/02/2022-05-25-Spark源码编译实践/" rel="prev" title="Spark源码编译实践">
+                Spark源码编译实践 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -921,7 +922,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">204</span>
+                    <span class="site-state-item-count">279</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1074,7 +1075,21 @@
                     
                       
                     
-                    <span class="site-state-item-count">70</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1127,7 +1142,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1221,7 +1238,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-0-Kafka的Consumer-API"><span class="nav-number">2.1.</span> <span class="nav-text">0.0 Kafka的Consumer API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Receiver模式"><span class="nav-number">3.</span> <span class="nav-text">第一部分  Receiver模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-原始方式"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 原始方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-预写日志（WAL）模式"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 预写日志（WAL）模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Direct模式"><span class="nav-number">4.</span> <span class="nav-text">第二部分  Direct模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Direct模式介绍"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 Direct模式介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-两种方式的比较"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 两种方式的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-PySpark和Kafka交互"><span class="nav-number">5.</span> <span class="nav-text">第三部分  PySpark和Kafka交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-PySpark中Receiver接口"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 PySpark中Receiver接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-接口说明"><span class="nav-number">5.1.1.</span> <span class="nav-text">3.1.1 接口说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-案例介绍"><span class="nav-number">5.1.2.</span> <span class="nav-text">3.1.2 案例介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-PySpark中Direct接口"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 PySpark中Direct接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-接口说明"><span class="nav-number">5.2.1.</span> <span class="nav-text">3.2.1 接口说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-案例介绍"><span class="nav-number">5.2.2.</span> <span class="nav-text">3.2.2 案例介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-checkpoint机制"><span class="nav-number">5.3.</span> <span class="nav-text">3.3 checkpoint机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-持久化（persist）和Checkpoint机制"><span class="nav-number">5.3.1.</span> <span class="nav-text">3.3.1 持久化（persist）和Checkpoint机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-2-Checkpoint机制的实现"><span class="nav-number">5.3.2.</span> <span class="nav-text">3.3.2 Checkpoint机制的实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-其他持久化实现方式"><span class="nav-number">5.4.</span> <span class="nav-text">3.4 其他持久化实现方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-任务的提交"><span class="nav-number">6.</span> <span class="nav-text">第四部分 任务的提交</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-兼容性"><span class="nav-number">6.1.</span> <span class="nav-text">4.1 兼容性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-任务提交案例"><span class="nav-number">6.2.</span> <span class="nav-text">4.2 任务提交案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-参数调优建议"><span class="nav-number">6.3.</span> <span class="nav-text">4.3 参数调优建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">7.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-0-Kafka的Consumer-API"><span class="nav-number">2.1.</span> <span class="nav-text">0.0 Kafka的Consumer API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Receiver模式"><span class="nav-number">3.</span> <span class="nav-text">第一部分  Receiver模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-原始方式"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 原始方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-预写日志（WAL）模式"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 预写日志（WAL）模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Direct模式"><span class="nav-number">4.</span> <span class="nav-text">第二部分  Direct模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Direct模式介绍"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 Direct模式介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-两种方式的比较"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 两种方式的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-PySpark和Kafka交互"><span class="nav-number">5.</span> <span class="nav-text">第三部分  PySpark和Kafka交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-PySpark中Receiver接口"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 PySpark中Receiver接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-接口说明"><span class="nav-number">5.1.1.</span> <span class="nav-text">3.1.1 接口说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-案例介绍"><span class="nav-number">5.1.2.</span> <span class="nav-text">3.1.2 案例介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-PySpark中Direct接口"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 PySpark中Direct接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-接口说明"><span class="nav-number">5.2.1.</span> <span class="nav-text">3.2.1 接口说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-案例介绍"><span class="nav-number">5.2.2.</span> <span class="nav-text">3.2.2 案例介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-checkpoint机制"><span class="nav-number">5.3.</span> <span class="nav-text">3.3 checkpoint机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-持久化（persist）和Checkpoint机制"><span class="nav-number">5.3.1.</span> <span class="nav-text">3.3.1 持久化（persist）和Checkpoint机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-2-Checkpoint机制的实现"><span class="nav-number">5.3.2.</span> <span class="nav-text">3.3.2 Checkpoint机制的实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-自行管理offset状态"><span class="nav-number">5.4.</span> <span class="nav-text">3.4 自行管理offset状态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-任务的提交"><span class="nav-number">6.</span> <span class="nav-text">第四部分 任务的提交</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-兼容性"><span class="nav-number">6.1.</span> <span class="nav-text">4.1 兼容性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-任务提交案例"><span class="nav-number">6.2.</span> <span class="nav-text">4.2 任务提交案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-参数调优建议"><span class="nav-number">6.3.</span> <span class="nav-text">4.3 参数调优建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">7.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1254,7 +1271,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">666k</span>
+    <span title="站点总字数">878k</span>
   
 
   
@@ -1263,7 +1280,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">10:05</span>
+    <span title="站点阅读时长">13:19</span>
   
 </div>
 
@@ -1411,7 +1428,7 @@
   var disqus_config = function () {
     this.page.url = "https://zjrongxiang.github.io/2020/03/02/2020-03-02-Pyspark系列文章-Pyspark和Kafka交互介绍/";
     this.page.identifier = "2020/03/02/2020-03-02-Pyspark系列文章-Pyspark和Kafka交互介绍/";
-    this.page.title = 'PySpark和Kafka交互介绍';
+    this.page.title = 'PySpark和Kafka交互总结';
     };
   function loadComments () {
     var d = document, s = d.createElement('script');

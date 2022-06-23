@@ -124,7 +124,7 @@
 <meta property="og:site_name" content="RongXiang">
 <meta property="og:description" content="目录 背景 第一部分  静态分区 第二部分 动态分区 第三部分 两者的比较 第四部分 动态分区使用的问题 参考文献及资料  背景在Hive中有两种类型的分区：静态分区(Static Partitioning)和动态分区(Dynamic Partitioning)。  静态分区。对于静态分区，从字面就可以理解：表的分区数量和分区值是固定的。 动态分区。会根据数据自动的创建新的分区。  本文会详细介绍">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-10-21T12:08:05.398Z">
+<meta property="og:updated_time" content="2022-01-27T06:43:30.599Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hive中静态分区和动态分区总结">
 <meta name="twitter:description" content="目录 背景 第一部分  静态分区 第二部分 动态分区 第三部分 两者的比较 第四部分 动态分区使用的问题 参考文献及资料  背景在Hive中有两种类型的分区：静态分区(Static Partitioning)和动态分区(Dynamic Partitioning)。  静态分区。对于静态分区，从字面就可以理解：表的分区数量和分区值是固定的。 动态分区。会根据数据自动的创建新的分区。  本文会详细介绍">
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-10-21 20:08:05" itemprop="dateModified" datetime="2020-10-21T20:08:05+08:00">2020-10-21</time>
+                <time title="修改时间：2022-01-27 14:43:30" itemprop="dateModified" datetime="2022-01-27T14:43:30+08:00">2022-01-27</time>
               
             
           </span>
@@ -600,7 +600,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive &gt; insert overwrite table order_partition partition (year,month) select order_id, order_date, order_status, substr(order_date,1,4) year, substr(order_date,5,2) month from orders;</span><br><span class="line"></span><br><span class="line">FAILED: SemanticException [Error 10096]: Dynamic partition strict mode requires at least one static partition column. To turn this off <span class="keyword">set</span> hive.exec.dynamic.partition.mode=nonstrict</span><br></pre></td></tr></table></figure>
 <p>写入报错。这是因为Hive默认配置不启用动态分区，需要使用前开启配置。开启的方式有两种：</p>
 <ul>
-<li><p>在hive服务配置文件中全局配置；</p>
+<li><p>在Hive服务配置文件中全局配置；</p>
 </li>
 <li><p>每次交互时候进行配置（只影响本次交互）；</p>
 </li>
@@ -631,10 +631,10 @@
 </tbody>
 </table>
 <p>另外动态分区的值是<code>MapReduce</code>任务在<code>reduce</code>运行阶段确定的，也就是所有的记录都会<code>distribute by</code>，相同字段(分区字段)的<code>map</code>输出会发到同一个<code>reduce</code>节点去处理，如果数据量大，这是一个很弱的运行性能。而静态分区在编译阶段就确定了，不需要<code>reduce</code>任务处理。所以如果实际业务场景静态分区能解决的，尽量使用静态分区即可。</p>
-<h2 id="第四部分-动态分区使用的问题"><a href="#第四部分-动态分区使用的问题" class="headerlink" title="第四部分 动态分区使用的问题"></a>第四部分 动态分区使用的问题</h2><p>Hive表中分区架构使得数据按照分区分别存储在<code>HDFS</code>文件系统的各个目录中，查询只要针对指定的目录集合进行查询，而不需要全局查找，提高查询性能。</p>
+<h2 id="第四部分-动态分区使用的问题"><a href="#第四部分-动态分区使用的问题" class="headerlink" title="第四部分 动态分区使用的问题"></a>第四部分 动态分区使用的问题</h2><p><code>Hive</code>表中分区架构，使得数据按照分区分别存储在<code>HDFS</code>文件系统的各个目录中，查询只要针对指定的目录集合进行查询，而不需要全局查找，提高查询性能。</p>
 <p>但是分区不是”银弹”，如果分区数据过多，就会在<code>HDFS</code>文件系统中创建大量的目录和文件，对于集群<code>NameNode</code>服务是有性能压力的，<code>NameNode</code>需要将大量元数据信息保留在内存中。另外大分区表在用户查询时候由于分析<code>size</code>太大，也容易造成<code>Metastore</code>服务出现<code>OMM</code>报错。</p>
 <p>上面两个现象均在生产环境发生，分别造成<code>NameNode</code>和<code>Metastore</code>不可用。</p>
-<p>事实上，Hive为了防止异常生产大量分区，甚至默认动态分区是关闭的。另外对于生成动态分区的数量也做了性能默认限制。</p>
+<p>事实上，<code>Hive</code>为了防止异常生产大量分区，甚至默认动态分区是关闭的。另外对于生成动态分区的数量也做了性能默认限制。</p>
 <h3 id="4-1-动态分区创建限制"><a href="#4-1-动态分区创建限制" class="headerlink" title="4.1 动态分区创建限制"></a>4.1 动态分区创建限制</h3><p>当我们在一个<code>Mapreduce</code>任务（<code>hive</code>写入会编译成<code>mapreduce</code>任务）中创建大量分区的时候，经常会遇到下面的报错信息：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2015-06-15 17:27:44,614 ERROR [LocalJobRunner Map Task Executor #0]: mr.ExecMapper (ExecMapper.java:map(171)) - org.apache.hadoop.hive.ql.metadata.HiveException: Hive Runtime Error while processing row ....</span><br><span class="line">Caused by: org.apache.hadoop.hive.ql.metadata.HiveFatalException: [Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. The maximum number of dynamic partitions is controlled by hive.exec.max.dynamic.partitions and hive.exec.max.dynamic.partitions.pernode. Maximum was set to: 256... 10 more</span><br></pre></td></tr></table></figure>
 <p>这个报错就是因为Hive对于动态分区创建的限制，涉及的参数有：</p>
@@ -710,8 +710,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/10/03/2020-10-03-Docker系列文章-Dockerfile总结/" rel="prev" title="使用Dockerfile定制docker镜像总结">
-                使用Dockerfile定制docker镜像总结 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/10/02/2021-04-29-Elasticsearch集群pending_task任务等待集群故障处理/" rel="prev" title="Elasticsearch集群pending_task任务等待集群故障处理">
+                Elasticsearch集群pending_task任务等待集群故障处理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -791,7 +791,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">204</span>
+                    <span class="site-state-item-count">279</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -944,7 +944,21 @@
                     
                       
                     
-                    <span class="site-state-item-count">70</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -997,7 +1011,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1124,7 +1140,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">666k</span>
+    <span title="站点总字数">878k</span>
   
 
   
@@ -1133,7 +1149,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">10:05</span>
+    <span title="站点阅读时长">13:19</span>
   
 </div>
 
