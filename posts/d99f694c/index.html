@@ -117,17 +117,19 @@
 
 
 
-  <meta name="description" content="目录 背景 第一部分    第二部分  第三部分  参考文献及资料  背景https://blog.csdn.net/zhanyuanlin/article/details/78799341 https://blog.csdn.net/zhanyuanlin/article/details/78799131 https://blog.csdn.net/u010770993/article/deta">
+  <meta name="description" content="目录 背景 第一部分    第二部分  第三部分  参考文献及资料  背景在数据处理中，我们经常有这样的需求，判断某个元素是否在一个指定集合中。最朴素的处理方法是首先存储指定集合中数据，然后查找集合中数据，如有数据和查找元素相等即归属于该集合。 在数学中，如果只利用集合的定义属性，查找只能通过穷举遍历。如果集合元素较大，势必会影响查找的性能。 这时候对于集合数据类型使用特殊的数据架构实现，这就是H">
 <meta property="og:type" content="article">
 <meta property="og:title" content="布隆过滤算法总结">
 <meta property="og:url" content="https://zjrongxiang.github.io/posts/d99f694c/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="目录 背景 第一部分    第二部分  第三部分  参考文献及资料  背景https://blog.csdn.net/zhanyuanlin/article/details/78799341 https://blog.csdn.net/zhanyuanlin/article/details/78799131 https://blog.csdn.net/u010770993/article/deta">
+<meta property="og:description" content="目录 背景 第一部分    第二部分  第三部分  参考文献及资料  背景在数据处理中，我们经常有这样的需求，判断某个元素是否在一个指定集合中。最朴素的处理方法是首先存储指定集合中数据，然后查找集合中数据，如有数据和查找元素相等即归属于该集合。 在数学中，如果只利用集合的定义属性，查找只能通过穷举遍历。如果集合元素较大，势必会影响查找的性能。 这时候对于集合数据类型使用特殊的数据架构实现，这就是H">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2022-10-25T15:01:28.567Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019120520321867.jpg">
+<meta property="og:updated_time" content="2022-10-25T15:01:29.474Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="布隆过滤算法总结">
-<meta name="twitter:description" content="目录 背景 第一部分    第二部分  第三部分  参考文献及资料  背景https://blog.csdn.net/zhanyuanlin/article/details/78799341 https://blog.csdn.net/zhanyuanlin/article/details/78799131 https://blog.csdn.net/u010770993/article/deta">
+<meta name="twitter:description" content="目录 背景 第一部分    第二部分  第三部分  参考文献及资料  背景在数据处理中，我们经常有这样的需求，判断某个元素是否在一个指定集合中。最朴素的处理方法是首先存储指定集合中数据，然后查找集合中数据，如有数据和查找元素相等即归属于该集合。 在数学中，如果只利用集合的定义属性，查找只能通过穷举遍历。如果集合元素较大，势必会影响查找的性能。 这时候对于集合数据类型使用特殊的数据架构实现，这就是H">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2019120520321867.jpg">
 
 
 
@@ -482,7 +484,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-10-25 23:01:28" itemprop="dateModified" datetime="2022-10-25T23:01:28+08:00">2022-10-25</time>
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
               
             
           </span>
@@ -545,7 +547,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">1.1k</span>
+                <span title="本文字数">11k</span>
               
 
               
@@ -559,7 +561,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">1 分钟</span>
+                <span title="阅读时长">10 分钟</span>
               
             </div>
           
@@ -586,9 +588,68 @@
 <li>第三部分 </li>
 <li>参考文献及资料</li>
 </ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://blog.csdn.net/zhanyuanlin/article/details/78799341" target="_blank" rel="noopener">https://blog.csdn.net/zhanyuanlin/article/details/78799341</a></p>
-<p><a href="https://blog.csdn.net/zhanyuanlin/article/details/78799131" target="_blank" rel="noopener">https://blog.csdn.net/zhanyuanlin/article/details/78799131</a></p>
-<p><a href="https://blog.csdn.net/u010770993/article/details/70312473" target="_blank" rel="noopener">https://blog.csdn.net/u010770993/article/details/70312473</a></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在数据处理中，我们经常有这样的需求，判断某个元素是否在一个指定集合中。最朴素的处理方法是首先存储指定集合中数据，然后查找集合中数据，如有数据和查找元素相等即归属于该集合。</p>
+<p>在数学中，如果只利用集合的定义属性，查找只能通过穷举遍历。如果集合元素较大，势必会影响查找的性能。</p>
+<p>这时候对于集合数据类型使用特殊的数据架构实现，这就是Hash表（散列表）。集合数据结构由三个部分组成：</p>
+<ul>
+<li>数据坐标集合B。</li>
+<li>原始数据集合A。</li>
+<li>Hash Function。hash函数是原始集合A到坐标集合的映射。</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/2019120520321867.jpg" alt="https://img-blog.csdnimg.cn/2019120520321867.jpg"></p>
+<p>在这种数据结构下，判断元素是否属于指定集合，只需要计算该元素在hash函数作用下的坐标值。而这个坐标设置为数组的坐标，通过数组坐标就可以获取这个地址空间存储的值，最后判断是否和元素相等。</p>
+<blockquote>
+<p>上面是最朴素的原理，在实际中由于hash函数的特点，存在集合A中不同值在hash函数映射下，坐标值可能是相同的，这就是hash冲突。具体细节后续介绍。</p>
+</blockquote>
+<p>Hash表的实现本质思想是“空间换取时间”，对于特别大的集合，这种换取需要海量的内存存储空间。例如经常列举的案例就是垃圾邮件过滤场景。</p>
+<p>引用自吴军的《数学之美》。<code>Yahoo</code>, <code>Hotmail</code> 和 <code>Gmail</code> 等公众电子邮件提供商，需要过滤垃圾邮件。一个办法就是记录下那些发垃圾邮件的 email 地址。由于那些发送者不停地在注册新的地址，全世界少说也有几十亿个发垃圾邮件的地址，将他们都存起来则需要大量的存储。如果用哈希表，每存储一亿 个 email 地址， 就需要 1.6 GB 的内存（用哈希表实现的具体办法是将每一个 email 地址对应成一个八字节的信息指纹， 然后将这些信息指纹存入哈希表，由于哈希表的存储效率一般只有 50%，因此一个 email 地址需要占用十六个字节。一亿个地址大约要 1.6 GB内存资源）。因此存储几十亿个邮件地址可能需要上百 GB 的内存。</p>
+<p>那么我们重新分析一下我们业务场景，实际核心需求是：<strong>判断元素是否重复，并不需要存储集合中具体数据</strong>。</p>
+<p>数据坐标集合B，在数学中我们有很多实现方式（空间坐标等）。但是在计算机科学中，我们需要使用基础数据结构和运算方式。布隆（Burton Howard Bloom）在1970年提出布隆过滤器算法，算法中使用位阵列（Bit Array）作为坐标集合。接下来我们将详细介绍。</p>
+<h2 id="第一部分-Hash函数"><a href="#第一部分-Hash函数" class="headerlink" title="第一部分 Hash函数"></a>第一部分 Hash函数</h2><h3 id="1-1-Hash函数定义"><a href="#1-1-Hash函数定义" class="headerlink" title="1.1 Hash函数定义"></a>1.1 Hash函数定义</h3><p>Hash函数，通常音译为哈希函数（也有翻译成：散列函数）。Hash函数首先是数学意义上的函数：<br>$$<br>Hash\ Function\ F：A-&gt;B<br>$$<br>其中定义域集合A是不等长的字符串集合，而值域集合B中字符串是固定长度。</p>
+<p>理论上满足这样的函数的海量的，我们在挑选好的Hash函数时，通常有下面的标准：</p>
+<ul>
+<li>Hash函数在计算值域的时候是高效的（对于长度为n的字符串计算时间复杂度应为O(n)）。</li>
+<li>确定性。对于任何给定的输入，哈希函数必须始终给出相同的结果。即函数值的确定性。</li>
+<li>Hash碰撞概率低。由于值域集合中字符串是固定长度的，那么肯定是一个有限集合。例如<code>SHA256</code>算法值域大小（集合的势）为<code>2^256</code>。在我们进行<code>2^256+1</code>次输入时，必然会发生一次碰撞（$$x!=y,F(x)=F(y)$$）。所以选取的Hash函数针对具体场景，需要具有较低的碰撞概率。</li>
+<li>隐蔽性。通俗的讲就是不能通过函数值F(x)，反向计算出x。这就是计算理论和密码学中单向函数概念。由于这个特性Hash函数大量应用于加密场景。</li>
+<li>值域集合分布均匀。谈到分布那么值域空间就引入了距离的概念。通俗的讲就是点与点之间打散在空间中，没有聚集现象。</li>
+</ul>
+<p>Hash函数将一个空间A中的数据映射到另一个空间B（坐标空间）中数据，通常集合B小于集合A（集合的势）。数据空间A定义成Hash表，在数据初始化和插入过程需要计算Hash坐标，并存储。这就完成了将计算时间（或计算消耗）转换成存储空间的思想。</p>
+<h3 id="1-2-Hash函数种类"><a href="#1-2-Hash函数种类" class="headerlink" title="1.2 Hash函数种类"></a>1.2 Hash函数种类</h3><p>通常按照Hash函数的实现原理分为：加法Hash、位运算Hash、乘法Hash、除法Hash、查表Hash、混合Hash。</p>
+<h4 id="1-2-1-加法Hash"><a href="#1-2-1-加法Hash" class="headerlink" title="1.2.1 加法Hash"></a>1.2.1 加法Hash</h4><p>Hash将字符串字符相加并处理后形成结果。下面案例同余质数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    System.out.println(additiveHash(<span class="string">"Secure Hash Algorit"</span>,<span class="number">19</span>));</span><br><span class="line">    <span class="comment">// 输出3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">additiveHash</span><span class="params">(String key, <span class="keyword">int</span> prime)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> hash,i;</span><br><span class="line">    <span class="keyword">for</span>(hash=key.length(),i=<span class="number">0</span>;i&lt;key.length();i++)&#123;</span><br><span class="line">        hash+=key.charAt(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> hash%prime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-2-位运算Hash"><a href="#1-2-2-位运算Hash" class="headerlink" title="1.2.2 位运算Hash"></a>1.2.2 位运算Hash</h4><p>这类型Hash函数通过利用各种位运算（常见的是移位和异或等）来充分的变换输入元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    System.out.println(rotatingHash(<span class="string">"Secure Hash Algorit"</span>,<span class="number">19</span>));</span><br><span class="line">    <span class="comment">//6</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">rotatingHash</span><span class="params">(String key,<span class="keyword">int</span> prime)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> hash,i;</span><br><span class="line">    <span class="keyword">for</span>(hash = key.length(),i=<span class="number">0</span>;i&lt;key.length();i++)&#123;</span><br><span class="line">        hash=(hash&lt;&lt;<span class="number">1</span>)^(hash&gt;&gt;<span class="number">10</span>)^key.charAt(i)&amp;key.charAt(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> hash%prime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-3-乘法Hash"><a href="#1-2-3-乘法Hash" class="headerlink" title="1.2.3 乘法Hash"></a>1.2.3 乘法Hash</h4><p>这种类型的Hash函数利用了乘法的不相关性.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    System.out.println(bernstein(<span class="string">"Secure Hash Algorit"</span>));</span><br><span class="line">    <span class="comment">//361558494</span></span><br><span class="line">&#125;    </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">bernstein</span><span class="params">(String key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> hash=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;key.length();i++)&#123;</span><br><span class="line">        hash=hash*<span class="number">10</span>+key.charAt(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> hash;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-4-除法Hash"><a href="#1-2-4-除法Hash" class="headerlink" title="1.2.4 除法Hash"></a>1.2.4 除法Hash</h4><p>因为除法太慢，这种方式几乎找不到真正的应用。</p>
+<h4 id="1-2-5-查表Hash"><a href="#1-2-5-查表Hash" class="headerlink" title="1.2.5 查表Hash"></a>1.2.5 查表Hash</h4><p>查表Hash中有名的例子有：Universal Hashing和Zobrist Hashing。他们的表格都是随机生成的。</p>
+<h4 id="1-2-6-混合Hash"><a href="#1-2-6-混合Hash" class="headerlink" title="1.2.6 混合Hash"></a>1.2.6 混合Hash</h4><p>混合Hash算法利用了以上各种方式。各种常见的Hash算法，比如MD5、Tiger都属于这个范围。它们一般很少在面向查找的Hash函数里面使用。</p>
+<h3 id="1-3-Hash函数应用"><a href="#1-3-Hash函数应用" class="headerlink" title="1.3 Hash函数应用"></a>1.3 Hash函数应用</h3><p>Hash函数主要应用有：</p>
+<ul>
+<li><p><strong>安全加密</strong></p>
+<p>密钥加密通常使用MD5和SHA系列算法。SHA系列有五个算法，分别是 SHA-1、SHA-224、SHA-256、SHA-384，和SHA-512。后四者有时并称为 SHA-2。SHA-1在许多安全协定中广为使用，包括 TLS/SSL 等，是 MD5 的后继者。</p>
+<p>SHA-256可能是所有加密哈希函数中最著名的，因为它已在区块链技术中广泛使用。中本聪的原始比特币协议中使用了它。</p>
+</li>
+<li><p><strong>唯一标识</strong></p>
+<p>文件之类的二进制数据做 md5 处理，作为唯一标识，这样判定重复文件的时候更快捷。</p>
+</li>
+<li><p><strong>数据校验</strong></p>
+<p>比如从网上下载的很多文件（尤其是P2P站点资源），都会包含一个 MD5 值，用于校验下载数据的完整性，避免数据在中途被劫持篡改。</p>
+</li>
+<li><p><strong>分布式缓存</strong></p>
+<p>分布式缓存和其他机器或数据库的分布式不一样，因为每台机器存放的缓存数据不一致，每当缓存机器扩容时，需要对缓存存放机器进行重新索引（或者部分重新索引），这里应用到的也是哈希算法的思想。</p>
+</li>
+<li><p><strong>负载均衡</strong></p>
+<p>对于同一个客户端上的请求，尤其是已登录用户的请求，需要将其会话请求都路由到同一台机器，以保证数据的一致性，这可以借助哈希算法来实现，通过用户 ID 尾号对总机器数取模（取多少位可以根据机器数定），将结果值作为机器编号。</p>
+</li>
+</ul>
+<h2 id="第二部分-布隆过滤"><a href="#第二部分-布隆过滤" class="headerlink" title="第二部分 布隆过滤"></a>第二部分 布隆过滤</h2><h3 id="2-1-原理"><a href="#2-1-原理" class="headerlink" title="2.1 原理"></a>2.1 原理</h3><p>前文我们讨论了“判断某个元素是否在一个指定集合中”问题的实现思路。在数据量较小的情况下，我们可以使用经典的<code>HashMap</code>数据结构。对于大量数据场景下，布隆（Burton Howard Bloom）在1970年提出布隆过滤器算法。</p>
+<h3 id="2-2-Java实现"><a href="#2-2-Java实现" class="headerlink" title="2.2 Java实现"></a>2.2 Java实现</h3><h3 id="2-2-布隆过滤的应用"><a href="#2-2-布隆过滤的应用" class="headerlink" title="2.2 布隆过滤的应用"></a>2.2 布隆过滤的应用</h3><p>Google 著名的分布式数据库 Bigtable 使用了布隆过滤器来查找不存在的行或列，以减少磁盘查找的IO次数［3］。</p>
+<p>Squid 网页代理缓存服务器在 <a href="http://wiki.squid-cache.org/SquidFaq/CacheDigests" target="_blank" rel="noopener">cache digests </a>中使用了也布隆过滤器［4］。</p>
+<p>Venti 文档存储系统也采用布隆过滤器来检测先前存储的数据［5］。</p>
+<p>SPIN 模型检测器也使用布隆过滤器在大规模验证问题时跟踪可达状态空间［6］。</p>
+<p>Google Chrome浏览器使用了布隆过滤器加速安全浏览服务［7］。</p>
 <h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、数学之美二十一：布隆过滤器（Bloom Filter）：<a href="http://www.google.com.hk/ggblog/googlechinablog/2007/07/bloom-filter_7469.html" target="_blank" rel="noopener">http://www.google.com.hk/ggblog/googlechinablog/2007/07/bloom-filter_7469.html</a></p>
 
       
@@ -636,8 +697,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/posts/28cb1b18/" rel="prev" title="HDFS小文件治理总结">
-                HDFS小文件治理总结 <i class="fa fa-chevron-right"></i>
+              <a href="/posts/d99f694c/" rel="prev" title="布隆过滤算法总结">
+                布隆过滤算法总结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1039,7 +1100,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">3.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Hash函数"><span class="nav-number">3.</span> <span class="nav-text">第一部分 Hash函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Hash函数定义"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 Hash函数定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Hash函数种类"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 Hash函数种类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-加法Hash"><span class="nav-number">3.2.1.</span> <span class="nav-text">1.2.1 加法Hash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-位运算Hash"><span class="nav-number">3.2.2.</span> <span class="nav-text">1.2.2 位运算Hash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-乘法Hash"><span class="nav-number">3.2.3.</span> <span class="nav-text">1.2.3 乘法Hash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-4-除法Hash"><span class="nav-number">3.2.4.</span> <span class="nav-text">1.2.4 除法Hash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-5-查表Hash"><span class="nav-number">3.2.5.</span> <span class="nav-text">1.2.5 查表Hash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-6-混合Hash"><span class="nav-number">3.2.6.</span> <span class="nav-text">1.2.6 混合Hash</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Hash函数应用"><span class="nav-number">3.3.</span> <span class="nav-text">1.3 Hash函数应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-布隆过滤"><span class="nav-number">4.</span> <span class="nav-text">第二部分 布隆过滤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-原理"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Java实现"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 Java实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-布隆过滤的应用"><span class="nav-number">4.3.</span> <span class="nav-text">2.2 布隆过滤的应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">5.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>

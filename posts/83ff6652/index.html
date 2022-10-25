@@ -117,17 +117,17 @@
 
 
 
-  <meta name="description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景https://cloud.tencent.com/developer/article/1350441 参考文献及资料1、 Apache Spark support，链接">
+  <meta name="description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景\4. hive 从非分区表插入数据到分区表时出错： Cannot insert into target table because column number/types are different ‘’分区名’’: Table insclause-0 has 2 columns, but query">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Yarn上长任务报Token失效问题总结(Invalid AMRMToken)">
 <meta property="og:url" content="https://zjrongxiang.github.io/posts/83ff6652/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景https://cloud.tencent.com/developer/article/1350441 参考文献及资料1、 Apache Spark support，链接">
+<meta property="og:description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景\4. hive 从非分区表插入数据到分区表时出错： Cannot insert into target table because column number/types are different ‘’分区名’’: Table insclause-0 has 2 columns, but query">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2022-10-25T15:01:28.660Z">
+<meta property="og:updated_time" content="2022-10-25T15:01:28.667Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Yarn上长任务报Token失效问题总结(Invalid AMRMToken)">
-<meta name="twitter:description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景https://cloud.tencent.com/developer/article/1350441 参考文献及资料1、 Apache Spark support，链接">
+<meta name="twitter:description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景\4. hive 从非分区表插入数据到分区表时出错： Cannot insert into target table because column number/types are different ‘’分区名’’: Table insclause-0 has 2 columns, but query">
 
 
 
@@ -545,7 +545,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">509</span>
+                <span title="本文字数">2.3k</span>
               
 
               
@@ -559,7 +559,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">1 分钟</span>
+                <span title="阅读时长">2 分钟</span>
               
             </div>
           
@@ -586,7 +586,21 @@
 <li>第三部分 任务提交</li>
 <li>参考文献及资料</li>
 </ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://cloud.tencent.com/developer/article/1350441" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1350441</a></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>\4. hive 从非分区表插入数据到分区表时出错：</p>
+<p>Cannot insert into target table because column number/types are different ‘’分区名’’: Table insclause-0 has 2 columns, but query has 3 columns.</p>
+<p>首先解释一下这个错误：因为hive的分区列是作为元信息存放在mysql中的，<strong>他们并不在数据文件中</strong>，相反他们以子目录的名字被使用，因此你的<strong>分区表实际含有的数据列，注意是数据列是不包含分区列的</strong>，所以在你向分区表插入数据时，不能插入分区列；</p>
+<p>举个简单的例子：体育课上站队时，老师经常让男生、女生各站一队，你觉得有必要再给他们每一个人加上一个性别的标签吗？</p>
+<p>下面是stackoverflow上大神关于这个问题的解释：</p>
+<p> <strong>*\</strong>*In Hive the partitioning “columns” are managed as** **metadata** **&gt;&gt; they are not included in the data files, instead they are used as sub-directory names. So your partitioned table has just 2 real columns, and you must feed just 2 columns with your SELECT.**<em>**</em></p>
+<p>比如你的非分区表non_part的内容如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">id</span>	<span class="string">name	sex</span></span><br><span class="line"><span class="attr">1</span>	<span class="string">tom 	M</span></span><br><span class="line"><span class="attr">2</span>	<span class="string">mary	F</span></span><br></pre></td></tr></table></figure>
+<p><strong>假如你的分区表part是以sex来分区的，当你想把以上非分区表中的数据插入到分区表中：</strong></p>
+<p><strong>你应该：insert into table part partition(sex=’M’) select id,name from non_part where sex=’M’;（对，你要插入的就是两列，分区列不作为数据保存在数据表中）</strong></p>
+<p><strong><em>\</em>而不是\</strong>*<em>：****insert into table part partition(sex=’M’) select  \</em>  from non_part where sex=’M’;****</p>
+<p>另外需要注意的地方：</p>
+<p>1.从非分区表插入数据到分区表时hive会将HiveQL转换为MR来执行的,官方提示Hive-on-MR在将来可能不再被支持；</p>
+<p>2.只要是向分区表内装数据，无论是load还是insert都要<strong>在表名后指明分区名</strong>；而且load时，会将你要load的文件内的所有内容放在指定的分区下；</p>
+<p><a href="https://www.cnblogs.com/lemonu/p/11279979.html" target="_blank" rel="noopener">https://www.cnblogs.com/lemonu/p/11279979.html</a></p>
 <h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、 Apache Spark support，链接</p>
 
       
@@ -624,8 +638,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/441cb89d/" rel="next" title="HDFS Federation架构介绍">
-                <i class="fa fa-chevron-left"></i> HDFS Federation架构介绍
+              <a href="/posts/9d888129/" rel="next" title="Hive的分区和分桶总结">
+                <i class="fa fa-chevron-left"></i> Hive的分区和分桶总结
               </a>
             
           </div>

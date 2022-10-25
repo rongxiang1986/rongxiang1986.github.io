@@ -286,13 +286,13 @@
   </entry>
   
   <entry>
-    <title>Python系列文章-NeuralProphet时间序列预测包使用</title>
-    <link href="https://zjrongxiang.github.io/posts/e0a9b868/"/>
-    <id>https://zjrongxiang.github.io/posts/e0a9b868/</id>
+    <title>Python系列文章-Prophet时间序列预测包使用</title>
+    <link href="https://zjrongxiang.github.io/posts/1894f56d/"/>
+    <id>https://zjrongxiang.github.io/posts/1894f56d/</id>
     <published>2022-10-03T14:42:00.000Z</published>
-    <updated>2022-10-25T15:01:29.264Z</updated>
+    <updated>2022-10-25T15:01:29.275Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>NeuralProphet之一：安装与使用</p><p>论文PDF： NeuralProphet: Explainable Forecasting at Scale 文档地址：<a href="https://neuralprophet.com/html/contents.html" target="_blank" rel="noopener">https://neuralprophet.com/html/contents.html</a><br>数据地址：<a href="https://github.com/ourownstory/neuralprophet-data" target="_blank" rel="noopener">https://github.com/ourownstory/neuralprophet-data</a><br>示例地址：<a href="https://github.com/ourownstory/neural_prophet/tree/main/tutorials" target="_blank" rel="noopener">https://github.com/ourownstory/neural_prophet/tree/main/tutorials</a></p><p>1 概述<br>NeuralProphet模型集成了Prophet的所有优点，不仅具有不错的可解释性，还有优于Prophet的预测性能。</p><p>使用PyTorch作为后端进行优化的梯度下降法。<br>使用AR-Net对时间序列的自相关进行建模。<br>使用seepearate前馈神经网络对滞后回归者进行建模。<br>可配置的FFNNs非线性深层。<br>可调整到特定的预测范围（大于1）。<br>自定义损失和指标。<br>2 安装<br>pip install neuralprophet<br>1.<br>3 使用<br>导入包：</p><p>from neuralprophet import<br>1.<br>调用：</p><p>m = NeuralProphet()<br>metrics = m.fit(df)<br>forecast = m.predict(df)<br>1.<br>2.<br>3.<br>可视化结果：</p><p>fig_forecast = m.plot(forecast)<br>fig_components = m.plot_components(forecast)<br>fig_model = m.plot_parameters()<br>1.<br>2.<br>3.<br>预测：</p><p>m = NeuralProphet().fit(df, freq=”D”)<br>df_future = m.make_future_dataframe(df, periods=30)<br>forecast = m.predict(df_future)<br>fig_forecast = m.plot(forecast)</p><h2 id="超参数"><a href="#超参数" class="headerlink" title="超参数"></a>超参数</h2><p><a href="https://blog.51cto.com/shanglianlm/5605590" target="_blank" rel="noopener">https://blog.51cto.com/shanglianlm/5605590</a></p><p><a href="https://zhuanlan.zhihu.com/p/333210630" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/333210630</a></p><table><thead><tr><th>Parameter</th><th>Default Value</th><th>说明</th><th>备注</th></tr></thead><tbody><tr><td>growth</td><td>linear</td><td></td><td></td></tr><tr><td>changepoints</td><td>None</td><td>手动设置改变点</td><td></td></tr><tr><td>n_changepoints</td><td>5</td><td>控制趋势灵活度</td><td></td></tr><tr><td>changepoints_range</td><td>0.8</td><td>默认值0.8，表示后20%的训练数据无changepoints</td><td></td></tr><tr><td>trend_reg</td><td>0</td><td>趋势正则项</td><td></td></tr><tr><td>trend_reg_threshold</td><td>False</td><td></td><td></td></tr><tr><td>yearly_seasonality</td><td>auto</td><td>默认6</td><td></td></tr><tr><td>weekly_seasonality</td><td>auto</td><td>默认 4</td><td></td></tr><tr><td>daily_seasonality</td><td>auto</td><td>默认6</td><td></td></tr><tr><td>seasonality_mode</td><td>additive</td><td></td><td>additive，multiplicative</td></tr><tr><td>seasonality_reg</td><td>0</td><td>值越大正则约束越大</td><td>0.1-1或者1-100</td></tr><tr><td>n_forecasts</td><td>1</td><td>预测范围，1意味着将来预测一步</td><td></td></tr><tr><td>n_lags</td><td>0</td><td>定义是否使用AR-Net，n_lags决定AR-Net回看步数，建议取值大于n_forecasts</td><td></td></tr><tr><td>num_hidden_layers</td><td>0</td><td>定义FFNNs的隐藏层数，0意味着只有一个隐藏层</td><td>0，1，2</td></tr><tr><td>d_hidden</td><td>None</td><td>隐藏层的单元数，如果未指定，默认为n_lags + n_forecasts</td><td>n_lags 和 n_forecasts 之间</td></tr><tr><td>ar_sparsity</td><td>None</td><td>0完全稀疏，1无正则约束</td><td>0-1</td></tr><tr><td>learning_rate</td><td>None</td><td>如果未指定，自动调整</td><td></td></tr><tr><td>epochs</td><td>None</td><td>如果未指定，根据数据大小设定</td><td></td></tr><tr><td>batch_size</td><td>None</td><td></td><td></td></tr><tr><td>loss_func</td><td>Huber</td><td>如果未指定，根据数据大小设定</td><td>Huber， MSE，torch.nn.modules.loss</td></tr><tr><td>optimizer</td><td>AdamW</td><td></td><td>AdamW，SDG</td></tr><tr><td>train_speed</td><td>None</td><td></td><td></td></tr><tr><td>normalize</td><td>auto</td><td>min-max normalization</td><td></td></tr><tr><td>impute_missing</td><td>True</td><td>惩罚缺失值</td><td></td></tr><tr><td>collect_metrics</td><td>True</td><td>默认计算mae 和 rmse</td></tr></tbody></table><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、官网介绍：<a href="https://github.com/ourownstory/neural_prophet" target="_blank" rel="noopener">https://github.com/ourownstory/neural_prophet</a></p><p><a href="https://github.com/ourownstory/neural_prophet/tree/main/tutorials" target="_blank" rel="noopener">https://github.com/ourownstory/neural_prophet/tree/main/tutorials</a></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://blog.csdn.net/qq_20948717/article/details/89286268" target="_blank" rel="noopener">https://blog.csdn.net/qq_20948717/article/details/89286268</a></p><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、变量官网介绍：</p>]]></content>
     
     <summary type="html">
     
@@ -342,13 +342,13 @@
   </entry>
   
   <entry>
-    <title>翻译系列文章-NeuralProphet-可解释的大规模预测</title>
-    <link href="https://zjrongxiang.github.io/posts/657c48b5/"/>
-    <id>https://zjrongxiang.github.io/posts/657c48b5/</id>
+    <title>Python系列文章-NeuralProphet时间序列预测包使用</title>
+    <link href="https://zjrongxiang.github.io/posts/e0a9b868/"/>
+    <id>https://zjrongxiang.github.io/posts/e0a9b868/</id>
     <published>2022-10-03T14:42:00.000Z</published>
-    <updated>2022-10-25T15:01:29.282Z</updated>
+    <updated>2022-10-25T15:01:29.264Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本位介绍了<code>Neural Prophet</code>，它是 <code>Facebook Prophet</code> 的继任者，它设定了行业标准用于可解释、可扩展和用户友好的预测框架。随着时间序列数据的增长，可解释的预测仍然是业务和运营决策指定中的一项具有挑战性的任务。需要混合解决方案来弥合可解释的经典方法之间的差距和可扩展的深度学习模型。我们将 Prophet 视为这种解决方案的先驱。然而，Prophet 缺乏当地背景，这对于预测近期未来至关重要且具有挑战性由于其 Stan 后端而扩展。</p><p>NeuralProphet 是一个基于 PyTorch 并经过标准训练的混合预测框架深度学习方法，使开发人员可以轻松扩展框架。本地环境引入了自回归和协变量模块，可以配置为经典线性回归或作为神经网络。否则NeuralProphet 保留了设计理念Prophet 并提供相同的基本模型组件。</p><p>我们的结果表明，NeuralProphet 产生可解释的预测成分在一组生成的时间序列上与 Prophet 相当或更高的质量。 NeuralProphet 表现出色Prophet 对真实世界数据集的多样化集合。对于中短期预测，NeuralProphet 将预测准确性提高了 55% 到 92%。</p><p>关键字：Explainable, Forecasting, Neural networks, Time series, Deep learning</p><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="1-1-背景"><a href="#1-1-背景" class="headerlink" title="1.1 背景"></a>1.1 背景</h3><p>时间序列数据在大多数工业领域都很重要，虽然在</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">时间序列数据在大多数工业领域都很突出。虽然在理论上进行了广泛研究</span><br><span class="line">和经济等应用，工业应用中的实际预测尚未收到</span><br><span class="line">直到最近才受到广泛关注。</span><br></pre></td></tr></table></figure><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、官网介绍：<a href="https://github.com/ourownstory/neural_prophet" target="_blank" rel="noopener">https://github.com/ourownstory/neural_prophet</a></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>NeuralProphet之一：安装与使用</p><p>论文PDF： NeuralProphet: Explainable Forecasting at Scale 文档地址：<a href="https://neuralprophet.com/html/contents.html" target="_blank" rel="noopener">https://neuralprophet.com/html/contents.html</a><br>数据地址：<a href="https://github.com/ourownstory/neuralprophet-data" target="_blank" rel="noopener">https://github.com/ourownstory/neuralprophet-data</a><br>示例地址：<a href="https://github.com/ourownstory/neural_prophet/tree/main/tutorials" target="_blank" rel="noopener">https://github.com/ourownstory/neural_prophet/tree/main/tutorials</a></p><p>1 概述<br>NeuralProphet模型集成了Prophet的所有优点，不仅具有不错的可解释性，还有优于Prophet的预测性能。</p><p>使用PyTorch作为后端进行优化的梯度下降法。<br>使用AR-Net对时间序列的自相关进行建模。<br>使用seepearate前馈神经网络对滞后回归者进行建模。<br>可配置的FFNNs非线性深层。<br>可调整到特定的预测范围（大于1）。<br>自定义损失和指标。<br>2 安装<br>pip install neuralprophet<br>1.<br>3 使用<br>导入包：</p><p>from neuralprophet import<br>1.<br>调用：</p><p>m = NeuralProphet()<br>metrics = m.fit(df)<br>forecast = m.predict(df)<br>1.<br>2.<br>3.<br>可视化结果：</p><p>fig_forecast = m.plot(forecast)<br>fig_components = m.plot_components(forecast)<br>fig_model = m.plot_parameters()<br>1.<br>2.<br>3.<br>预测：</p><p>m = NeuralProphet().fit(df, freq=”D”)<br>df_future = m.make_future_dataframe(df, periods=30)<br>forecast = m.predict(df_future)<br>fig_forecast = m.plot(forecast)</p><h2 id="超参数"><a href="#超参数" class="headerlink" title="超参数"></a>超参数</h2><p><a href="https://blog.51cto.com/shanglianlm/5605590" target="_blank" rel="noopener">https://blog.51cto.com/shanglianlm/5605590</a></p><p><a href="https://zhuanlan.zhihu.com/p/333210630" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/333210630</a></p><table><thead><tr><th>Parameter</th><th>Default Value</th><th>说明</th><th>备注</th></tr></thead><tbody><tr><td>growth</td><td>linear</td><td></td><td></td></tr><tr><td>changepoints</td><td>None</td><td>手动设置改变点</td><td></td></tr><tr><td>n_changepoints</td><td>5</td><td>控制趋势灵活度</td><td></td></tr><tr><td>changepoints_range</td><td>0.8</td><td>默认值0.8，表示后20%的训练数据无changepoints</td><td></td></tr><tr><td>trend_reg</td><td>0</td><td>趋势正则项</td><td></td></tr><tr><td>trend_reg_threshold</td><td>False</td><td></td><td></td></tr><tr><td>yearly_seasonality</td><td>auto</td><td>默认6</td><td></td></tr><tr><td>weekly_seasonality</td><td>auto</td><td>默认 4</td><td></td></tr><tr><td>daily_seasonality</td><td>auto</td><td>默认6</td><td></td></tr><tr><td>seasonality_mode</td><td>additive</td><td></td><td>additive，multiplicative</td></tr><tr><td>seasonality_reg</td><td>0</td><td>值越大正则约束越大</td><td>0.1-1或者1-100</td></tr><tr><td>n_forecasts</td><td>1</td><td>预测范围，1意味着将来预测一步</td><td></td></tr><tr><td>n_lags</td><td>0</td><td>定义是否使用AR-Net，n_lags决定AR-Net回看步数，建议取值大于n_forecasts</td><td></td></tr><tr><td>num_hidden_layers</td><td>0</td><td>定义FFNNs的隐藏层数，0意味着只有一个隐藏层</td><td>0，1，2</td></tr><tr><td>d_hidden</td><td>None</td><td>隐藏层的单元数，如果未指定，默认为n_lags + n_forecasts</td><td>n_lags 和 n_forecasts 之间</td></tr><tr><td>ar_sparsity</td><td>None</td><td>0完全稀疏，1无正则约束</td><td>0-1</td></tr><tr><td>learning_rate</td><td>None</td><td>如果未指定，自动调整</td><td></td></tr><tr><td>epochs</td><td>None</td><td>如果未指定，根据数据大小设定</td><td></td></tr><tr><td>batch_size</td><td>None</td><td></td><td></td></tr><tr><td>loss_func</td><td>Huber</td><td>如果未指定，根据数据大小设定</td><td>Huber， MSE，torch.nn.modules.loss</td></tr><tr><td>optimizer</td><td>AdamW</td><td></td><td>AdamW，SDG</td></tr><tr><td>train_speed</td><td>None</td><td></td><td></td></tr><tr><td>normalize</td><td>auto</td><td>min-max normalization</td><td></td></tr><tr><td>impute_missing</td><td>True</td><td>惩罚缺失值</td><td></td></tr><tr><td>collect_metrics</td><td>True</td><td>默认计算mae 和 rmse</td></tr></tbody></table><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、官网介绍：<a href="https://github.com/ourownstory/neural_prophet" target="_blank" rel="noopener">https://github.com/ourownstory/neural_prophet</a></p><p><a href="https://github.com/ourownstory/neural_prophet/tree/main/tutorials" target="_blank" rel="noopener">https://github.com/ourownstory/neural_prophet/tree/main/tutorials</a></p>]]></content>
     
     <summary type="html">
     
@@ -370,13 +370,13 @@
   </entry>
   
   <entry>
-    <title>Python系列文章-Prophet时间序列预测包使用</title>
-    <link href="https://zjrongxiang.github.io/posts/1894f56d/"/>
-    <id>https://zjrongxiang.github.io/posts/1894f56d/</id>
+    <title>翻译系列文章-NeuralProphet-可解释的大规模预测</title>
+    <link href="https://zjrongxiang.github.io/posts/657c48b5/"/>
+    <id>https://zjrongxiang.github.io/posts/657c48b5/</id>
     <published>2022-10-03T14:42:00.000Z</published>
-    <updated>2022-10-25T15:01:29.275Z</updated>
+    <updated>2022-10-25T15:01:29.282Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://blog.csdn.net/qq_20948717/article/details/89286268" target="_blank" rel="noopener">https://blog.csdn.net/qq_20948717/article/details/89286268</a></p><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、变量官网介绍：</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本位介绍了<code>Neural Prophet</code>，它是 <code>Facebook Prophet</code> 的继任者，它设定了行业标准用于可解释、可扩展和用户友好的预测框架。随着时间序列数据的增长，可解释的预测仍然是业务和运营决策指定中的一项具有挑战性的任务。需要混合解决方案来弥合可解释的经典方法之间的差距和可扩展的深度学习模型。我们将 Prophet 视为这种解决方案的先驱。然而，Prophet 缺乏当地背景，这对于预测近期未来至关重要且具有挑战性由于其 Stan 后端而扩展。</p><p>NeuralProphet 是一个基于 PyTorch 并经过标准训练的混合预测框架深度学习方法，使开发人员可以轻松扩展框架。本地环境引入了自回归和协变量模块，可以配置为经典线性回归或作为神经网络。否则NeuralProphet 保留了设计理念Prophet 并提供相同的基本模型组件。</p><p>我们的结果表明，NeuralProphet 产生可解释的预测成分在一组生成的时间序列上与 Prophet 相当或更高的质量。 NeuralProphet 表现出色Prophet 对真实世界数据集的多样化集合。对于中短期预测，NeuralProphet 将预测准确性提高了 55% 到 92%。</p><p>关键字：Explainable, Forecasting, Neural networks, Time series, Deep learning</p><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="1-1-背景"><a href="#1-1-背景" class="headerlink" title="1.1 背景"></a>1.1 背景</h3><p>时间序列数据在大多数工业领域都很重要，虽然在</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">时间序列数据在大多数工业领域都很突出。虽然在理论上进行了广泛研究</span><br><span class="line">和经济等应用，工业应用中的实际预测尚未收到</span><br><span class="line">直到最近才受到广泛关注。</span><br></pre></td></tr></table></figure><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、官网介绍：<a href="https://github.com/ourownstory/neural_prophet" target="_blank" rel="noopener">https://github.com/ourownstory/neural_prophet</a></p>]]></content>
     
     <summary type="html">
     
@@ -430,34 +430,6 @@
     <link href="https://zjrongxiang.github.io/posts/90ac3682/"/>
     <id>https://zjrongxiang.github.io/posts/90ac3682/</id>
     <published>2022-09-11T14:42:00.000Z</published>
-    <updated>2022-10-25T15:01:29.242Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>python的字符串前面加f表示格式化字符串，加f后可以在字符串里面使用用花括号括起来的变量和表达式，如果字符串里面没有表达式，那么前面加不加f输出应该都一样.</p><p>Python3.6新增了一种f-字符串格式化</p><p>格式化的字符串文字前缀为’f’和接受的格式字符串相似str.format()。它们包含由花括号包围的替换区域。替换字段是表达式，在运行时进行评估，然后使用format()协议进行格式化。</p><p>formatted string literals, 以 f 开头，包含的{}表达式在程序运行时会被表达式的值代替。</p><p>。。。。。。。。。。</p><p>print(f’max row:{ws.max_row}’)</p><p>for row in ws[‘d1:d6’]:</p><p>   for cell in row:</p><pre><code>cell.value=f&quot;=VLOOKUP(A{cell.row},G:J,4,0)&quot;</code></pre><p>。。。。。。。。。。。。</p><p>另外：</p><p>1、字符串前加 u<br>例：u”我是含有中文字符组成的字符串。”</p><p>作用：</p><p>后面字符串以 Unicode 格式 进行编码，一般用在中文字符串前面，防止因为源码储存格式问题，导致再次使用时出现乱码。</p><p>2、字符串前加 r<br>例：r”\n\n\n\n”　　# 表示一个普通生字符串 \n\n\n\n，而不表示换行了。</p><p>作用：</p><p>去掉反斜杠的转义机制。</p><p>（特殊字符：即那些，反斜杠加上对应字母，表示对应的特殊含义的，比如最常见的”\n”表示换行，”\t”表示Tab等。 ）</p><p>应用：</p><p>常用于正则表达式，对应着re模块。</p><p>3、字符串前加 b<br>例: response = b’</p><h1>Hello World!</h1>‘     # b’ ‘ 表示这是一个 bytes 对象<p></p><p>作用：</p><p>b” “前缀表示：后面字符串是bytes 类型。</p><p>用处：</p><p>网络编程中，服务器和浏览器只认bytes 类型数据。</p><p>如：send 函数的参数和 recv 函数的返回值都是 bytes 类型</p><p>附：</p><p>在 Python3 中，bytes 和 str 的互相转换方式是</p><p>str.encode(‘utf-8’)</p><h2 id="bytes-decode-‘utf-8’"><a href="#bytes-decode-‘utf-8’" class="headerlink" title="bytes.decode(‘utf-8’)"></a>bytes.decode(‘utf-8’)</h2><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、变量官网介绍：</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;目录&quot;&gt;&lt;a href=&quot;#目录&quot; class=&quot;headerlink&quot; title=&quot;目录&quot;&gt;&lt;/a&gt;目录&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;背景&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;第一部分   第一个项目&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;第二部分  总结&lt;/p
-      
-    
-    </summary>
-    
-      <category term="Python" scheme="https://zjrongxiang.github.io/categories/Python/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Python系列文章-Python字符串修饰符总结</title>
-    <link href="https://zjrongxiang.github.io/posts/90ac3682/"/>
-    <id>https://zjrongxiang.github.io/posts/90ac3682/</id>
-    <published>2022-09-11T14:42:00.000Z</published>
     <updated>2022-10-25T15:01:29.252Z</updated>
     
     <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://github.com/folospace/ChineseHoliday" target="_blank" rel="noopener">https://github.com/folospace/ChineseHoliday</a></p><p><a href="https://github.com/LKI/chinese-calendar" target="_blank" rel="noopener">https://github.com/LKI/chinese-calendar</a></p><p><a href="https://github.com/topics/chinese-holiday" target="_blank" rel="noopener">https://github.com/topics/chinese-holiday</a></p><p><a href="https://github.com/NateScarlet/holiday-cn/blob/17a8557d17a20a0dea08c7b99dfe223bd3572fc5/fetch_holidays.py#L14" target="_blank" rel="noopener">https://github.com/NateScarlet/holiday-cn/blob/17a8557d17a20a0dea08c7b99dfe223bd3572fc5/fetch_holidays.py#L14</a></p><p><a href="https://github.com/longweiqiang/get_holiday_cn" target="_blank" rel="noopener">https://github.com/longweiqiang/get_holiday_cn</a></p><p><a href="https://github.com/chariothy/Chinese-holiday" target="_blank" rel="noopener">https://github.com/chariothy/Chinese-holiday</a></p><p><a href="https://github.com/qinst64/chinaholiday" target="_blank" rel="noopener">https://github.com/qinst64/chinaholiday</a></p><p><a href="https://github.com/lanceliao/china-holiday-calender" target="_blank" rel="noopener">https://github.com/lanceliao/china-holiday-calender</a></p><p><a href="https://github.com/xbf321/iCal" target="_blank" rel="noopener">https://github.com/xbf321/iCal</a></p><p><a href="https://github.com/Diluka/chinese-holidays-ics" target="_blank" rel="noopener">https://github.com/Diluka/chinese-holidays-ics</a></p><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、变量官网介绍：</p>]]></content>
@@ -489,6 +461,34 @@
     <updated>2022-10-25T15:01:29.245Z</updated>
     
     <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://new.qq.com/omn/20210223/20210223A09YTD00.html" target="_blank" rel="noopener">https://new.qq.com/omn/20210223/20210223A09YTD00.html</a></p><p><a href="https://freewechat.com/a/MzAwNDMxNDkxNQ==/2247501341/1" target="_blank" rel="noopener">https://freewechat.com/a/MzAwNDMxNDkxNQ==/2247501341/1</a></p><p><a href="https://www.sohu.com/a/294180422_260616" target="_blank" rel="noopener">https://www.sohu.com/a/294180422_260616</a></p><p><a href="https://www.thepaper.cn/newsDetail_forward_3734368" target="_blank" rel="noopener">https://www.thepaper.cn/newsDetail_forward_3734368</a></p><p><a href="https://www.thepaper.cn/newsDetail_forward_1968007" target="_blank" rel="noopener">https://www.thepaper.cn/newsDetail_forward_1968007</a></p><p>## </p><p>1、变量官网介绍：</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;目录&quot;&gt;&lt;a href=&quot;#目录&quot; class=&quot;headerlink&quot; title=&quot;目录&quot;&gt;&lt;/a&gt;目录&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;背景&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;第一部分   第一个项目&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;第二部分  总结&lt;/p
+      
+    
+    </summary>
+    
+      <category term="Python" scheme="https://zjrongxiang.github.io/categories/Python/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Python系列文章-Python字符串修饰符总结</title>
+    <link href="https://zjrongxiang.github.io/posts/90ac3682/"/>
+    <id>https://zjrongxiang.github.io/posts/90ac3682/</id>
+    <published>2022-09-11T14:42:00.000Z</published>
+    <updated>2022-10-25T15:01:29.242Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul><li><p>背景</p></li><li><p>第一部分   第一个项目</p></li><li><p>第二部分  总结</p></li><li><p>参考文献及资料</p></li></ul><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>python的字符串前面加f表示格式化字符串，加f后可以在字符串里面使用用花括号括起来的变量和表达式，如果字符串里面没有表达式，那么前面加不加f输出应该都一样.</p><p>Python3.6新增了一种f-字符串格式化</p><p>格式化的字符串文字前缀为’f’和接受的格式字符串相似str.format()。它们包含由花括号包围的替换区域。替换字段是表达式，在运行时进行评估，然后使用format()协议进行格式化。</p><p>formatted string literals, 以 f 开头，包含的{}表达式在程序运行时会被表达式的值代替。</p><p>。。。。。。。。。。</p><p>print(f’max row:{ws.max_row}’)</p><p>for row in ws[‘d1:d6’]:</p><p>   for cell in row:</p><pre><code>cell.value=f&quot;=VLOOKUP(A{cell.row},G:J,4,0)&quot;</code></pre><p>。。。。。。。。。。。。</p><p>另外：</p><p>1、字符串前加 u<br>例：u”我是含有中文字符组成的字符串。”</p><p>作用：</p><p>后面字符串以 Unicode 格式 进行编码，一般用在中文字符串前面，防止因为源码储存格式问题，导致再次使用时出现乱码。</p><p>2、字符串前加 r<br>例：r”\n\n\n\n”　　# 表示一个普通生字符串 \n\n\n\n，而不表示换行了。</p><p>作用：</p><p>去掉反斜杠的转义机制。</p><p>（特殊字符：即那些，反斜杠加上对应字母，表示对应的特殊含义的，比如最常见的”\n”表示换行，”\t”表示Tab等。 ）</p><p>应用：</p><p>常用于正则表达式，对应着re模块。</p><p>3、字符串前加 b<br>例: response = b’</p><h1>Hello World!</h1>‘     # b’ ‘ 表示这是一个 bytes 对象<p></p><p>作用：</p><p>b” “前缀表示：后面字符串是bytes 类型。</p><p>用处：</p><p>网络编程中，服务器和浏览器只认bytes 类型数据。</p><p>如：send 函数的参数和 recv 函数的返回值都是 bytes 类型</p><p>附：</p><p>在 Python3 中，bytes 和 str 的互相转换方式是</p><p>str.encode(‘utf-8’)</p><h2 id="bytes-decode-‘utf-8’"><a href="#bytes-decode-‘utf-8’" class="headerlink" title="bytes.decode(‘utf-8’)"></a>bytes.decode(‘utf-8’)</h2><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、变量官网介绍：</p>]]></content>
     
     <summary type="html">
     

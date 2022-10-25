@@ -117,45 +117,18 @@
 
 
 
-  <meta name="description" content="背景在数据科学中，需要对数据空间中点度量差异（相似度），就需要对数据集合赋予恰当合适的测度（度量），用来刻画点与点之间的差异（距离）。通常这种度量种类很多，选取时需要针对集合特点进行选取。 https://www.cnblogs.com/ranjiewen/p/5958803.html https://www.cnblogs.com/wt869054461/p/7156397.html 第一部分">
+  <meta name="description" content="背景参考文献及资料1、">
 <meta name="keywords" content="Data Science">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习系列文章-数据科学中度量距离总结">
 <meta property="og:url" content="https://zjrongxiang.github.io/posts/2e8a0e1a/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="背景在数据科学中，需要对数据空间中点度量差异（相似度），就需要对数据集合赋予恰当合适的测度（度量），用来刻画点与点之间的差异（距离）。通常这种度量种类很多，选取时需要针对集合特点进行选取。 https://www.cnblogs.com/ranjiewen/p/5958803.html https://www.cnblogs.com/wt869054461/p/7156397.html 第一部分">
+<meta property="og:description" content="背景参考文献及资料1、">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://miro.medium.com/max/60/0*WmZ-uk5VzfY7RiBt?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/433/0*WmZ-uk5VzfY7RiBt">
-<meta property="og:image" content="https://miro.medium.com/max/60/1*nSBd4Q8nA9zo_8iVUHa69w.png?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/282/1*nSBd4Q8nA9zo_8iVUHa69w.png">
-<meta property="og:image" content="https://miro.medium.com/max/60/0*m9AgwqgzAZsdcf-z?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/349/0*m9AgwqgzAZsdcf-z">
-<meta property="og:image" content="https://miro.medium.com/max/60/1*v7_aLyWp8fFuIZ9H0WWfjQ.png?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/281/1*v7_aLyWp8fFuIZ9H0WWfjQ.png">
-<meta property="og:image" content="https://miro.medium.com/max/60/0*r8SVpQTf2yjTZ0Xi?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/395/0*r8SVpQTf2yjTZ0Xi">
-<meta property="og:image" content="https://miro.medium.com/max/60/1*U3CcVaKC6yJ8uU_k7oBX3g.png?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/282/1*U3CcVaKC6yJ8uU_k7oBX3g.png">
-<meta property="og:image" content="https://miro.medium.com/max/60/0*UbbyH2MUPb5ZBa64?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/451/0*UbbyH2MUPb5ZBa64">
-<meta property="og:image" content="https://miro.medium.com/max/60/1*RxAzLf9dRrDSVrB-ElZVEw.png?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/281/1*RxAzLf9dRrDSVrB-ElZVEw.png">
-<meta property="og:image" content="https://miro.medium.com/max/60/0*3fcCoSZUOxa7vzon?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/333/0*3fcCoSZUOxa7vzon">
-<meta property="og:image" content="https://miro.medium.com/max/60/1*c6YJw_Cv8u3O42CaAOrLRw.png?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/282/1*c6YJw_Cv8u3O42CaAOrLRw.png">
-<meta property="og:image" content="https://miro.medium.com/max/60/0*ZZCAEu9KsHOfl0Kr?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/1098/0*ZZCAEu9KsHOfl0Kr">
-<meta property="og:image" content="https://miro.medium.com/max/60/1*-pA7yjdXoLepVh3nB-LC4g.png?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/281/1*-pA7yjdXoLepVh3nB-LC4g.png">
-<meta property="og:image" content="https://miro.medium.com/max/60/0*N5xU3llTz-MKt9E8?q=20">
-<meta property="og:image" content="https://miro.medium.com/max/293/0*N5xU3llTz-MKt9E8">
-<meta property="og:updated_time" content="2022-10-25T15:01:29.496Z">
+<meta property="og:updated_time" content="2022-10-25T15:01:28.752Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习系列文章-数据科学中度量距离总结">
-<meta name="twitter:description" content="背景在数据科学中，需要对数据空间中点度量差异（相似度），就需要对数据集合赋予恰当合适的测度（度量），用来刻画点与点之间的差异（距离）。通常这种度量种类很多，选取时需要针对集合特点进行选取。 https://www.cnblogs.com/ranjiewen/p/5958803.html https://www.cnblogs.com/wt869054461/p/7156397.html 第一部分">
-<meta name="twitter:image" content="https://miro.medium.com/max/60/0*WmZ-uk5VzfY7RiBt?q=20">
+<meta name="twitter:description" content="背景参考文献及资料1、">
 
 
 
@@ -510,7 +483,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
+                <time title="修改时间：2022-10-25 23:01:28" itemprop="dateModified" datetime="2022-10-25T23:01:28+08:00">2022-10-25</time>
               
             
           </span>
@@ -573,7 +546,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">11k</span>
+                <span title="本文字数">164</span>
               
 
               
@@ -587,7 +560,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">10 分钟</span>
+                <span title="阅读时长">1 分钟</span>
               
             </div>
           
@@ -607,105 +580,7 @@
       
 
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在数据科学中，需要对数据空间中点度量差异（相似度），就需要对数据集合赋予恰当合适的测度（度量），用来刻画点与点之间的差异（距离）。通常这种度量种类很多，选取时需要针对集合特点进行选取。</p>
-<p><a href="https://www.cnblogs.com/ranjiewen/p/5958803.html" target="_blank" rel="noopener">https://www.cnblogs.com/ranjiewen/p/5958803.html</a></p>
-<p><a href="https://www.cnblogs.com/wt869054461/p/7156397.html" target="_blank" rel="noopener">https://www.cnblogs.com/wt869054461/p/7156397.html</a></p>
-<h3 id="第一部分-前言"><a href="#第一部分-前言" class="headerlink" title="第一部分 前言"></a>第一部分 前言</h3><p>机器学习中有监督和无监督算法都会用到距离度量。例如常用算法<code>k-NN</code>，<code>UMAP</code>，<code>HDBSCAN</code>中经常使用的度量：欧氏度量和余弦相似性度量等。其中欧式距离是我们使用最多的距离，但是它是否适应所有的数据集合呢？答案是否定的，欧式距离不是银弹。</p>
-<p>特别的当我们数据集合中数据本身具有遗传度量，例如地球上物体经纬度坐标，这个本身就有自己的球面距离，如果使用欧式距离就破坏了数据天然的度量。</p>
-<h3 id="第一部分-欧氏距离"><a href="#第一部分-欧氏距离" class="headerlink" title="第一部分  欧氏距离"></a>第一部分  欧氏距离</h3><p>我们从最常见的距离度量开始，即欧几里得距离。最好将距离量度解释为连接两个点的线段的长度。该公式非常简单，因为使用勾股定理从这些点的笛卡尔坐标计算距离。</p>
-<h4 id="1-1-缺点"><a href="#1-1-缺点" class="headerlink" title="1.1 缺点"></a>1.1 缺点</h4><p>尽管这是一种常用的距离度量，但欧几里得距离并不是比例不变的，这意味着所计算的距离可能会根据要素的单位而发生偏斜。通常，在使用此距离度量之前，需要对数据进行<strong>标准化</strong>。</p>
-<p>此外，随着数据维数的增加，欧氏距离的用处也就越小。这与维数的诅咒有关，维数的诅咒与高维空间不能像直觉上期望的二维或3维空间那样起作用。有关摘要，请参阅<a href="https://stats.stackexchange.com/questions/99171/why-is-euclidean-distance-not-a-good-metric-in-high-dimensions" target="_blank" rel="noopener">这篇</a>文章。</p>
-<h4 id="1-2-用例"><a href="#1-2-用例" class="headerlink" title="1.2 用例"></a>1.2 用例</h4><p>当您拥有低维数据并且向量的大小非常重要时，欧几里得距离的效果非常好。如果在低维数据上使用欧几里得距离，则kNN和HDBSCAN之类的方法将显示出出色的结果。</p>
-<p>尽管已开发出许多其他措施来解决欧几里得距离的缺点，但出于充分的原因，它仍然是最常用的距离措施之一。它使用起来非常直观，易于实现，并且在许多用例中都显示出了极好的效果。</p>
-<h3 id="第二部分-余弦相似度"><a href="#第二部分-余弦相似度" class="headerlink" title="第二部分 余弦相似度"></a>第二部分 余弦相似度</h3><p>余弦相似度经常被用作解决高维数欧几里德距离问题的方法。余弦相似度只是两个向量之间角度的余弦。如果将向量归一化为长度均为1，则向量的内积也相同。</p>
-<p>两个方向完全相同的向量的余弦相似度为1，而两个彼此相对的向量的相似度为-1。注意，它们的大小并不重要，因为这是方向的度量。</p>
-<p><img src="https://miro.medium.com/max/60/0*WmZ-uk5VzfY7RiBt?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/433/0*WmZ-uk5VzfY7RiBt" alt="图片发布"></p>
-<p>余弦相似度</p>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>余弦相似度的主要缺点之一是不考虑向量的大小，仅考虑其方向。实际上，这意味着没有充分考虑值的差异。例如，如果采用推荐系统，则余弦相似度不会考虑不同用户之间的评分等级差异。</p>
-<h4 id="用例"><a href="#用例" class="headerlink" title="用例"></a>用例</h4><p>当我们拥有高维数据并且向量的大小不重要时，通常会使用余弦相似度。对于文本分析，当数据由字数表示时，此度量非常常用。例如，当一个单词在一个文档中比另一个单词更频繁出现时，这并不一定意味着一个文档与该单词更相关。可能是文件长度不均匀，计数的重要性不太重要。然后，我们最好使用忽略幅度的余弦相似度。</p>
-<h3 id="3-海明距离"><a href="#3-海明距离" class="headerlink" title="3.海明距离"></a>3.海明距离</h3><p>海明距离。图片由作者提供。</p>
-<p>汉明距离是两个向量之间不同的值的数量。它通常用于比较两个等长的二进制字符串。它也可用于字符串，以通过计算彼此不同的字符数来比较它们彼此之间的相似程度。</p>
-<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><p>如您所料，当两个向量的长度不相等时，很难使用汉明距离。您可能希望将相同长度的向量相互比较，以了解哪些位置不匹配。</p>
-<p>此外，只要它们不同或相等，就不会考虑实际值。因此，当幅度是重要指标时，建议不要使用此距离指标。</p>
-<h4 id="用例-1"><a href="#用例-1" class="headerlink" title="用例"></a>用例</h4><p>典型的用例包括通过计算机网络传输数据时的纠错/检测。它可以用来确定二进制字中失真比特的数量，作为估计错误的一种方法。</p>
-<p>此外，您还可以使用汉明距离来测量分类变量之间的距离。</p>
-<h3 id="4-曼哈顿距离"><a href="#4-曼哈顿距离" class="headerlink" title="4.曼哈顿距离"></a>4.曼哈顿距离</h3><p><img src="https://miro.medium.com/max/60/1*nSBd4Q8nA9zo_8iVUHa69w.png?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/282/1*nSBd4Q8nA9zo_8iVUHa69w.png" alt="图片发布"></p>
-<p>曼哈顿距离。图片由作者提供。</p>
-<p>曼哈顿距离（通常称为出租车距离或城市街区距离）可计算实值向量之间的距离。想象一下在统一的网格上描述对象的矢量，例如棋盘。然后，曼哈顿距离是指两个向量只能以直角移动时的距离。计算距离时不涉及对角线运动。</p>
-<p><img src="https://miro.medium.com/max/60/0*m9AgwqgzAZsdcf-z?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/349/0*m9AgwqgzAZsdcf-z" alt="图片发布"></p>
-<p>曼哈顿距离</p>
-<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><p>尽管曼哈顿距离对于<a href="https://www.quora.com/What-is-the-difference-between-Manhattan-and-Euclidean-distance-measures" target="_blank" rel="noopener">高维数据</a>似乎还可以，但它比欧几里德距离直观性差一些，特别是在使用高维数据时。</p>
-<p>此外，由于它不是最短的路径，因此比欧几里得距离更有可能提供更高的距离值。这不一定会带来问题，但是您应该考虑这一点。</p>
-<h4 id="用例-2"><a href="#用例-2" class="headerlink" title="用例"></a>用例</h4><p>当您的数据集具有离散和/或二进制属性时，Manhattan似乎工作得很好，因为它考虑了可以在这些属性的值内实际采用的路径。以欧几里得距离为例，实际上可能不可能在两个向量之间创建一条直线。</p>
-<h3 id="5-切比雪夫距离"><a href="#5-切比雪夫距离" class="headerlink" title="5.切比雪夫距离"></a>5.切比雪夫距离</h3><p><img src="https://miro.medium.com/max/60/1*v7_aLyWp8fFuIZ9H0WWfjQ.png?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/281/1*v7_aLyWp8fFuIZ9H0WWfjQ.png" alt="图片发布"></p>
-<p>切比雪夫距离。图片由作者提供。</p>
-<p>切比雪夫距离定义为沿着任何坐标维度的两个向量之间的最大差。换句话说，它只是一个轴上的最大距离。由于其性质，通常将其称为棋盘距离，因为国王从一个正方形到另一个正方形所需的最小移动次数等于切比雪夫距离。</p>
-<p><img src="https://miro.medium.com/max/60/0*r8SVpQTf2yjTZ0Xi?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/395/0*r8SVpQTf2yjTZ0Xi" alt="图片发布"></p>
-<p>切比雪夫距离</p>
-<h4 id="缺点-3"><a href="#缺点-3" class="headerlink" title="缺点"></a>缺点</h4><p>切比雪夫（Chebyshev）通常用在非常特定的用例中，这使得很难将其用作通用距离度量标准，例如欧几里得距离或余弦相似度。因此，建议仅在绝对确定它适合您的用例时才使用它。</p>
-<h4 id="用例-3"><a href="#用例-3" class="headerlink" title="用例"></a>用例</h4><p>如前所述，切比雪夫距离可用于提取从一个正方形移动到另一个正方形所需的最小移动次数。此外，在允许无限制八向移动的游戏中，这可能是有用的措施。</p>
-<p>实际上，切比雪夫距离通常用于仓库物流中，因为它与高架起重机移动物体所需的时间非常相似。</p>
-<h3 id="6-闵可夫斯基"><a href="#6-闵可夫斯基" class="headerlink" title="6.闵可夫斯基"></a>6.闵可夫斯基</h3><p><img src="https://miro.medium.com/max/60/1*U3CcVaKC6yJ8uU_k7oBX3g.png?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/282/1*U3CcVaKC6yJ8uU_k7oBX3g.png" alt="图片发布"></p>
-<p>Minkowski距离。图片由作者提供。</p>
-<p>Minkowski距离比大多数距离更复杂。它是在范数向量空间（n维实空间）中使用的度量，这意味着它可以在距离可以表示为具有长度的向量的空间中使用。</p>
-<p>该措施具有三个要求：</p>
-<ul>
-<li><strong>零向量</strong>—零向量的长度为零，而每个其他向量的长度为正。例如，如果我们从一个地方到另一个地方旅行，那么该距离始终为正。但是，如果我们从一个地方到自己的地方旅行，则该距离为零。</li>
-<li><strong>标量因数</strong>—当向量与正数相乘时，其长度会更改，同时保持其方向。例如，如果我们在一个方向上走了一定距离并添加了相同的距离，则方向不会改变。</li>
-<li><strong>三角形不等式</strong>—两点之间的最短距离是一条直线。</li>
-</ul>
-<p>Minkowski距离的公式如下所示：</p>
-<p><img src="https://miro.medium.com/max/60/0*UbbyH2MUPb5ZBa64?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/451/0*UbbyH2MUPb5ZBa64" alt="图片发布"></p>
-<p>明可夫斯基距离</p>
-<p>关于此距离度量最有趣的是使用parameter <code>**p**</code>。我们可以使用此参数来操纵距离度量以使其与其他度量非常相似。</p>
-<p>的常见值<code>p</code>是：</p>
-<ul>
-<li>p = 1 —曼哈顿距离</li>
-<li>p = 2 —欧几里德距离</li>
-<li>p = <em>∞-</em>切比雪夫距离</li>
-</ul>
-<h4 id="缺点-4"><a href="#缺点-4" class="headerlink" title="缺点"></a>缺点</h4><p>Minkowski与它们所代表的距离度量具有相同的缺点，因此对曼哈顿，欧几里得和契比雪夫距离等度量的良好理解非常重要。</p>
-<p>而且，<code>p</code>根据您的用例，使用合适的参数可能会很麻烦，因为找到正确的值可能在计算上效率低下。</p>
-<h4 id="用例-4"><a href="#用例-4" class="headerlink" title="用例"></a>用例</h4><p>好处<code>p</code>是可以对其进行迭代并找到最适合您的用例的距离度量。它为您的距离度量提供了极大的灵活性，如果您熟悉<code>p</code>并且有很多距离度量，那么这将是一个巨大的好处。</p>
-<h3 id="7-贾卡德指数"><a href="#7-贾卡德指数" class="headerlink" title="7.贾卡德指数"></a>7.贾卡德指数</h3><p><img src="https://miro.medium.com/max/60/1*RxAzLf9dRrDSVrB-ElZVEw.png?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/281/1*RxAzLf9dRrDSVrB-ElZVEw.png" alt="图片发布"></p>
-<p>Jaccard索引。图片由作者提供。</p>
-<p>Jaccard索引（或“联合上的交集”）是用于计算样本集的相似性和多样性的度量。它是交集的大小除以样本集并集的大小。</p>
-<p>实际上，它是集合之间相似实体的总数除以实体的总数。例如，如果两个集合共有1个实体，并且共有5个不同的实体，则Jaccard索引将为1/5 = 0.2。</p>
-<p>要计算Jaccard距离，我们只需从1中减去Jaccard索引：</p>
-<p><img src="https://miro.medium.com/max/60/0*3fcCoSZUOxa7vzon?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/333/0*3fcCoSZUOxa7vzon" alt="图片发布"></p>
-<p>提卡距离</p>
-<h4 id="缺点-5"><a href="#缺点-5" class="headerlink" title="缺点"></a>缺点</h4><p>Jaccard索引的主要缺点是它受到数据大小的很大影响。大型数据集可能会对索引产生很大影响，因为它可以显着增加联合并同时保持相交相似。</p>
-<h4 id="用例-5"><a href="#用例-5" class="headerlink" title="用例"></a>用例</h4><p>Jaccard索引通常用于使用二进制或二进制数据的应用程序中。当您拥有一个预测图像片段（例如汽车）的深度学习模型时，可以使用Jaccard索引来计算给定真实标签的预测片段的准确性。</p>
-<p>同样，它可用于文本相似性分析中，以衡量文档之间单词选择重叠的程度。因此，它可以用来比较模式集。</p>
-<h3 id="8-哈弗碱"><a href="#8-哈弗碱" class="headerlink" title="8.哈弗碱"></a>8.哈弗碱</h3><p><img src="https://miro.medium.com/max/60/1*c6YJw_Cv8u3O42CaAOrLRw.png?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/282/1*c6YJw_Cv8u3O42CaAOrLRw.png" alt="图片发布"></p>
-<p>Haversine距离。图片由作者提供。</p>
-<p>Haversine距离是指球面上两个点之间的经度和纬度。它与欧几里得距离非常相似，因为它可以计算两点之间的最短线。主要区别在于不可能有直线，因为这里的假设是两个点都在一个球面上。</p>
-<p><img src="https://miro.medium.com/max/60/0*ZZCAEu9KsHOfl0Kr?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/1098/0*ZZCAEu9KsHOfl0Kr" alt="图片发布"></p>
-<p>两点之间的正弦距离</p>
-<h4 id="缺点-6"><a href="#缺点-6" class="headerlink" title="缺点"></a>缺点</h4><p>这种距离测量的一个缺点是假定这些点位于一个<strong>球体上</strong>。实际上，这种情况很少出现，例如，地球不是完美的圆形，在某些情况下可能会使计算变得困难。取而代之的是，将目光转向假定椭圆形的<strong>Vincenty距离</strong>。</p>
-<h4 id="用例-6"><a href="#用例-6" class="headerlink" title="用例"></a>用例</h4><p>如您所料，Haversine距离通常用于导航。例如，您可以使用它来计算两个国家之间的飞行距离。请注意，如果距离本身不那么大，则不太适合。曲率不会产生太大的影响。</p>
-<h3 id="9-索伦森-骰子指数"><a href="#9-索伦森-骰子指数" class="headerlink" title="9.索伦森-骰子指数"></a>9.索伦森-骰子指数</h3><p><img src="https://miro.medium.com/max/60/1*-pA7yjdXoLepVh3nB-LC4g.png?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/281/1*-pA7yjdXoLepVh3nB-LC4g.png" alt="图片发布"></p>
-<p>Sørensen-骰子系数。图片由作者提供。</p>
-<p>Sørensen-Dice索引与Jaccard索引非常相似，因为它可以测量样本集的相似性和多样性。尽管它们的计算方式相似，但索伦森-迪斯指数却更直观一些，因为可以将其视为两组之间重叠的百分比，该值介于0和1之间：</p>
-<p><img src="https://miro.medium.com/max/60/0*N5xU3llTz-MKt9E8?q=20" alt="图片发布"></p>
-<p><img src="https://miro.medium.com/max/293/0*N5xU3llTz-MKt9E8" alt="图片发布"></p>
-<p>索伦森–骰子系数</p>
-<h4 id="缺点-7"><a href="#缺点-7" class="headerlink" title="缺点"></a>缺点</h4><p>像Jaccard索引一样，它们都夸大了几乎没有或没有地面真理肯定集的集合的重要性。结果，它可以控制多组平均得分。它会按相关集合的大小成反比地加权每个项目，而不是平等对待它们。</p>
-<h4 id="用例-7"><a href="#用例-7" class="headerlink" title="用例"></a>用例</h4><p>用例与Jaccard索引相似（如果不同）。您会发现它通常用于图像分割任务或文本相似性分析中。</p>
-<p><strong>注意：</strong>比这里提到的9种距离测量更多。如果您正在寻找更有趣的指标，我建议您研究以下内容之一：马哈拉诺比斯（Mahalanobis），堪培拉（Canberra），Braycurtis和KL分歧。</p>
-<h3 id="切比雪夫距离"><a href="#切比雪夫距离" class="headerlink" title="切比雪夫距离"></a><strong>切比雪夫距离</strong></h3><h3 id="闵可夫斯基距离-Minkowski-Distance"><a href="#闵可夫斯基距离-Minkowski-Distance" class="headerlink" title="闵可夫斯基距离(Minkowski Distance)"></a><strong>闵可夫斯基距离(Minkowski Distance)</strong></h3><h3 id="标准化欧氏距离-Standardized-Euclidean-distance"><a href="#标准化欧氏距离-Standardized-Euclidean-distance" class="headerlink" title="标准化欧氏距离 (Standardized Euclidean distance )"></a><strong>标准化欧氏距离 (Standardized Euclidean distance )</strong></h3><h3 id="马氏距离-Mahalanobis-Distance"><a href="#马氏距离-Mahalanobis-Distance" class="headerlink" title="马氏距离(Mahalanobis Distance)"></a><strong>马氏距离(Mahalanobis Distance)</strong></h3><h3 id="巴氏距离（Bhattacharyya-Distance）"><a href="#巴氏距离（Bhattacharyya-Distance）" class="headerlink" title="巴氏距离（Bhattacharyya Distance）"></a><strong>巴氏距离（Bhattacharyya Distance）</strong></h3><h3 id="皮尔逊系数-Pearson-Correlation-Coefficient"><a href="#皮尔逊系数-Pearson-Correlation-Coefficient" class="headerlink" title="皮尔逊系数(Pearson Correlation Coefficient)"></a><strong>皮尔逊系数(Pearson Correlation Coefficient)</strong></h3><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、9 Distance Measures in Data Science，链接：<a href="https://towardsdatascience.com/9-distance-measures-in-data-science-918109d069fa" target="_blank" rel="noopener">https://towardsdatascience.com/9-distance-measures-in-data-science-918109d069fa</a></p>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、</p>
 
       
     </div>
@@ -748,8 +623,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/84a54a18/" rel="next" title="机器学习系列文章-数据科学中的几何">
-                <i class="fa fa-chevron-left"></i> 机器学习系列文章-数据科学中的几何
+              <a href="/posts/48c9c220/" rel="next" title="streamsets数据采集平台介绍">
+                <i class="fa fa-chevron-left"></i> streamsets数据采集平台介绍
               </a>
             
           </div>
@@ -1161,7 +1036,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一部分-前言"><span class="nav-number">1.1.</span> <span class="nav-text">第一部分 前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第一部分-欧氏距离"><span class="nav-number">1.2.</span> <span class="nav-text">第一部分  欧氏距离</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-缺点"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.1 缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-用例"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2 用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二部分-余弦相似度"><span class="nav-number">1.3.</span> <span class="nav-text">第二部分 余弦相似度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点"><span class="nav-number">1.3.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例"><span class="nav-number">1.3.2.</span> <span class="nav-text">用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-海明距离"><span class="nav-number">1.4.</span> <span class="nav-text">3.海明距离</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点-1"><span class="nav-number">1.4.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例-1"><span class="nav-number">1.4.2.</span> <span class="nav-text">用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-曼哈顿距离"><span class="nav-number">1.5.</span> <span class="nav-text">4.曼哈顿距离</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点-2"><span class="nav-number">1.5.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例-2"><span class="nav-number">1.5.2.</span> <span class="nav-text">用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-切比雪夫距离"><span class="nav-number">1.6.</span> <span class="nav-text">5.切比雪夫距离</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点-3"><span class="nav-number">1.6.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例-3"><span class="nav-number">1.6.2.</span> <span class="nav-text">用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-闵可夫斯基"><span class="nav-number">1.7.</span> <span class="nav-text">6.闵可夫斯基</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点-4"><span class="nav-number">1.7.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例-4"><span class="nav-number">1.7.2.</span> <span class="nav-text">用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-贾卡德指数"><span class="nav-number">1.8.</span> <span class="nav-text">7.贾卡德指数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点-5"><span class="nav-number">1.8.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例-5"><span class="nav-number">1.8.2.</span> <span class="nav-text">用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-哈弗碱"><span class="nav-number">1.9.</span> <span class="nav-text">8.哈弗碱</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点-6"><span class="nav-number">1.9.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例-6"><span class="nav-number">1.9.2.</span> <span class="nav-text">用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-索伦森-骰子指数"><span class="nav-number">1.10.</span> <span class="nav-text">9.索伦森-骰子指数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点-7"><span class="nav-number">1.10.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用例-7"><span class="nav-number">1.10.2.</span> <span class="nav-text">用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切比雪夫距离"><span class="nav-number">1.11.</span> <span class="nav-text">切比雪夫距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#闵可夫斯基距离-Minkowski-Distance"><span class="nav-number">1.12.</span> <span class="nav-text">闵可夫斯基距离(Minkowski Distance)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准化欧氏距离-Standardized-Euclidean-distance"><span class="nav-number">1.13.</span> <span class="nav-text">标准化欧氏距离 (Standardized Euclidean distance )</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#马氏距离-Mahalanobis-Distance"><span class="nav-number">1.14.</span> <span class="nav-text">马氏距离(Mahalanobis Distance)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#巴氏距离（Bhattacharyya-Distance）"><span class="nav-number">1.15.</span> <span class="nav-text">巴氏距离（Bhattacharyya Distance）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#皮尔逊系数-Pearson-Correlation-Coefficient"><span class="nav-number">1.16.</span> <span class="nav-text">皮尔逊系数(Pearson Correlation Coefficient)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">2.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">2.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
