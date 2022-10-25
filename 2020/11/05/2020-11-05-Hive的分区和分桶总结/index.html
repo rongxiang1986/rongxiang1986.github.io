@@ -117,17 +117,17 @@
 
 
 
-  <meta name="description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景https://data-flair.training/blogs/hive-partitioning-vs-bucketing/ https://blog.csdn.net/whdxjbw/article/details/82219022 分区和分桶参考文献及资料1、">
+  <meta name="description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景Hive将表划分为分区(partition)表和分桶(bucket)表。分区表在加载数据的时候可以指定加载某一部分数据，并不是全量的数据，可以让数据的部分查询变得更快。分桶表通常是在原始数据中加入一些额外的结构，这些结构可以用于高效的查询 https://data-flair.training/blog">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hive的分区和分桶总结">
 <meta property="og:url" content="https://zjrongxiang.github.io/2020/11/05/2020-11-05-Hive的分区和分桶总结/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景https://data-flair.training/blogs/hive-partitioning-vs-bucketing/ https://blog.csdn.net/whdxjbw/article/details/82219022 分区和分桶参考文献及资料1、">
+<meta property="og:description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景Hive将表划分为分区(partition)表和分桶(bucket)表。分区表在加载数据的时候可以指定加载某一部分数据，并不是全量的数据，可以让数据的部分查询变得更快。分桶表通常是在原始数据中加入一些额外的结构，这些结构可以用于高效的查询 https://data-flair.training/blog">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2022-05-11T06:48:22.024Z">
+<meta property="og:updated_time" content="2022-07-01T04:21:59.124Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hive的分区和分桶总结">
-<meta name="twitter:description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景https://data-flair.training/blogs/hive-partitioning-vs-bucketing/ https://blog.csdn.net/whdxjbw/article/details/82219022 分区和分桶参考文献及资料1、">
+<meta name="twitter:description" content="目录 背景 第一部分  环境依赖 第二部分 交互接口 第三部分 任务提交 参考文献及资料  背景Hive将表划分为分区(partition)表和分桶(bucket)表。分区表在加载数据的时候可以指定加载某一部分数据，并不是全量的数据，可以让数据的部分查询变得更快。分桶表通常是在原始数据中加入一些额外的结构，这些结构可以用于高效的查询 https://data-flair.training/blog">
 
 
 
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-05-11 14:48:22" itemprop="dateModified" datetime="2022-05-11T14:48:22+08:00">2022-05-11</time>
+                <time title="修改时间：2022-07-01 12:21:59" itemprop="dateModified" datetime="2022-07-01T12:21:59+08:00">2022-07-01</time>
               
             
           </span>
@@ -545,7 +545,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">755</span>
+                <span title="本文字数">12k</span>
               
 
               
@@ -559,7 +559,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">1 分钟</span>
+                <span title="阅读时长">11 分钟</span>
               
             </div>
           
@@ -586,9 +586,27 @@
 <li>第三部分 任务提交</li>
 <li>参考文献及资料</li>
 </ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://data-flair.training/blogs/hive-partitioning-vs-bucketing/" target="_blank" rel="noopener">https://data-flair.training/blogs/hive-partitioning-vs-bucketing/</a></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Hive将表划分为分区(partition)表和分桶(bucket)表。分区表在加载数据的时候可以指定加载某一部分数据，并不是全量的数据，可以让数据的部分查询变得更快。分桶表通常是在原始数据中加入一些额外的结构，这些结构可以用于高效的查询</p>
+<p><a href="https://data-flair.training/blogs/hive-partitioning-vs-bucketing/" target="_blank" rel="noopener">https://data-flair.training/blogs/hive-partitioning-vs-bucketing/</a></p>
 <p><a href="https://blog.csdn.net/whdxjbw/article/details/82219022" target="_blank" rel="noopener">https://blog.csdn.net/whdxjbw/article/details/82219022</a></p>
-<h2 id="分区和分桶"><a href="#分区和分桶" class="headerlink" title="分区和分桶"></a>分区和分桶</h2><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、 </p>
+<h2 id="第一部分-分区"><a href="#第一部分-分区" class="headerlink" title="第一部分 分区"></a>第一部分 分区</h2><h2 id="第二部分-分桶"><a href="#第二部分-分桶" class="headerlink" title="第二部分 分桶"></a>第二部分 分桶</h2><p>Hive分桶是相对分区进行更细粒度的划分。是将整个数据内容按照某列取hash值，对桶的个数取模的方式决定该条记录存放在哪个桶当中；具有相同hash值的数据进入到同一个文件中。如要安装name属性分为3个桶，就是对name属性值的hash值对3取摸，按照取模结果对数据分桶。如取模结果为0的数据记录存放到一个文件，取模为1的数据存放到一个文件，取模为2的数据存放到一个文件。</p>
+<h3 id="创建分桶表"><a href="#创建分桶表" class="headerlink" title="创建分桶表"></a>创建分桶表</h3><h4 id="在创建分桶表之前要执以下的命令，开启对分桶表的支持以及reduce个数"><a href="#在创建分桶表之前要执以下的命令，开启对分桶表的支持以及reduce个数" class="headerlink" title="在创建分桶表之前要执以下的命令，开启对分桶表的支持以及reduce个数"></a>在创建分桶表之前要执以下的命令，开启对分桶表的支持以及reduce个数</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="builtin-name">set</span> hive.enforce.<span class="attribute">bucketing</span>=<span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置与桶相同的reduce个数（默认只有一个reduce）</span></span><br><span class="line"><span class="builtin-name">set</span> mapreduce.job.<span class="attribute">reduces</span>=4;</span><br></pre></td></tr></table></figure>
+<h4 id="创建分桶表-1"><a href="#创建分桶表-1" class="headerlink" title="创建分桶表"></a>创建分桶表</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> myhive1.user_buckets_demo(<span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="keyword">string</span>)</span><br><span class="line">clustered <span class="keyword">by</span>(<span class="keyword">id</span>) </span><br><span class="line"><span class="keyword">into</span> <span class="number">4</span> buckets </span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="如何向分桶表中导入数据"><a href="#如何向分桶表中导入数据" class="headerlink" title="如何向分桶表中导入数据"></a>如何向分桶表中导入数据</h4><p>向分桶表中导入数据，不可以直接加载，需要先导入普通表，再导入分桶表中，这种和动态分区类似。</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建普通表</span></span><br><span class="line">create table user_demo(id int, name string)</span><br><span class="line">row format delimited fields terminated by '\t';</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备数据文件 buckets.txt</span></span><br><span class="line">cd /opt/module/hive-1.1.0-cdh5.14.2/data/test</span><br><span class="line">vim user_bucket.txt</span><br><span class="line"></span><br><span class="line">1 anzhulababy1</span><br><span class="line">2 anzhulababy2</span><br><span class="line">3 anzhulababy3</span><br><span class="line">4 anzhulababy4</span><br><span class="line">5 anzhulababy5</span><br><span class="line">6 anzhulababy6</span><br><span class="line">7 anzhulababy7</span><br><span class="line">8 anzhulababy8</span><br><span class="line">9 anzhulababy9</span><br><span class="line">10 anzhulababy10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 向普通标中导入数据</span></span><br><span class="line">load data local inpath '/opt/module/hive-1.1.0-cdh5.14.2/data/test/user_bucket.txt'  overwrite into table user_demo; </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看数据</span></span><br><span class="line">select <span class="symbol">*</span> from user_demo;</span><br><span class="line"></span><br><span class="line">+---------------+-----------------+--+</span><br><span class="line">|<span class="string"> user_demo.id  </span>|<span class="string"> user_demo.name  </span>|</span><br><span class="line">+---------------+-----------------+--+</span><br><span class="line">|<span class="string"> 1             </span>|<span class="string"> anzhulababy1    </span>|</span><br><span class="line">|<span class="string"> 2             </span>|<span class="string"> anzhulababy2    </span>|</span><br><span class="line">|<span class="string"> 3             </span>|<span class="string"> anzhulababy3    </span>|</span><br><span class="line">|<span class="string"> 4             </span>|<span class="string"> anzhulababy4    </span>|</span><br><span class="line">|<span class="string"> 5             </span>|<span class="string"> anzhulababy5    </span>|</span><br><span class="line">|<span class="string"> 6             </span>|<span class="string"> anzhulababy6    </span>|</span><br><span class="line">|<span class="string"> 7             </span>|<span class="string"> anzhulababy7    </span>|</span><br><span class="line">|<span class="string"> 8             </span>|<span class="string"> anzhulababy8    </span>|</span><br><span class="line">|<span class="string"> 9             </span>|<span class="string"> anzhulababy9    </span>|</span><br><span class="line">|<span class="string"> 10            </span>|<span class="string"> anzhulababy10   </span>|</span><br><span class="line">+---------------+-----------------+--+</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据到桶表user_buckets_demo中</span></span><br><span class="line">insert into table user_buckets_demo select <span class="symbol">*</span> from user_demo;</span><br></pre></td></tr></table></figure>
+<h3 id="分桶表物理存储结构"><a href="#分桶表物理存储结构" class="headerlink" title="分桶表物理存储结构"></a>分桶表物理存储结构</h3><p>分桶表表在hdfs上作为一个文件存在。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: jdbc:hive2:<span class="comment">//node03:10000&gt; dfs -ls /user/hive/warehouse/myhive1.db/user_buckets_demo;</span></span><br><span class="line">+----------------------------------------------------+--+</span><br><span class="line">|                     DFS Output                     |</span><br><span class="line">+----------------------------------------------------+--+</span><br><span class="line">| Found <span class="number">4</span> items                                      |</span><br><span class="line">| -rwxr-xr-x   <span class="number">3</span> hadoop supergroup         <span class="number">30</span> <span class="number">2020</span><span class="number">-06</span><span class="number">-08</span> <span class="number">13</span>:<span class="number">30</span> /user/hive/warehouse/myhive1.db/user_buckets_demo/<span class="number">000000</span>_0 |</span><br><span class="line">| -rwxr-xr-x   <span class="number">3</span> hadoop supergroup         <span class="number">45</span> <span class="number">2020</span><span class="number">-06</span><span class="number">-08</span> <span class="number">13</span>:<span class="number">30</span> /user/hive/warehouse/myhive1.db/user_buckets_demo/<span class="number">000001</span>_0 |</span><br><span class="line">| -rwxr-xr-x   <span class="number">3</span> hadoop supergroup         <span class="number">47</span> <span class="number">2020</span><span class="number">-06</span><span class="number">-08</span> <span class="number">13</span>:<span class="number">30</span> /user/hive/warehouse/myhive1.db/user_buckets_demo/<span class="number">000002</span>_0 |</span><br><span class="line">| -rwxr-xr-x   <span class="number">3</span> hadoop supergroup         <span class="number">30</span> <span class="number">2020</span><span class="number">-06</span><span class="number">-08</span> <span class="number">13</span>:<span class="number">30</span> /user/hive/warehouse/myhive1.db/user_buckets_demo/<span class="number">000003</span>_0 |</span><br><span class="line">+----------------------------------------------------+--+</span><br></pre></td></tr></table></figure>
+<h3 id="分桶表使用场景"><a href="#分桶表使用场景" class="headerlink" title="分桶表使用场景"></a>分桶表使用场景</h3><ul>
+<li>取样sampling更高效。没有分桶的话需要扫描整个数据集。</li>
+<li>提升某些查询操作效率，例如map side join</li>
+</ul>
+<h3 id="如何抽样查询桶表的数据"><a href="#如何抽样查询桶表的数据" class="headerlink" title="如何抽样查询桶表的数据"></a>如何抽样查询桶表的数据</h3><p>tablesample抽样语句语法：tablesample(bucket  x  out  of  y)</p>
+<ul>
+<li>x表示从第几个桶开始取数据</li>
+<li>y与进行采样的桶数的个数、每个采样桶的采样比例有关</li>
+</ul>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select * <span class="keyword">from</span> user_buckets_demo tablesample(bucket <span class="number">1</span> <span class="keyword">out</span> of <span class="number">2</span>);</span><br><span class="line">-- 需要采样的总桶数=<span class="number">4</span>/<span class="number">2</span>=<span class="number">2</span>个</span><br><span class="line">-- 先从第<span class="number">1</span>个桶中取出数据</span><br><span class="line">-- <span class="number">1</span>+<span class="number">2</span>=<span class="number">3</span>，再从第<span class="number">3</span>个桶中取出数据</span><br></pre></td></tr></table></figure>
+<h2 id="第三部分"><a href="#第三部分" class="headerlink" title="第三部分"></a>第三部分</h2><h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、 </p>
 
       
     </div>
@@ -635,8 +653,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/11/12/2020-11-28-Yarn上长任务报Token失效问题总结(Invalid AMRMToken)/" rel="prev" title="Yarn上长任务报Token失效问题总结(Invalid AMRMToken)">
-                Yarn上长任务报Token失效问题总结(Invalid AMRMToken) <i class="fa fa-chevron-right"></i>
+              <a href="/2020/11/12/2020-11-12-Unix和Windows中文本行末结束符/" rel="prev" title="Unix和Windows中文本行末结束符">
+                Unix和Windows中文本行末结束符 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -716,7 +734,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">279</span>
+                    <span class="site-state-item-count">311</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -883,7 +901,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">77</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1032,7 +1056,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分区和分桶"><span class="nav-number">3.</span> <span class="nav-text">分区和分桶</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">4.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-分区"><span class="nav-number">3.</span> <span class="nav-text">第一部分 分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-分桶"><span class="nav-number">4.</span> <span class="nav-text">第二部分 分桶</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建分桶表"><span class="nav-number">4.1.</span> <span class="nav-text">创建分桶表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在创建分桶表之前要执以下的命令，开启对分桶表的支持以及reduce个数"><span class="nav-number">4.1.1.</span> <span class="nav-text">在创建分桶表之前要执以下的命令，开启对分桶表的支持以及reduce个数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建分桶表-1"><span class="nav-number">4.1.2.</span> <span class="nav-text">创建分桶表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何向分桶表中导入数据"><span class="nav-number">4.1.3.</span> <span class="nav-text">如何向分桶表中导入数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分桶表物理存储结构"><span class="nav-number">4.2.</span> <span class="nav-text">分桶表物理存储结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分桶表使用场景"><span class="nav-number">4.3.</span> <span class="nav-text">分桶表使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何抽样查询桶表的数据"><span class="nav-number">4.4.</span> <span class="nav-text">如何抽样查询桶表的数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分"><span class="nav-number">5.</span> <span class="nav-text">第三部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">6.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1065,7 +1089,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">878k</span>
+    <span title="站点总字数">940k</span>
   
 
   
@@ -1074,7 +1098,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">13:19</span>
+    <span title="站点阅读时长">14:15</span>
   
 </div>
 

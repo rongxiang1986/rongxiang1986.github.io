@@ -134,7 +134,7 @@
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/20200604212151736.png">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/disk.png">
 <meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/shuffleDisk.jpg">
-<meta property="og:updated_time" content="2022-03-19T09:50:02.055Z">
+<meta property="og:updated_time" content="2022-10-25T03:17:43.030Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark内存管理和优化">
 <meta name="twitter:description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark内存优化 第三部分 总结 参考文献及资料  背景当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，MapReduce这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背">
@@ -493,7 +493,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-03-19 17:50:02" itemprop="dateModified" datetime="2022-03-19T17:50:02+08:00">2022-03-19</time>
+                <time title="修改时间：2022-10-25 11:17:43" itemprop="dateModified" datetime="2022-10-25T11:17:43+08:00">2022-10-25</time>
               
             
           </span>
@@ -556,7 +556,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">27k</span>
+                <span title="本文字数">28k</span>
               
 
               
@@ -660,6 +660,10 @@
 </li>
 </ul>
 <p>所以，对于堆内内存的申请和释放实际是由 <code>JVM</code> 来管理的。因此，在统计堆内内存具体使用量时，考虑性能等各方面原因，<code>Spark</code> 目前采用的是抽样统计的方式来计算已使用的内存。<code>Spark</code>不能准确记录实际可用的堆内内存，当数据量较大时，如果不能及时溢出(<code>Spill</code>)数据到磁盘，也就无法避免内存溢出<code>OOM</code>。</p>
+<blockquote>
+<p>Spark预估内存资源算法介绍：<a href="https://www.turbofei.wang/spark/2016/12/26/spark%E5%86%85%E5%AD%98%E9%A2%84%E6%B5%8B" target="_blank" rel="noopener">https://www.turbofei.wang/spark/2016/12/26/spark%E5%86%85%E5%AD%98%E9%A2%84%E6%B5%8B</a></p>
+<p>源码：org/apache/spark/util/SizeEstimator.scala</p>
+</blockquote>
 <p>所以Spark 从1.6 版本开始引入了<code>Off-heap memory</code>(<a href="https://issues.apache.org/jira/browse/SPARK-11389" target="_blank" rel="noopener">SPARK-11389</a>)。该内存资源不属于<code>JVM</code>内存，而是调用 <code>Java</code> 的 <code>unsafe</code> 相关 <code>API</code> 直接向操作系统申请内存，直接在服务器节点的内存中开辟空间，存储经过序列化的二进制数据。由于这种方式不需要 <code>JVM</code> 内存管理，所以可以避免频繁的 <code>GC</code>，但是缺点是用户必须自行编写内存申请和释放的逻辑。</p>
 <p>默认情况下，堆外内存是禁用的。可以通过参数<code>spark.memory.offHeap.enabled</code> 参数启用它 ，并通过<code>spark.memory.offHeap.size</code> 参数设置内存大小，单位为字节 。</p>
 <p>与堆内内存相比，堆外内存模型比较简单，只有<code>Storage memory</code>和<code>Execution memory</code>，其分布如下图所示：</p>
@@ -800,7 +804,7 @@
   <p><span>本文标题:</span><a href="/2021/11/16/2021-12-24-Spark内存管理和优化/">Spark内存管理和优化</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
   <p><span>发布时间:</span>2021年11月16日 - 13:11</p>
-  <p><span>最后更新:</span>2022年03月19日 - 17:03</p>
+  <p><span>最后更新:</span>2022年10月25日 - 11:10</p>
   <p><span>原始链接:</span><a href="/2021/11/16/2021-12-24-Spark内存管理和优化/" title="Spark内存管理和优化">https://zjrongxiang.github.io/2021/11/16/2021-12-24-Spark内存管理和优化/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/2021/11/16/2021-12-24-Spark内存管理和优化/" aria-label="复制成功！"></i></span>
   </p>
@@ -848,8 +852,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/11/16/2022-01-18-Hadoop Yarn高可用机制/" rel="next" title="Hadoop Yarn高可用机制">
-                <i class="fa fa-chevron-left"></i> Hadoop Yarn高可用机制
+              <a href="/2021/11/16/2022-03-13-机器学习系列-什么是概率/" rel="next" title="机器学习系列-什么是概率、随机变量、统计">
+                <i class="fa fa-chevron-left"></i> 机器学习系列-什么是概率、随机变量、统计
               </a>
             
           </div>
@@ -939,7 +943,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">279</span>
+                    <span class="site-state-item-count">311</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1106,7 +1110,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">77</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1288,7 +1298,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">878k</span>
+    <span title="站点总字数">940k</span>
   
 
   
@@ -1297,7 +1307,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">13:19</span>
+    <span title="站点阅读时长">14:15</span>
   
 </div>
 

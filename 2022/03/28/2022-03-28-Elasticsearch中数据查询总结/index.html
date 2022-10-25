@@ -117,17 +117,17 @@
 
 
 
-  <meta name="description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： 第一部分 Search 接口1.1 接口案例我们使用Elasticsearch官方提供 Python 包">
+  <meta name="description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： elasticsearch基于 本文以Python API（官方包：https://github.com">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Elasticsearch中数据查询总结">
+<meta property="og:title" content="Elasticsearch中数据查询(Python实现)总结">
 <meta property="og:url" content="https://zjrongxiang.github.io/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/index.html">
 <meta property="og:site_name" content="RongXiang">
-<meta property="og:description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： 第一部分 Search 接口1.1 接口案例我们使用Elasticsearch官方提供 Python 包">
+<meta property="og:description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： elasticsearch基于 本文以Python API（官方包：https://github.com">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2022-06-14T07:21:49.508Z">
+<meta property="og:updated_time" content="2022-06-30T08:44:54.503Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Elasticsearch中数据查询总结">
-<meta name="twitter:description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： 第一部分 Search 接口1.1 接口案例我们使用Elasticsearch官方提供 Python 包">
+<meta name="twitter:title" content="Elasticsearch中数据查询(Python实现)总结">
+<meta name="twitter:description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： elasticsearch基于 本文以Python API（官方包：https://github.com">
 
 
 
@@ -146,7 +146,7 @@
   };
 </script>
 
-  <title>Elasticsearch中数据查询总结 | RongXiang</title>
+  <title>Elasticsearch中数据查询(Python实现)总结 | RongXiang</title>
   
 
 
@@ -439,7 +439,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Elasticsearch中数据查询总结
+          <h1 class="post-title" itemprop="name headline">Elasticsearch中数据查询(Python实现)总结
 
               
             
@@ -482,7 +482,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-06-14 15:21:49" itemprop="dateModified" datetime="2022-06-14T15:21:49+08:00">2022-06-14</time>
+                <time title="修改时间：2022-06-30 16:44:54" itemprop="dateModified" datetime="2022-06-30T16:44:54+08:00">2022-06-30</time>
               
             
           </span>
@@ -545,7 +545,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">22k</span>
+                <span title="本文字数">23k</span>
               
 
               
@@ -559,7 +559,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">20 分钟</span>
+                <span title="阅读时长">21 分钟</span>
               
             </div>
           
@@ -588,6 +588,9 @@
 <li>参考文献及资料</li>
 </ul>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><code>Elasticsearch</code>是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下<code>Elasticsearch</code>的查询原理：</p>
+<p>elasticsearch基于</p>
+<p>本文以Python API（官方包：<official elasticsearch client library for python><a href="https://github.com/elastic/elasticsearch-py）为例进行实现讲解。" target="_blank" rel="noopener">https://github.com/elastic/elasticsearch-py）为例进行实现讲解。</a></official></p>
+<h2 id="第一部分-查询原理说明"><a href="#第一部分-查询原理说明" class="headerlink" title="第一部分 查询原理说明"></a>第一部分 查询原理说明</h2><p><a href="https://pdai.tech/md/db/nosql-es/elasticsearch-y-th-4.html" target="_blank" rel="noopener">https://pdai.tech/md/db/nosql-es/elasticsearch-y-th-4.html</a></p>
 <h2 id="第一部分-Search-接口"><a href="#第一部分-Search-接口" class="headerlink" title="第一部分 Search 接口"></a>第一部分 <code>Search</code> 接口</h2><h3 id="1-1-接口案例"><a href="#1-1-接口案例" class="headerlink" title="1.1 接口案例"></a>1.1 接口案例</h3><p>我们使用Elasticsearch官方提供 <code>Python</code> 包进行查询交互：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</span><br><span class="line">elasticClient = Elasticsearch(<span class="string">'http://192.168.52.142:9200'</span>)</span><br><span class="line"></span><br><span class="line">query_body = &#123;</span><br><span class="line">    <span class="string">"query"</span>:&#123;</span><br><span class="line">        <span class="string">"bool"</span>:&#123;</span><br><span class="line">            <span class="string">"must"</span>:&#123;</span><br><span class="line">                <span class="string">"match"</span>:&#123;</span><br><span class="line">                    <span class="string">"text_entry"</span>: <span class="string">"we"</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"from"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">"size"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">result = elasticClient.search(index=<span class="string">"shakespeare"</span>, body=query_body)</span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
 <p>查询结果为:</p>
@@ -628,7 +631,8 @@
 <p>我们可以看到，可以根据设置size数值，来获取返回的文档数，但是另外的问题又来了，如果文档数量大于10000（size的最大值）呢？且这样获取貌似速度上比较慢？</p>
 <p>2.文档数量大于10000，且查询速度不够快</p>
 <p>这时候scan API就派上用场了。</p>
-<h2 id="第二部分-Scroll-接口"><a href="#第二部分-Scroll-接口" class="headerlink" title="第二部分 Scroll 接口"></a>第二部分 Scroll 接口</h2><p>elasticsearch的scroll是什么？<br>可以简单理解为mysql的cursor游标，比如你一次请求的数据会很大，可以使用scroll这样的流式接口，scroll会把你的所需要的结果标记起来。<br>但是这scroll的查询还是会对数据进行排序的，这样会影响性能。 如果你只是单纯的想要数据，那么可以使用scan，因为scan会告诉 elasticsearch 不去排序。scan模式会扫描shard分片中的数据,单纯的扫除匹配，而不会像scroll进行排序处理。</p>
+<p>当发送查询命令到ElasticSearch中，返回的文档集合默认会按照计算出来的文档打分排序(已经在本章的 Lucene的默认打分算法 一节中讲到)。</p>
+<h3 id="1-3-Python实现"><a href="#1-3-Python实现" class="headerlink" title="1.3 Python实现"></a>1.3 Python实现</h3><h2 id="第二部分-Scroll-接口"><a href="#第二部分-Scroll-接口" class="headerlink" title="第二部分 Scroll 接口"></a>第二部分 Scroll 接口</h2><p>elasticsearch的scroll是什么？<br>可以简单理解为mysql的cursor游标，比如你一次请求的数据会很大，可以使用scroll这样的流式接口，scroll会把你的所需要的结果标记起来。<br>但是这scroll的查询还是会对数据进行排序的，这样会影响性能。 如果你只是单纯的想要数据，那么可以使用scan，因为scan会告诉 elasticsearch 不去排序。scan模式会扫描shard分片中的数据,单纯的扫除匹配，而不会像scroll进行排序处理。</p>
 <p><a href="https://zhuanlan.zhihu.com/p/392363821" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/392363821</a></p>
 <p>Slice使用方式以及原理。多线程方式提升查询速度。</p>
 <ul>
@@ -636,9 +640,13 @@
 <li>注意用完的scroll应该及时删除。es默认保留500个滚动任务id。多了就不能再使用了！</li>
 <li>注意scroll状态保留的时间。如果你后续接到数据以后的处理时间比较长，或者查询本身时间花费也长，你应该合理的设置一个长的状态保留时间。</li>
 </ul>
-<h2 id="第三部分-Scan-接口"><a href="#第三部分-Scan-接口" class="headerlink" title="第三部分 Scan 接口"></a>第三部分 Scan 接口</h2><p>不用排序，单纯将数据查出来。</p>
+<h3 id="2-1-接口案例"><a href="#2-1-接口案例" class="headerlink" title="2.1 接口案例"></a>2.1 接口案例</h3><h3 id="2-2-接口说明"><a href="#2-2-接口说明" class="headerlink" title="2.2 接口说明"></a>2.2 接口说明</h3><h3 id="2-3-Python实现"><a href="#2-3-Python实现" class="headerlink" title="2.3 Python实现"></a>2.3 Python实现</h3><p><a href="https://simplernerd.com/elasticsearch-scroll-python/" target="_blank" rel="noopener">https://simplernerd.com/elasticsearch-scroll-python/</a></p>
+<h2 id="第三部分-Scan-接口"><a href="#第三部分-Scan-接口" class="headerlink" title="第三部分 Scan 接口"></a>第三部分 Scan 接口</h2><p>按照官网介绍</p>
+<p>不用排序，单纯将数据查出来。</p>
 <p>如果没有排序的深度分页需求，最好使用 scan scroll的组合。</p>
 <p>scan scroll的流式接口用法很是简单,在url里扩充字段 search_type 是scan类型，scroll是3分钟，当次查询的结果会在elasticsearch标记3分钟。<br>这里的size 1000个会在每个shard起到作用。 并不是把所有结果限制为1000个 ！ 如果你的分片数目有10个，那么你最多可以拿到 1000 * 10的数据。</p>
+<h2 id="第四部分-异步搜索"><a href="#第四部分-异步搜索" class="headerlink" title="第四部分 异步搜索"></a>第四部分 异步搜索</h2><p><a href="https://blog.csdn.net/UbuntuTouch/article/details/107868114" target="_blank" rel="noopener">https://blog.csdn.net/UbuntuTouch/article/details/107868114</a></p>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.16/async-search.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/7.16/async-search.html</a></p>
 <h2 id="第四部分-总结"><a href="#第四部分-总结" class="headerlink" title="第四部分 总结"></a>第四部分 总结</h2><p>当需求查询es数据库中大量数据时,用_search就不符合应用场景了，建议使用helpers.scan，helpers.scan返回的数据对象时迭代器，很大节省内存空间，而且查询速度要远远大于search；search在利用from、size参数控制返回数据的条数,使用 from and size 的深度分页，size=10&amp;from=10000 是非常低效的，因为 100,000 排序的结果必须从每个分片上取出并重新排序最后返回 10 条。这个过程需要对每个请求页重复，scroll进行数据分页，也可以返回大数据，但是search返回的数据是以list的形式，如果一次需要返回的数据量比较大的话，则会十分耗费内存，而且数据传输速度也会比较慢</p>
 <h2 id="第五部分-附录"><a href="#第五部分-附录" class="headerlink" title="第五部分 附录"></a>第五部分 附录</h2><h3 id="5-1-参数track-total-hits说明"><a href="#5-1-参数track-total-hits说明" class="headerlink" title="5.1 参数track_total_hits说明"></a>5.1 参数<code>track_total_hits</code>说明</h3><p>Generally the total hit count can’t be computed accurately without visiting all matches, which is costly for queries that match lots of documents. The <code>track_total_hits</code> parameter allows you to control how the total number of hits should be tracked. Given that it is often enough to have a lower bound of the number of hits, such as “there are at least 10000 hits”, the default is set to <code>10,000</code>. This means that requests will count the total hit accurately up to <code>10,000</code> hits. It’s is a good trade off to speed up searches if you don’t need the accurate number of hits after a certain threshold.</p>
 <p>When set to <code>true</code> the search response will always track the number of hits that match the query accurately (e.g. <code>total.relation</code> will always be equal to <code>&quot;eq&quot;</code> when <code>track_total_hits</code> is set to true). Otherwise the <code>&quot;total.relation&quot;</code> returned in the <code>&quot;total&quot;</code> object in the search response determines how the <code>&quot;total.value&quot;</code> should be interpreted. A value of <code>&quot;gte&quot;</code> means that the <code>&quot;total.value&quot;</code> is a lower bound of the total hits that match the query and a value of <code>&quot;eq&quot;</code> indicates that <code>&quot;total.value&quot;</code> is the accurate count.</p>
@@ -719,7 +727,7 @@
 <ul>
 <li></li>
 </ul>
-<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、数据治理对运维数据体系的思考与启发，链接：<a href="http://blog.itpub.net/69994525/viewspace-2762789/" target="_blank" rel="noopener">http://blog.itpub.net/69994525/viewspace-2762789/</a></p>
+<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、Official Elasticsearch client library for Python，链接：<a href="https://github.com/elastic/elasticsearch-py" target="_blank" rel="noopener">https://github.com/elastic/elasticsearch-py</a></p>
 
       
     </div>
@@ -735,11 +743,11 @@
   <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
   <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
-  <p><span>本文标题:</span><a href="/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/">Elasticsearch中数据查询总结</a></p>
+  <p><span>本文标题:</span><a href="/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/">Elasticsearch中数据查询(Python实现)总结</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
   <p><span>发布时间:</span>2022年03月28日 - 13:03</p>
-  <p><span>最后更新:</span>2022年06月14日 - 15:06</p>
-  <p><span>原始链接:</span><a href="/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/" title="Elasticsearch中数据查询总结">https://zjrongxiang.github.io/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/</a>
+  <p><span>最后更新:</span>2022年06月30日 - 16:06</p>
+  <p><span>原始链接:</span><a href="/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/" title="Elasticsearch中数据查询(Python实现)总结">https://zjrongxiang.github.io/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/" aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
@@ -786,8 +794,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2022/03/28/2022-03-30-智能运维综述系列（告警处理）/" rel="next" title="智能运维综述系列（异常检测）">
-                <i class="fa fa-chevron-left"></i> 智能运维综述系列（异常检测）
+              <a href="/2022/03/28/2022-03-30-智能运维综述系列（日志处理）/" rel="next" title="智能运维综述系列（日志处理）">
+                <i class="fa fa-chevron-left"></i> 智能运维综述系列（日志处理）
               </a>
             
           </div>
@@ -796,8 +804,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2022/03/28/2022-03-30-智能运维综述系列（性能容量）/" rel="prev" title="智能运维综述系列（异常检测）">
-                智能运维综述系列（异常检测） <i class="fa fa-chevron-right"></i>
+              <a href="/2022/04/17/2022-04-17-Flink内存管理和优化/" rel="prev" title="Flink内存管理和优化">
+                Flink内存管理和优化 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -877,7 +885,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">279</span>
+                    <span class="site-state-item-count">311</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1044,7 +1052,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">77</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1193,7 +1207,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Search-接口"><span class="nav-number">3.</span> <span class="nav-text">第一部分 Search 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-接口案例"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 接口案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-接口说明"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 接口说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Scroll-接口"><span class="nav-number">4.</span> <span class="nav-text">第二部分 Scroll 接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-Scan-接口"><span class="nav-number">5.</span> <span class="nav-text">第三部分 Scan 接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-总结"><span class="nav-number">6.</span> <span class="nav-text">第四部分 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五部分-附录"><span class="nav-number">7.</span> <span class="nav-text">第五部分 附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-参数track-total-hits说明"><span class="nav-number">7.1.</span> <span class="nav-text">5.1 参数track_total_hits说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">8.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-查询原理说明"><span class="nav-number">3.</span> <span class="nav-text">第一部分 查询原理说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Search-接口"><span class="nav-number">4.</span> <span class="nav-text">第一部分 Search 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-接口案例"><span class="nav-number">4.1.</span> <span class="nav-text">1.1 接口案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-接口说明"><span class="nav-number">4.2.</span> <span class="nav-text">1.2 接口说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Python实现"><span class="nav-number">4.3.</span> <span class="nav-text">1.3 Python实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Scroll-接口"><span class="nav-number">5.</span> <span class="nav-text">第二部分 Scroll 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-接口案例"><span class="nav-number">5.1.</span> <span class="nav-text">2.1 接口案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-接口说明"><span class="nav-number">5.2.</span> <span class="nav-text">2.2 接口说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Python实现"><span class="nav-number">5.3.</span> <span class="nav-text">2.3 Python实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-Scan-接口"><span class="nav-number">6.</span> <span class="nav-text">第三部分 Scan 接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-异步搜索"><span class="nav-number">7.</span> <span class="nav-text">第四部分 异步搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-总结"><span class="nav-number">8.</span> <span class="nav-text">第四部分 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五部分-附录"><span class="nav-number">9.</span> <span class="nav-text">第五部分 附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-参数track-total-hits说明"><span class="nav-number">9.1.</span> <span class="nav-text">5.1 参数track_total_hits说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">10.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
             
 
           </div>
@@ -1226,7 +1240,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">878k</span>
+    <span title="站点总字数">940k</span>
   
 
   
@@ -1235,7 +1249,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">13:19</span>
+    <span title="站点阅读时长">14:15</span>
   
 </div>
 
@@ -1383,7 +1397,7 @@
   var disqus_config = function () {
     this.page.url = "https://zjrongxiang.github.io/2022/03/28/2022-03-28-Elasticsearch中数据查询总结/";
     this.page.identifier = "2022/03/28/2022-03-28-Elasticsearch中数据查询总结/";
-    this.page.title = 'Elasticsearch中数据查询总结';
+    this.page.title = 'Elasticsearch中数据查询(Python实现)总结';
     };
   function loadComments () {
     var d = document, s = d.createElement('script');
