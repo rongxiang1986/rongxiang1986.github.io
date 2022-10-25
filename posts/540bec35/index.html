@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="目录 背景 第一部分 环境准备 第二部分 原理解析 第三部分 案例运行 第四部分 线上架构设计 参考文献及资料  背景目前Flink逐步成为企业级大数据平台的使用最广泛的实时计算框架，特别在构建TB级别的实时数仓场景。Flink经历大量企业级线上环境的业务考验。 那么Flink的强大实时计算能力能否赋能给机器学习场景呢？这就是PyFlink项目的目的。我们知道机器学习主要是基于Python语言生态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于PyFlink实现在线机器学习">
+<meta property="og:url" content="https://zjrongxiang.github.io/posts/540bec35/index.html">
+<meta property="og:site_name" content="RongXiang">
+<meta property="og:description" content="目录 背景 第一部分 环境准备 第二部分 原理解析 第三部分 案例运行 第四部分 线上架构设计 参考文献及资料  背景目前Flink逐步成为企业级大数据平台的使用最广泛的实时计算框架，特别在构建TB级别的实时数仓场景。Flink经历大量企业级线上环境的业务考验。 那么Flink的强大实时计算能力能否赋能给机器学习场景呢？这就是PyFlink项目的目的。我们知道机器学习主要是基于Python语言生态">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="d:/myblog/source/_posts/images/picture/pyFlink/arch.jpg">
+<meta property="og:image" content="d:/myblog/source/_posts/images/picture/pyFlink/py4j.png">
+<meta property="og:image" content="d:/myblog/source/_posts/images/picture/pyFlink/socket.bmp">
+<meta property="og:image" content="d:/myblog/source/_posts/images/picture/pyFlink/tableapi.bmp">
+<meta property="og:updated_time" content="2022-10-25T15:01:29.535Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于PyFlink实现在线机器学习">
+<meta name="twitter:description" content="目录 背景 第一部分 环境准备 第二部分 原理解析 第三部分 案例运行 第四部分 线上架构设计 参考文献及资料  背景目前Flink逐步成为企业级大数据平台的使用最广泛的实时计算框架，特别在构建TB级别的实时数仓场景。Flink经历大量企业级线上环境的业务考验。 那么Flink的强大实时计算能力能否赋能给机器学习场景呢？这就是PyFlink项目的目的。我们知道机器学习主要是基于Python语言生态">
+<meta name="twitter:image" content="d:/myblog/source/_posts/images/picture/pyFlink/arch.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RongXiang" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://zjrongxiang.github.io/posts/540bec35/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>基于PyFlink实现在线机器学习 | RongXiang</title>
+  
+
+
+
+
+  <script async src="//www.googletagmanager.com/gtag/js?id=UA-113063423-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-113063423-1');
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a> -->
+    <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RongXiang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">我的烂笔头</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>日程表</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/540bec35/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基于PyFlink实现在线机器学习
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-11-16 13:30:00" itemprop="dateCreated datePublished" datetime="2021-11-16T13:30:00+08:00">2021-11-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/540bec35/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/540bec35/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">14k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">12 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li>背景</li>
+<li>第一部分 环境准备</li>
+<li>第二部分 原理解析</li>
+<li>第三部分 案例运行</li>
+<li>第四部分 线上架构设计</li>
+<li>参考文献及资料</li>
+</ul>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>目前Flink逐步成为企业级大数据平台的使用最广泛的实时计算框架，特别在构建TB级别的实时数仓场景。Flink经历大量企业级线上环境的业务考验。</p>
+<p>那么Flink的强大实时计算能力能否赋能给机器学习场景呢？这就是PyFlink项目的目的。我们知道机器学习主要是基于Python语言生态圈。但是Python（Cpython）语言是一个单核语言（即全局解析锁GIL），限制了单机处理性能。但是有了Flink赋能，Python机器学习可以分布式实时处理，就能大大提升机器学习的处理能力。</p>
+<p>本文将介绍PyFlink项目的实现原理、环境部署、机器学习案例运行，最后对实际线上架构部署提出架构建议。</p>
+<h2 id="第一部分-环境准备"><a href="#第一部分-环境准备" class="headerlink" title="第一部分 环境准备"></a>第一部分 环境准备</h2><h3 id="1-1-Hadoop-Yarn集群准备"><a href="#1-1-Hadoop-Yarn集群准备" class="headerlink" title="1.1 Hadoop Yarn集群准备"></a>1.1 Hadoop Yarn集群准备</h3><p>测试环境我们使用CDH开源集群，Flink的运行方式采用Flink on Yarn模式。单机测试的时候还有下面几种模式：</p>
+<ul>
+<li>Local-SingleJVM 模式，开发测试使用，所有角色TM、JM 都在同一个 JVM 里面，线程模拟；</li>
+<li>Local-SingleNode 模式，开发测试使用，运行在单机，进程模拟，伪分布式。</li>
+<li>Cluster 模式，Flink自带集群模式，即Standalone集群；</li>
+<li>k8s模式，k8s云模式部署；</li>
+</ul>
+<h3 id="1-1-Flink准备"><a href="#1-1-Flink准备" class="headerlink" title="1.1 Flink准备"></a>1.1 Flink准备</h3><p>Flink 版本采用最新（2022年1月15日）稳定版：<a href="https://www.apache.org/dyn/closer.lua/flink/flink-1.14.2/flink-1.14.2-bin-scala_2.11.tgz" target="_blank" rel="noopener">Apache Flink 1.14.2</a>。</p>
+<h3 id="1-2-Python环境准备"><a href="#1-2-Python环境准备" class="headerlink" title="1.2 Python环境准备"></a>1.2 Python环境准备</h3><p>Python环境我们使用Aconda环境部署，Python内核版本为Python3.7.6。目前官网要求版本为： 3.6 或 3.7+，否则会出错。</p>
+<p>另外需要部署安装PyFlink包。从flink1.10开始，<a href="https://pypi.org/project/apache-flink/" target="_blank" rel="noopener">PyFlink</a>安装无需编译源码.</p>
+<p>安装命令如下（注意对应的Flink版本）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@deeplearning:~# pip install apache-flink==1.14.2</span><br></pre></td></tr></table></figure>
+<p>由于墙的原因建议指定国内源（使用清华大学源：<a href="https://pypi.tuna.tsinghua.edu.cn/simple/），否则会很慢：" target="_blank" rel="noopener">https://pypi.tuna.tsinghua.edu.cn/simple/），否则会很慢：</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@deeplearning:~# pip install apache-flink==1.14.2 -i https://pypi.tuna.tsinghua.edu.cn/simple/</span><br></pre></td></tr></table></figure>
+<h3 id="1-3-其他环境"><a href="#1-3-其他环境" class="headerlink" title="1.3 其他环境"></a>1.3 其他环境</h3><ul>
+<li>集群（每个节点）的JAVA_HOME要求1.8或者1.11。</li>
+</ul>
+<h2 id="第二部分-原理解析"><a href="#第二部分-原理解析" class="headerlink" title="第二部分 原理解析"></a>第二部分 原理解析</h2><h3 id="2-1-运行原理"><a href="#2-1-运行原理" class="headerlink" title="2.1 运行原理"></a>2.1 运行原理</h3><p>Flink项目组并没有使用Python语言重新实现Flink引擎，而是基于最小化设计原则（以最小的成本实现既定目标），在Flink Java核心外面套上一层Python API，重用现有的Java核心引擎。整个设计实现类似PySpark。</p>
+<p>从Flink版本演进上看，主要提供能力有：</p>
+<ul>
+<li><p>Flink 1.8.x，开始对Python支持；</p>
+<p>存在的问题：支持Datase/Stream 两个独立实现的API，底层使用JPython实现。</p>
+</li>
+<li><p>Flink 1.9.x，对Table的支持；</p>
+</li>
+<li><p>Flink 1.10.x，增加Python UDFs的支持，在 Table API/SQL 中注册并使用自定义函数；</p>
+</li>
+<li><p>Flink 1.11.x，Pandas UDF 和用户自定义的 Metrics；</p>
+</li>
+</ul>
+<h4 id="2-1-1-通讯选型"><a href="#2-1-1-通讯选型" class="headerlink" title="2.1.1 通讯选型"></a>2.1.1 通讯选型</h4><p>Flink赋能Python最核心的问题是：Java（Flink为Java研发）和Python进程如何实现通讯。在Flink 1.8.x版本的时候使用Jython来实现，性能上比cpython要快。但是机器学习等生态包支持上，远不如cpython。所以从生态融合上看选择Cpython才是正确的方向。</p>
+<p>Java和Python通信有两种解法。</p>
+<ul>
+<li><p>第一种，第三方实现，即实现一个统一的大数据处理管道（pipline），并支持多语言开发，通信由管道平台统一处理。这就是Google开源的Apache Beam（如下图）。</p>
+<p>通常流程是：用户使用Apache Beam Python SDK编写数据处理管道，选择runner为FlinkRunner，最后将代码提交至Flink集群运行。</p>
+</li>
+</ul>
+<p><img src="D:\myblog\source\_posts\images\picture\pyFlink\arch.jpg" alt="arch"></p>
+<ul>
+<li>第二种，由Flink本身在不改变源Java内核的前提下，外层套上一层薄薄的API，然后Python进程通过和这层API通信实现和Java虚拟机内部的通信。这就是大名鼎鼎的Py4J，即Py4J 作为 Java VM 和 Python 解释器之间通讯的桥梁（如下图）。</li>
+</ul>
+<p><img src="D:\myblog\source\_posts\images\picture\pyFlink\py4j.png" alt="py4j"></p>
+<p>第一种解法需要依赖Apache Beam SDK能力和生态，为了通用性，必然要牺牲灵活性，参考<a href="https://beam.apache.org/documentation/io/built-in/" target="_blank" rel="noopener">Beam的外部I/O的支持清单</a>。</p>
+<p>最终Flink选择了第二种解法。其实熟悉Spark和PySpark项目的同学应该知道Spark赋能Python也同样选择Py4J的架构（经历过线上实践考验的）。</p>
+<p>Py4J库分为Java和Python两部分，基本原理是：</p>
+<ol>
+<li>Java侧，通过<code>py4j.GatewayServer</code>，启动一个GatewayServer，监听一个tcp socket（记做server_socket），用于接收Python侧的请求。</li>
+<li>Python侧，启动一个Geteway。通过Socket访问JVM中对象或者调用方法。</li>
+<li>Python侧在创建<code>JavaGateway</code>对象时，可以选择同时创建一个<code>CallbackServer</code>，它会在Python侧监听一个tcp socket（记做callback_socket），用来给Java回调Python代码提供一条渠道。</li>
+<li>Python 这边创建一个 table 对象的时候，它也会在相应的 Java 这边创建一个相同 table 对象。如果创建一个 TableEnvironment 对象，在 Java 部分也会创建一个 TableEnvironment 对象。调用 table 对象上的方法，那么也会映射到 Java 这边，所以是一个一一映射的关系。</li>
+<li>Py4J提供了一套文本协议用来在tcp socket间传递命令。</li>
+</ol>
+<p><img src="D:\myblog\source\_posts\images\picture\pyFlink\socket.bmp" alt="socket"></p>
+<p>基于这样的设计，如果用户使用 Python Table API 写出了一个作业（没有 Python UDF 的时候），那么这个作业的性能和用 Java 写出来的作业性能是一样的。因为底层的架构都是同一套 Java 的架构。但是需要考虑socket通信的消耗。</p>
+<p><img src="D:\myblog\source\_posts\images\picture\pyFlink\tableapi.bmp" alt="tableapi"></p>
+<h4 id="2-1-2-PyFlink-UDF"><a href="#2-1-2-PyFlink-UDF" class="headerlink" title="2.1.2 PyFlink UDF"></a>2.1.2 PyFlink UDF</h4><p><a href="https://www.modb.pro/db/128622" target="_blank" rel="noopener">https://www.modb.pro/db/128622</a></p>
+<p><a href="https://developer.aliyun.com/article/738962" target="_blank" rel="noopener">https://developer.aliyun.com/article/738962</a></p>
+<h3 id="2-2-提交任务"><a href="#2-2-提交任务" class="headerlink" title="2.2 提交任务"></a>2.2 提交任务</h3><p>参数清单：</p>
+<ul>
+<li><p><code>-py,--python</code>  </p>
+<p>Python script with the program entry. The dependent resources can be configured with the <code>--pyFiles</code> option.</p>
+<p>说明：Python程序脚本作为入口程序。例如：<code>-py /home/flink-1.14.2/examples/python/table/word_count.py</code>，指定入口程序脚本本地路径。</p>
+</li>
+<li><p><code>-pym,--pyModule</code>  </p>
+<p>Python module with the program entry point. This option must be used in conjunction with <code>--pyFiles</code>.</p>
+<p>说明：这个参数和<code>--pyFiles</code>参数结合使用。例如这个参数案例：<code>-pym table_api_demo -pyfs file:///path/to/table_api_demo.py</code>；其中<code>pyfs</code>参数指定了入口文件的路径（也可分布式文件系统），<code>pym</code>指定了入口程序脚本名（使用<code>pyfs</code>参数中文件）。</p>
+</li>
+<li><p><code>-pyfs,--pyFiles</code> </p>
+<p>Attach custom files for job. The standard resource file suffixes such as .py/.egg/.zip/.whl or directory are all supported. These files will be added to the PYTHONPATH of both the local client and the remote python UDF worker. Files suffixed with .zip will be extracted and added to PYTHONPATH. Comma (‘,’) could be used as the separator to specify multiple files (e.g., –pyFiles file:///tmp/myresource.zip,hdfs:///$namenode_address/myresource2.zip).</p>
+<p>说明：该参数主要用于上传运行依赖的客户化脚本文件。文件类型支持：.py/.egg/.zip/.whl，甚至目录（没有验证过）。这些文件最后会追加在客户端和远端的Python检索路径中（<code>PYTHONPATH</code>）中。多个文件（目录）需要使用英文逗号间隔。对于zip类文件，解压后，路径追加Python检索路径。</p>
+</li>
+<li><p><code>-pyarch,--pyArchives</code>  </p>
+<p>Add python archive files for job. The archive files will be extracted to the working directory of python UDF worker. For each archive file, a target directory be specified. If the target directory name is specified, the archive file will be extracted to a directory with the specified name. Otherwise, the archive file will be extracted to a directory with the same name of the archive file. The files uploaded via this option are accessible via relative path. ‘#’ could be used as the separator of the archive file path and the target directory name. Comma (‘,’) could be used as the separator to specify multiple archive files. This option can be used to upload the virtual environment, the data files used in Python UDF (e.g., –pyArchives file:///tmp/py37.zip,file:///tmp/data.zip#data –pyExecutable py37.zip/py37/bin/python). The data files could be accessed in Python UDF, e.g.: f = open(‘data/data.txt’, ‘r’).</p>
+<p>说明：参数指定需要上传的压缩包文件（通常是Python SDK编译环境文件系统，也可以数据类的依赖包）。上传后压缩文件会在目的节点侧进行文件解压。解压的目标文件目录名可以通过<code>#</code>符号来指定（例如：file:///tmp/data.zip#data，解压后目录名即为data，如果压缩包中有文件data.txt，那么python程序就可用通过下面的路径进行访问：f = open(‘data/data.txt’, ‘r’)）。多个压缩文件使用英文逗号间隔。</p>
+</li>
+<li><p><code>-pyclientexec,--pyClientExecutable</code>  </p>
+<p>The path of the Python interpreter used to launch the Python process when submitting the Python jobs via \”flink run\” or compiling the Java/Scala jobs containing Python UDFs. (e.g., –pyArchives file:///tmp/py37.zip –pyClientExecutable py37.zip/py37/python)</p>
+<p>说明：参数指定了flink 客户端侧python的编译环境。例如：参数–pyArchives file:///tmp/py37.zip 指定了python的SDK包，解压后路径为：py37.zip/py37/python，所以通过这个参数可以指定客户端侧的python解析环境路径：–pyClientExecutable py37.zip/py37/python</p>
+</li>
+<li><p><code>-pyexec,--pyExecutable</code>  </p>
+<p>Specify the path of the python interpreter used to execute the python UDF worker (e.g.: –pyExecutable /usr/local/bin/python3). The python UDF worker depends on Python 3.6+, Apache Beam (version == 2.27.0), Pip (version &gt;= 7.1.0) and SetupTools (version &gt;= 37.0.0). Please ensure that the specified environment meets the above requirements.</p>
+<p>说明：类似-pyclientexec，-pyexec参数用来指定执行器的python编译环境，不再赘述。需要注意的是执行器侧python环境需要依赖包版本。</p>
+</li>
+<li><p><code>-pyreq,--pyRequirements</code> </p>
+<p>Specify the requirements.txt file which defines the third-party dependencies. These dependencies will be installed and added to the PYTHONPATH of the python UDF worker. A directory which contains the installation packages of these dependencies could be specified optionally. Use ‘#’ as the separator if the optional parameter exists (e.g., –pyRequirements file:///tmp/requirements.txt#file:///tmp/cached_dir).</p>
+<p>说明：参数用来指定第三方依赖包。</p>
+</li>
+</ul>
+<h2 id="第三部分-案例运行"><a href="#第三部分-案例运行" class="headerlink" title="第三部分 案例运行"></a>第三部分 案例运行</h2><h3 id="3-1-Hello-World案例运行"><a href="#3-1-Hello-World案例运行" class="headerlink" title="3.1 Hello World案例运行"></a>3.1 Hello World案例运行</h3><p>我们首先运行一个Flink项目自带的简单案例：<a href="https://github.com/apache/flink/blob/master/flink-python/pyflink/examples/table/word_count.py" target="_blank" rel="noopener">Hello World</a>。下面是提交命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> run.sh 脚本内容(其中路径自行调整)</span></span><br><span class="line">export HADOOP_CLASSPATH=`hadoop classpath`</span><br><span class="line">/home/flink-1.14.2/bin/flink run -m yarn-cluster \</span><br><span class="line">-pyarch /home/pyflink/python3.7.6.zip \</span><br><span class="line">-pyclientexec python3.7.6.zip/anaconda3/bin/python \</span><br><span class="line">-pyexec python3.7.6.zip/anaconda3/bin/python3 \</span><br><span class="line">-py /home/flink-1.14.2/examples/python/table/word_count.py</span><br></pre></td></tr></table></figure>
+<p>这样Yarn上就会运行一个Flink任务。</p>
+<p>注：Pyflink其中依赖包pyarrow包需要GLIBC 2.14，所以需要注意集群节点操作系统的版本需要大于这个最低要求。</p>
+<h3 id="3-2-在线机器学习"><a href="#3-2-在线机器学习" class="headerlink" title="3.2 在线机器学习"></a>3.2 在线机器学习</h3><h4 id="3-2-1-背景"><a href="#3-2-1-背景" class="headerlink" title="3.2.1 背景"></a>3.2.1 背景</h4><h2 id="第四部分-线上架构设计"><a href="#第四部分-线上架构设计" class="headerlink" title="第四部分 线上架构设计"></a>第四部分 线上架构设计</h2><p><a href="https://enjoyment.cool/2019/12/05/Apache-Flink-%E8%AF%B4%E9%81%93%E7%B3%BB%E5%88%97-%E5%A6%82%E4%BD%95%E5%9C%A8PyFlink-1-10%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89Python-UDF/" target="_blank" rel="noopener">https://enjoyment.cool/2019/12/05/Apache-Flink-%E8%AF%B4%E9%81%93%E7%B3%BB%E5%88%97-%E5%A6%82%E4%BD%95%E5%9C%A8PyFlink-1-10%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89Python-UDF/</a></p>
+<p><a href="https://github.com/uncleguanghui/pyflink_learn/blob/master/examples/README.md" target="_blank" rel="noopener">https://github.com/uncleguanghui/pyflink_learn/blob/master/examples/README.md</a></p>
+<p><a href="https://flink-learning.org.cn/article/detail/65bcdf72a377d468b5436c3e76a63437?spm=a2csy.flink.0.0.10473bdcqCaEq6" target="_blank" rel="noopener">https://flink-learning.org.cn/article/detail/65bcdf72a377d468b5436c3e76a63437?spm=a2csy.flink.0.0.10473bdcqCaEq6</a></p>
+<p><a href="https://cloud.tencent.com/developer/article/1651257" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1651257</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/114717285" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/114717285</a></p>
+<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、<code>PyFlink</code>项目文档，链接：<a href="https://nightlies.apache.org/flink/flink-docs-release-1.14/api/python/" target="_blank" rel="noopener">https://nightlies.apache.org/flink/flink-docs-release-1.14/api/python/</a></p>
+<p>2、The Flink Ecosystem: A Quick Start to PyFlink，链接：<a href="https://alibaba-cloud.medium.com/the-flink-ecosystem-a-quick-start-to-pyflink-6ad09560bf50" target="_blank" rel="noopener">https://alibaba-cloud.medium.com/the-flink-ecosystem-a-quick-start-to-pyflink-6ad09560bf50</a></p>
+<p>3、讨论，链接：<a href="https://docs.google.com/document/d/1ybYt-0xWRMa1Yf5VsuqGRtOfJBz4p74ZmDxZYg3j_h8/edit#heading=h.p6h40rdmqvbx" target="_blank" rel="noopener">https://docs.google.com/document/d/1ybYt-0xWRMa1Yf5VsuqGRtOfJBz4p74ZmDxZYg3j_h8/edit#heading=h.p6h40rdmqvbx</a></p>
+
+      
+    </div>
+
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/posts/540bec35/">基于PyFlink实现在线机器学习</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
+  <p><span>发布时间:</span>2021年11月16日 - 13:11</p>
+  <p><span>最后更新:</span>2022年10月25日 - 23:10</p>
+  <p><span>原始链接:</span><a href="/posts/540bec35/" title="基于PyFlink实现在线机器学习">https://zjrongxiang.github.io/posts/540bec35/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/posts/540bec35/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/18aa3d0d/" rel="next" title="Python语言PEP8规范（翻译）">
+                <i class="fa fa-chevron-left"></i> Python语言PEP8规范（翻译）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/dd6f8c36/" rel="prev" title="Hadoop Yarn高可用机制">
+                Hadoop Yarn高可用机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar/person.png" alt="rong xiang">
+            
+              <p class="site-author-name" itemprop="name">rong xiang</p>
+              <p class="site-description motion-element" itemprop="description">Keep a Pure Curiosity</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">311</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zjrongxiang" title="GitHub &rarr; https://github.com/zjrongxiang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:rongxiang1986@163.com" title="E-Mail &rarr; mailto:rongxiang1986@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/1971060643" title="Weibo &rarr; http://weibo.com/u/1971060643" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/fly51fly?refer_flag=1005055010_" title="https://weibo.com/fly51fly?refer_flag=1005055010_" rel="noopener" target="_blank">爱生活爱可可</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-环境准备"><span class="nav-number">3.</span> <span class="nav-text">第一部分 环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Hadoop-Yarn集群准备"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 Hadoop Yarn集群准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Flink准备"><span class="nav-number">3.2.</span> <span class="nav-text">1.1 Flink准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Python环境准备"><span class="nav-number">3.3.</span> <span class="nav-text">1.2 Python环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-其他环境"><span class="nav-number">3.4.</span> <span class="nav-text">1.3 其他环境</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-原理解析"><span class="nav-number">4.</span> <span class="nav-text">第二部分 原理解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-运行原理"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 运行原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-通讯选型"><span class="nav-number">4.1.1.</span> <span class="nav-text">2.1.1 通讯选型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-PyFlink-UDF"><span class="nav-number">4.1.2.</span> <span class="nav-text">2.1.2 PyFlink UDF</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-提交任务"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 提交任务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-案例运行"><span class="nav-number">5.</span> <span class="nav-text">第三部分 案例运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Hello-World案例运行"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 Hello World案例运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-在线机器学习"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 在线机器学习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-背景"><span class="nav-number">5.2.1.</span> <span class="nav-text">3.2.1 背景</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-线上架构设计"><span class="nav-number">6.</span> <span class="nav-text">第四部分 线上架构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">7.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2014 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rong xiang</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">940k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">14:15</span>
+  
+</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+    
+  <script id="dsq-count-scr" src="https://https-zjrongxiang-github-io.disqus.com/count.js" async></script>
+
+
+<script>
+  var disqus_config = function () {
+    this.page.url = "https://zjrongxiang.github.io/posts/540bec35/";
+    this.page.identifier = "posts/540bec35/";
+    this.page.title = '基于PyFlink实现在线机器学习';
+    };
+  function loadComments () {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-zjrongxiang-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    loadComments();
+  
+</script>
+
+  
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>

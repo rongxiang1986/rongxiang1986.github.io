@@ -422,7 +422,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/25/2019-04-23-在Minikube上运行Flink集群（一）/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/8ee13721/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -442,7 +442,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/06/25/2019-04-23-在Minikube上运行Flink集群（一）/" class="post-title-link" itemprop="url">在Minikube上运行Flink集群</a>
+                <a href="/posts/8ee13721/" class="post-title-link" itemprop="url">在Minikube上运行Spark集群</a>
               
             
           </h1>
@@ -484,7 +484,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-22 11:40:33" itemprop="dateModified" datetime="2020-03-22T11:40:33+08:00">2020-03-22</time>
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
               
             
           </span>
@@ -501,7 +501,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Flink/" itemprop="url" rel="index"><span itemprop="name">Flink</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Minikube-spark-Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Minikube spark Kubernetes</span></a></span>
 
                 
                 
@@ -516,9 +516,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/25/2019-04-23-在Minikube上运行Flink集群（一）/#comments" itemprop="discussionUrl">
+                <a href="/posts/8ee13721/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/2019-04-23-在Minikube上运行Flink集群（一）/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/8ee13721/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -540,7 +540,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">20k</span>
+                <span title="本文字数">32k</span>
               
 
               
@@ -554,7 +554,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">19 分钟</span>
+                <span title="阅读时长">29 分钟</span>
               
             </div>
           
@@ -577,21 +577,17 @@
         
           
             <p>
-              目录
-背景
-第一部分   部署准备
-第二部分  验证
-总结
-参考文献及资料 
+              [TOC]
+背景​     Spark2.3版本开始支持使用spark-submit直接提交任务给Kubernetes集群。执行机制原理：
 
-背景第一部分 部署准备首先当然需要部署minikube集群。启动minikube集群：
-# minikube startStarting local Kubernetes v1.10.0 cluster...Starti
+Spark创建一个在Kubernetes pod中运行的Spark驱动程序。
+驱动程序创建执行程序，这些执行程序也在Kubernetes pod中运行并连接到
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/06/25/2019-04-23-在Minikube上运行Flink集群（一）/#more" rel="contents">
+              <a class="btn" href="/posts/8ee13721/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -655,7 +651,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/25/2019-07-27-在Minikube上运行Kafka集群/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/f15de0fe/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -675,7 +671,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/06/25/2019-07-27-在Minikube上运行Kafka集群/" class="post-title-link" itemprop="url">在Minikube上运行Kafka集群</a>
+                <a href="/posts/f15de0fe/" class="post-title-link" itemprop="url">在Minikube上运行Kafka集群</a>
               
             
           </h1>
@@ -717,7 +713,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-22 11:41:26" itemprop="dateModified" datetime="2020-03-22T11:41:26+08:00">2020-03-22</time>
+                <time title="修改时间：2022-10-25 23:01:28" itemprop="dateModified" datetime="2022-10-25T23:01:28+08:00">2022-10-25</time>
               
             
           </span>
@@ -749,9 +745,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/25/2019-07-27-在Minikube上运行Kafka集群/#comments" itemprop="discussionUrl">
+                <a href="/posts/f15de0fe/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/2019-07-27-在Minikube上运行Kafka集群/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/f15de0fe/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -825,7 +821,7 @@
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/06/25/2019-07-27-在Minikube上运行Kafka集群/#more" rel="contents">
+              <a class="btn" href="/posts/f15de0fe/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -889,7 +885,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/25/2018-06-25-在Ubuntu上部署Minikube/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/2342599a/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -909,7 +905,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/06/25/2018-06-25-在Ubuntu上部署Minikube/" class="post-title-link" itemprop="url">在Ubuntu上部署Minikube</a>
+                <a href="/posts/2342599a/" class="post-title-link" itemprop="url">使用Docker部署Mysql容器</a>
               
             
           </h1>
@@ -951,7 +947,240 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-08-15 00:38:50" itemprop="dateModified" datetime="2021-08-15T00:38:50+08:00">2021-08-15</time>
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/2342599a/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/2342599a/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">3.4k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">3 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              目录
+背景
+第一部分    拉取Mysql镜像
+第二部分   启动镜像
+第五部分   总结
+参考文献及资料
+
+背景第一部分 拉取Mysql镜像1.1 镜像拉起我们使用Mysql官方（https://hub.docker.com/_/mysql）提供的镜像资源。
+root@deeplearning:/
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/posts/2342599a/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    <div>
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/a63b7206/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/posts/a63b7206/" class="post-title-link" itemprop="url">在Ubuntu上部署Minikube</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-25 19:30:00" itemprop="dateCreated datePublished" datetime="2018-06-25T19:30:00+08:00">2018-06-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
               
             
           </span>
@@ -983,9 +1212,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/25/2018-06-25-在Ubuntu上部署Minikube/#comments" itemprop="discussionUrl">
+                <a href="/posts/a63b7206/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/2018-06-25-在Ubuntu上部署Minikube/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/a63b7206/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1052,7 +1281,7 @@ Kube
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/06/25/2018-06-25-在Ubuntu上部署Minikube/#more" rel="contents">
+              <a class="btn" href="/posts/a63b7206/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1116,7 +1345,7 @@ Kube
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/2f850ff/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -1136,7 +1365,7 @@ Kube
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/" class="post-title-link" itemprop="url">使用Cloudera Quickstart Docker镜像快速部署hadoop集群</a>
+                <a href="/posts/2f850ff/" class="post-title-link" itemprop="url">使用Cloudera Quickstart Docker镜像快速部署hadoop集群</a>
               
             
           </h1>
@@ -1178,7 +1407,7 @@ Kube
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2022-02-27 15:18:40" itemprop="dateModified" datetime="2022-02-27T15:18:40+08:00">2022-02-27</time>
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
               
             
           </span>
@@ -1210,9 +1439,9 @@ Kube
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/#comments" itemprop="discussionUrl">
+                <a href="/posts/2f850ff/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/2f850ff/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1286,7 +1515,7 @@ Kube
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/06/25/2019-04-30-使用Cloudera Quickstart Docker镜像快速部署hadoop集群/#more" rel="contents">
+              <a class="btn" href="/posts/2f850ff/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1350,7 +1579,7 @@ Kube
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/25/2018-08-06-在Minikube上运行Spark集群/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/6fbd6781/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -1370,7 +1599,7 @@ Kube
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/06/25/2018-08-06-在Minikube上运行Spark集群/" class="post-title-link" itemprop="url">在Minikube上运行Spark集群</a>
+                <a href="/posts/6fbd6781/" class="post-title-link" itemprop="url">机器学习系列文章-聚类算法总结</a>
               
             
           </h1>
@@ -1412,469 +1641,7 @@ Kube
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-11 21:14:36" itemprop="dateModified" datetime="2020-08-11T21:14:36+08:00">2020-08-11</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Minikube-spark-Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Minikube spark Kubernetes</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/25/2018-08-06-在Minikube上运行Spark集群/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/2018-08-06-在Minikube上运行Spark集群/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">32k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">29 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              [TOC]
-背景​     Spark2.3版本开始支持使用spark-submit直接提交任务给Kubernetes集群。执行机制原理：
-
-Spark创建一个在Kubernetes pod中运行的Spark驱动程序。
-驱动程序创建执行程序，这些执行程序也在Kubernetes pod中运行并连接到
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/06/25/2018-08-06-在Minikube上运行Spark集群/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    <div>
-      
-    </div>
-    
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/25/2022-08-13-使用Docker部署Mysql容器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rong xiang">
-      <meta itemprop="description" content="Keep a Pure Curiosity">
-      <meta itemprop="image" content="/images/avatar/person.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="RongXiang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2018/06/25/2022-08-13-使用Docker部署Mysql容器/" class="post-title-link" itemprop="url">使用Docker部署Mysql容器</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-25 19:30:00" itemprop="dateCreated datePublished" datetime="2018-06-25T19:30:00+08:00">2018-06-25</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2022-08-13 14:10:48" itemprop="dateModified" datetime="2022-08-13T14:10:48+08:00">2022-08-13</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/25/2022-08-13-使用Docker部署Mysql容器/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/2022-08-13-使用Docker部署Mysql容器/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">3.4k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">3 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              目录
-背景
-第一部分    拉取Mysql镜像
-第二部分   启动镜像
-第五部分   总结
-参考文献及资料
-
-背景第一部分 拉取Mysql镜像1.1 镜像拉起我们使用Mysql官方（https://hub.docker.com/_/mysql）提供的镜像资源。
-root@deeplearning:/
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/06/25/2022-08-13-使用Docker部署Mysql容器/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    <div>
-      
-    </div>
-    
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/25/2018-08-06-关于正则表达式使用和总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rong xiang">
-      <meta itemprop="description" content="Keep a Pure Curiosity">
-      <meta itemprop="image" content="/images/avatar/person.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="RongXiang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2018/06/25/2018-08-06-关于正则表达式使用和总结/" class="post-title-link" itemprop="url">关于正则表达式使用和总结</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-25 19:30:00" itemprop="dateCreated datePublished" datetime="2018-06-25T19:30:00+08:00">2018-06-25</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2021-05-27 21:40:05" itemprop="dateModified" datetime="2021-05-27T21:40:05+08:00">2021-05-27</time>
+                <time title="修改时间：2022-10-25 23:01:28" itemprop="dateModified" datetime="2022-10-25T23:01:28+08:00">2022-10-25</time>
               
             
           </span>
@@ -1906,235 +1673,9 @@ root@deeplearning:/
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/25/2018-08-06-关于正则表达式使用和总结/#comments" itemprop="discussionUrl">
+                <a href="/posts/6fbd6781/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/2018-08-06-关于正则表达式使用和总结/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">11k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">10 分钟</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              背景正则表达式（regular Expression）是计算机中的概念。regular这里是规则、规律的意思，字面翻译指的是：规则的表达式。正则表达式主要用来处理字符串的工具，拥有自己独特的语法。 计算机常用语言均支持正则表达式，语法都是相同的，区别在于不同的语言支持的语法略有差异。 
-在数据科学实
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/06/25/2018-08-06-关于正则表达式使用和总结/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    <div>
-      
-    </div>
-    
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/25/2018-06-26-机器学习系列文章-聚类算法总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rong xiang">
-      <meta itemprop="description" content="Keep a Pure Curiosity">
-      <meta itemprop="image" content="/images/avatar/person.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="RongXiang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2018/06/25/2018-06-26-机器学习系列文章-聚类算法总结/" class="post-title-link" itemprop="url">机器学习系列文章-聚类算法总结</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-25 19:30:00" itemprop="dateCreated datePublished" datetime="2018-06-25T19:30:00+08:00">2018-06-25</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-10-05 21:42:01" itemprop="dateModified" datetime="2020-10-05T21:42:01+08:00">2020-10-05</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/machine-learning/" itemprop="url" rel="index"><span itemprop="name">machine learning</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/06/25/2018-06-26-机器学习系列文章-聚类算法总结/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/2018-06-26-机器学习系列文章-聚类算法总结/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/6fbd6781/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2202,7 +1743,7 @@ root@deeplearning:/
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/06/25/2018-06-26-机器学习系列文章-聚类算法总结/#more" rel="contents">
+              <a class="btn" href="/posts/6fbd6781/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2266,7 +1807,7 @@ root@deeplearning:/
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/06/09/2018-06-09-机器学习系列文章-集成学习综述/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/fc1eb8b2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -2286,7 +1827,466 @@ root@deeplearning:/
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/06/09/2018-06-09-机器学习系列文章-集成学习综述/" class="post-title-link" itemprop="url">机器学习系列文章-集成学习综述</a>
+                <a href="/posts/fc1eb8b2/" class="post-title-link" itemprop="url">在Minikube上运行Flink集群</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-25 19:30:00" itemprop="dateCreated datePublished" datetime="2018-06-25T19:30:00+08:00">2018-06-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:28" itemprop="dateModified" datetime="2022-10-25T23:01:28+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Flink/" itemprop="url" rel="index"><span itemprop="name">Flink</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/fc1eb8b2/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/fc1eb8b2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">20k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">19 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              目录
+背景
+第一部分   部署准备
+第二部分  验证
+总结
+参考文献及资料 
+
+背景第一部分 部署准备首先当然需要部署minikube集群。启动minikube集群：
+# minikube startStarting local Kubernetes v1.10.0 cluster...Starti
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/posts/fc1eb8b2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    <div>
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/cbe75957/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/posts/cbe75957/" class="post-title-link" itemprop="url">关于正则表达式使用和总结</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-25 19:30:00" itemprop="dateCreated datePublished" datetime="2018-06-25T19:30:00+08:00">2018-06-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:28" itemprop="dateModified" datetime="2022-10-25T23:01:28+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/machine-learning/" itemprop="url" rel="index"><span itemprop="name">machine learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/cbe75957/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/cbe75957/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">11k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">10 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              背景正则表达式（regular Expression）是计算机中的概念。regular这里是规则、规律的意思，字面翻译指的是：规则的表达式。正则表达式主要用来处理字符串的工具，拥有自己独特的语法。 计算机常用语言均支持正则表达式，语法都是相同的，区别在于不同的语言支持的语法略有差异。 
+在数据科学实
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/posts/cbe75957/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    <div>
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/f6f3d0bb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/posts/f6f3d0bb/" class="post-title-link" itemprop="url">机器学习系列文章-集成学习综述</a>
               
             
           </h1>
@@ -2328,7 +2328,7 @@ root@deeplearning:/
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-10-05 21:34:24" itemprop="dateModified" datetime="2020-10-05T21:34:24+08:00">2020-10-05</time>
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
               
             
           </span>
@@ -2360,9 +2360,9 @@ root@deeplearning:/
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/09/2018-06-09-机器学习系列文章-集成学习综述/#comments" itemprop="discussionUrl">
+                <a href="/posts/f6f3d0bb/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/09/2018-06-09-机器学习系列文章-集成学习综述/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/f6f3d0bb/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2434,7 +2434,7 @@ root@deeplearning:/
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/06/09/2018-06-09-机器学习系列文章-集成学习综述/#more" rel="contents">
+              <a class="btn" href="/posts/f6f3d0bb/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2498,7 +2498,7 @@ root@deeplearning:/
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/2018/04/16/2018-04-15-5分钟介绍深度学习（科普）/">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/5ef74c65/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rong xiang">
@@ -2518,7 +2518,7 @@ root@deeplearning:/
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/04/16/2018-04-15-5分钟介绍深度学习（科普）/" class="post-title-link" itemprop="url">5分钟介绍深度学习（科普）</a>
+                <a href="/posts/5ef74c65/" class="post-title-link" itemprop="url">5分钟介绍深度学习（科普）</a>
               
             
           </h1>
@@ -2560,7 +2560,7 @@ root@deeplearning:/
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-22 11:39:04" itemprop="dateModified" datetime="2020-03-22T11:39:04+08:00">2020-03-22</time>
+                <time title="修改时间：2022-10-25 23:01:28" itemprop="dateModified" datetime="2022-10-25T23:01:28+08:00">2022-10-25</time>
               
             
           </span>
@@ -2592,9 +2592,9 @@ root@deeplearning:/
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/04/16/2018-04-15-5分钟介绍深度学习（科普）/#comments" itemprop="discussionUrl">
+                <a href="/posts/5ef74c65/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/04/16/2018-04-15-5分钟介绍深度学习（科普）/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/5ef74c65/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2660,7 +2660,7 @@ root@deeplearning:/
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/04/16/2018-04-15-5分钟介绍深度学习（科普）/#more" rel="contents">
+              <a class="btn" href="/posts/5ef74c65/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

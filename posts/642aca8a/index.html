@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="目录 背景 第一部分  环境 第二部分 导入数据案例 参考文献及资料  背景In this article we’ll investigate the files written to the data directory by various parts of Elasticsearch. We will look at node, index and shard level files and">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入了解Elasticsearch存储">
+<meta property="og:url" content="https://zjrongxiang.github.io/posts/642aca8a/index.html">
+<meta property="og:site_name" content="RongXiang">
+<meta property="og:description" content="目录 背景 第一部分  环境 第二部分 导入数据案例 参考文献及资料  背景In this article we’ll investigate the files written to the data directory by various parts of Elasticsearch. We will look at node, index and shard level files and">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://zjrongxiang.github.io/posts/642aca8a/images/picture/es_files/Elasticsearch-vs-solr.PNG">
+<meta property="og:image" content="https://zjrongxiang.github.io/posts/642aca8a/images/picture/es_files/lucene.png">
+<meta property="og:updated_time" content="2022-10-25T15:01:29.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入了解Elasticsearch存储">
+<meta name="twitter:description" content="目录 背景 第一部分  环境 第二部分 导入数据案例 参考文献及资料  背景In this article we’ll investigate the files written to the data directory by various parts of Elasticsearch. We will look at node, index and shard level files and">
+<meta name="twitter:image" content="https://zjrongxiang.github.io/posts/642aca8a/images/picture/es_files/Elasticsearch-vs-solr.PNG">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RongXiang" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://zjrongxiang.github.io/posts/642aca8a/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>深入了解Elasticsearch存储 | RongXiang</title>
+  
+
+
+
+
+  <script async src="//www.googletagmanager.com/gtag/js?id=UA-113063423-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-113063423-1');
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a> -->
+    <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RongXiang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">我的烂笔头</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>日程表</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/642aca8a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入了解Elasticsearch存储
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-05-21 13:30:00" itemprop="dateCreated datePublished" datetime="2022-05-21T13:30:00+08:00">2022-05-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Elasticsearch/" itemprop="url" rel="index"><span itemprop="name">Elasticsearch</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/642aca8a/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/642aca8a/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">32k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">29 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li>背景</li>
+<li>第一部分  环境</li>
+<li>第二部分 导入数据案例</li>
+<li>参考文献及资料</li>
+</ul>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>In this article we’ll investigate the files written to the data directory by various parts of Elasticsearch. We will look at node, index and shard level files and give a short explanation of their contents in order to establish an understanding of the data written to disk by Elasticsearch.</p>
+<ul>
+<li>本文对 Elasticsearch 7.10 适用</li>
+<li>Elasticsearch 7.10 对应 Lucene 8.7</li>
+<li>Lucene 8.7 关于扩展名的官方文档 <a href="https://link.segmentfault.com/?enc=maaL0qyPvtzhx0pLpP63Zg%3D%3D.6lwR2Qobh5pP5f95LPdK2YZK9xUnToUGCS%2B1QSdnCbOYDXTYswndMWZqzoxMfnwqKis74FN4pmzmCmDuijCHm26fi7To0EotR0xjFeLxXCQLW0y8QYsw6QvIXRf2Wa6p8PLICL7OfWIPnaxMAf8Z8g%3D%3D" target="_blank" rel="noopener">https://lucene.apache.org/cor…</a></li>
+</ul>
+<h2 id="第一部分-路径"><a href="#第一部分-路径" class="headerlink" title="第一部分 路径"></a>第一部分 路径</h2><p><code>Elasticsearch</code> 运行前需要配置多种文件系统存储路径。分别在<code>JVM</code>启动参数或者配置文件中<code>config/elasticsearch.yml</code>中进行配置。</p>
+<h3 id="1-1-JVM中路径参数"><a href="#1-1-JVM中路径参数" class="headerlink" title="1.1 JVM中路径参数"></a>1.1 <code>JVM</code>中路径参数</h3><ul>
+<li><p><strong><code>path.home</code></strong>：运行 <code>Elasticsearch</code> 进程的用户的主目录。默认为 <code>Java</code> 系统属性<code>user.dir</code>，它是进程所有者的默认主目录。我们在<code>bin/elasticsearch</code>执行脚本中找到下面的<code>Java</code>启动参数：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Des.path.home="$ES_HOME"</span><br></pre></td></tr></table></figure>
+<p>而这个变量<code>ES_HOME</code>在<code>bin/elasticsearch-env</code>(<code>source</code> 这个变量文件)中定义如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ES_HOME=`dirname "$SCRIPT"`</span><br><span class="line">ES_HOME=`cd "$ES_HOME"; pwd`</span><br></pre></td></tr></table></figure>
+<p>所以默认路径为<code>bin</code>同路径，例如我们测试<code>Elasticsearch</code>的<code>path.home</code>路径为：<code>/usr/share/elasticsearch/bin</code>。</p>
+</li>
+<li><p><strong><code>path.conf</code></strong>: 服务的配置文件路径。和<code>path.home</code>定义方式相同，在<code>bin/elasticsearch</code>中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Des.path.conf="$ES_PATH_CONF"</span><br></pre></td></tr></table></figure>
+<p>变量值在<code>bin/elasticsearch-env</code>中定义如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if [ -z "$ES_PATH_CONF" ]; then ES_PATH_CONF="$ES_HOME"/config;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>path.plugins</code></strong>：Elasticsearch 插件目录。用于存放各类插件。位置为：<code>$ES_HOME/plugins</code>。</p>
+</li>
+</ul>
+<h3 id="1-2-配置文件中路径"><a href="#1-2-配置文件中路径" class="headerlink" title="1.2 配置文件中路径"></a>1.2 配置文件中路径</h3><ul>
+<li><strong><code>path.logs</code></strong>：<code>Elasticsearch</code> 运行日志存储路径。配置文件<code>config/elasticsearch.yml</code>可指定。</li>
+<li><strong><code>path.data</code></strong>：<code>Elasticsearch</code> 数据存储路径。</li>
+</ul>
+<h3 id="1-3-全部文件树"><a href="#1-3-全部文件树" class="headerlink" title="1.3 全部文件树"></a>1.3 全部文件树</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> tree -L 1 elasticsearch/</span></span><br><span class="line">elasticsearch/</span><br><span class="line">|-- LICENSE.txt       # 证书</span><br><span class="line">|-- NOTICE.txt        # 提示</span><br><span class="line">|-- README.asciidoc   # 说明</span><br><span class="line">|-- bin               # 可执行文件</span><br><span class="line">|-- config            # 配置路径</span><br><span class="line">|-- data              # 数据路径</span><br><span class="line">|-- jdk               # JDK路径，高版本为了解决jdk兼容问题，自带。减少用户自配置各类兼容问题。</span><br><span class="line">|-- lib               # 依赖包路径</span><br><span class="line">|-- logs              # 日志路径</span><br><span class="line">|-- modules           # 各类模块</span><br><span class="line">|-- plugins           # 插件路径</span><br></pre></td></tr></table></figure>
+<p>本文我们将详细介绍数据存储路径 ( <code>path.data</code>) 中的存储内容和用途。</p>
+<h2 id="第二部分-数据路径"><a href="#第二部分-数据路径" class="headerlink" title="第二部分 数据路径"></a>第二部分 数据路径</h2><p>我们现在谈到全文检索，通常都是<code>Elasticsearch</code>或者<code>solr</code>。其实两者都是对搜索引擎<code>Lucene</code>的封装，<code>Lucene</code>成为一个依赖包。</p>
+<blockquote>
+<p>我们查了一下<code>Elasticsearch</code>和<code>solr</code>两个词在<code>Google</code>趋势对比（<code>2004-2022</code>），明显<code>Elasticsearch</code>占优势（<code>Elasticsearch</code> 蓝色曲线，<code>solr</code>红色曲线）。</p>
+<p><img src="images\picture\es_files\Elasticsearch-vs-solr.PNG" alt="Elasticsearch-vs-solr"></p>
+</blockquote>
+<h3 id="2-1-存储架构"><a href="#2-1-存储架构" class="headerlink" title="2.1 存储架构"></a>2.1 存储架构</h3><p><code>Elasticsearch</code> 底层使用 <code>Lucene</code> 来处理分片级别的索引和查询，因此数据目录中的文件由 <code>Elasticsearch</code> 和 <code>Lucene</code> 编写。其中<code>Lucene</code> 负责读写维护 <code>Lucene</code> 索引文件，而 <code>Elasticsearch</code> 在 <code>Lucene</code> 之上读写管理相关的元数据，例如字段映射、索引设置等。</p>
+<p><code>Elasticsearch</code>中一个<code>Shard</code>分片就是一个<code>Lucene Index</code>，每个<code>Lucene</code>里的<code>Segment</code>为<code>Lucene</code>存储的最小管理单元。例如下图中对于分片<code>I1P2</code>进行了案例说明。</p>
+<p><img src="images\picture\es_files\lucene.png" alt="lucene"></p>
+<p>我们先看看 <code>Elasticsearch</code> 写入的数据的外部级别。</p>
+<h3 id="2-2-数据路径"><a href="#2-2-数据路径" class="headerlink" title="2.2 数据路径"></a>2.2 数据路径</h3><p>数据节点<code>data/nodes/0</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> tree -L 3 data/</span></span><br><span class="line">data/</span><br><span class="line">`-- nodes</span><br><span class="line">    `-- 0</span><br><span class="line">        |-- _state</span><br><span class="line">        |-- indices</span><br><span class="line">        `-- node.lock</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>node.lock</code>，文件用于确保一次只有一个 <code>Elasticsearch</code> 安装从单个数据目录读取/写入。</li>
+<li><code>_state</code>，目录中存放集群元数据信息。</li>
+<li><code>indices</code>，目录中存放集群<code>index</code>索引数据。</li>
+</ul>
+<h3 id="2-3-集群元数据"><a href="#2-3-集群元数据" class="headerlink" title="2.3 集群元数据"></a>2.3 集群元数据</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> tree _state/ </span></span><br><span class="line">_state/</span><br><span class="line">|-- _1q.fdt</span><br><span class="line">|-- _1q.fdx</span><br><span class="line">|-- _1q.fnm</span><br><span class="line">|-- _1q.si</span><br><span class="line">|-- _1q_2.liv</span><br><span class="line">|-- _1q_Lucene84_0.doc</span><br><span class="line">|-- _1q_Lucene84_0.tim</span><br><span class="line">|-- _1q_Lucene84_0.tip</span><br><span class="line">|-- _1u.cfe</span><br><span class="line">|-- _1u.cfs</span><br><span class="line">|-- _1u.si</span><br><span class="line">|-- _1x.cfe</span><br><span class="line">|-- _1x.cfs</span><br><span class="line">|-- _1x.si</span><br><span class="line">|-- _1z.cfe</span><br><span class="line">|-- _1z.cfs</span><br><span class="line">|-- _1z.si</span><br><span class="line">|-- manifest-2.st</span><br><span class="line">|-- node-2.st</span><br><span class="line">|-- segments_27</span><br><span class="line">`-- write.lock</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Name</th>
+<th style="text-align:left">Extension</th>
+<th style="text-align:left">Brief Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Segments File</td>
+<td style="text-align:left">segments_N</td>
+<td style="text-align:left">Stores information about a commit point</td>
+</tr>
+<tr>
+<td style="text-align:left">Lock File</td>
+<td style="text-align:left">write.lock</td>
+<td style="text-align:left">The Write lock prevents multiple IndexWriters from writing to the same file.(写入锁，防止多个IndexWriters 同时写一个文件)</td>
+</tr>
+<tr>
+<td style="text-align:left">Segment Info</td>
+<td style="text-align:left">.si</td>
+<td style="text-align:left">Stores metadata about a segment（segment的元数据信息，指明这个segment都包含哪些文件）</td>
+</tr>
+<tr>
+<td style="text-align:left">Compound File</td>
+<td style="text-align:left">.cfs, .cfe</td>
+<td style="text-align:left">An optional “virtual” file consisting of all the other index files for systems that frequently run out of file handles.</td>
+</tr>
+<tr>
+<td style="text-align:left">Fields</td>
+<td style="text-align:left">.fnm</td>
+<td style="text-align:left">Stores information about the fields</td>
+</tr>
+<tr>
+<td style="text-align:left">Field Index</td>
+<td style="text-align:left">.fdx</td>
+<td style="text-align:left">Contains pointers to field data</td>
+</tr>
+<tr>
+<td style="text-align:left">Field Data</td>
+<td style="text-align:left">.fdt</td>
+<td style="text-align:left">The stored fields for documents(Field数据文件)</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Dictionary</td>
+<td style="text-align:left">.tim</td>
+<td style="text-align:left">The term dictionary, stores term info</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Index</td>
+<td style="text-align:left">.tip</td>
+<td style="text-align:left">The index into the Term Dictionary</td>
+</tr>
+<tr>
+<td style="text-align:left">Frequencies</td>
+<td style="text-align:left">.doc</td>
+<td style="text-align:left">Contains the list of docs which contain each term along with frequency（保留包含每个Term的文档列表）</td>
+</tr>
+<tr>
+<td style="text-align:left">Positions</td>
+<td style="text-align:left">.pos</td>
+<td style="text-align:left">Stores position information about where a term occurs in the index</td>
+</tr>
+<tr>
+<td style="text-align:left">Payloads</td>
+<td style="text-align:left">.pay</td>
+<td style="text-align:left">Stores additional per-position metadata information such as character offsets and user payloads</td>
+</tr>
+<tr>
+<td style="text-align:left">Norms</td>
+<td style="text-align:left">.nvd, .nvm</td>
+<td style="text-align:left">Encodes length and boost factors for docs and fields</td>
+</tr>
+<tr>
+<td style="text-align:left">Per-Docukment Values</td>
+<td style="text-align:left">.dvd, .dvm</td>
+<td style="text-align:left">Encodes additional scoring factors or other per-document information.</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Vector Index</td>
+<td style="text-align:left">.tvx</td>
+<td style="text-align:left">Stores offset into the document data file</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Vector Documents</td>
+<td style="text-align:left">.tvd</td>
+<td style="text-align:left">Contains information about each document that has term vectors</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Vector Fields</td>
+<td style="text-align:left">.tvf</td>
+<td style="text-align:left">The field level info about term vectors</td>
+</tr>
+<tr>
+<td style="text-align:left">Live Documents</td>
+<td style="text-align:left">.liv</td>
+<td style="text-align:left">Info about what files are live</td>
+</tr>
+</tbody>
+</table>
+<p>更有趣的是<code>global-0.st</code>-file。<code>global-</code>前缀表示这是一个全局状态文件，而扩展<code>.st</code>名表示这是一个包含元数据的状态文件。正如您可能已经猜到的那样，这个二进制文件包含有关集群的全局元数据，前缀后面的数字表示集群元数据版本，这是遵循集群的严格递增的版本控制方案。</p>
+<blockquote>
+<p>虽然技术上可以在紧急情况下使用十六进制编辑器编辑这些文件，但强烈建议不要这样做，因为它会很快导致数据丢失。</p>
+</blockquote>
+<p><a href="https://www.shenyanchao.cn/blog/2018/12/04/lucene-index-files/" target="_blank" rel="noopener">https://www.shenyanchao.cn/blog/2018/12/04/lucene-index-files/</a></p>
+<h3 id="2-4-索引数据"><a href="#2-4-索引数据" class="headerlink" title="2.4 索引数据"></a>2.4 索引数据</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@f1f4420ca021 0]# tree -L 1 indices/</span><br><span class="line">indices/</span><br><span class="line">|-- Ce1hPxBFTc6xLH9zyzWRog</span><br><span class="line">|-- LFTAEix1Q6u79iWX5wFdAg</span><br><span class="line">|-- cNEZTRZGTtWn2f5r7zjveQ</span><br><span class="line">|-- pg9zI9o1QNKFav7KsxVQ-Q</span><br><span class="line">|-- r0lRikPvTUOWZaloPg7QXw</span><br><span class="line">`-- wHQ5gnEESM2GWgQsybPTKA</span><br></pre></td></tr></table></figure>
+<p>让我们创建一个单一的分片索引并查看 Elasticsearch 更改的文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> tree cNEZTRZGTtWn2f5r7zjveQ</span></span><br><span class="line">cNEZTRZGTtWn2f5r7zjveQ</span><br><span class="line">|-- 0</span><br><span class="line">|   |-- _state</span><br><span class="line">|   |   |-- retention-leases-9.st</span><br><span class="line">|   |   `-- state-0.st</span><br><span class="line">|   |-- index</span><br><span class="line">|   |   |-- _6.cfe</span><br><span class="line">|   |   |-- _6.cfs</span><br><span class="line">|   |   |-- _6.si</span><br><span class="line">|   |   |-- _6_1.fnm</span><br><span class="line">|   |   |-- _6_1_Lucene80_0.dvd</span><br><span class="line">|   |   |-- _6_1_Lucene80_0.dvm</span><br><span class="line">|   |   |-- _7.cfe</span><br><span class="line">|   |   |-- _7.cfs</span><br><span class="line">|   |   |-- _7.si</span><br><span class="line">|   |   |-- segments_6</span><br><span class="line">|   |   `-- write.lock</span><br><span class="line">|   `-- translog</span><br><span class="line">|       |-- translog-4.tlog</span><br><span class="line">|       `-- translog.ckp</span><br><span class="line">`-- _state</span><br><span class="line">    `-- state-2.st</span><br></pre></td></tr></table></figure>
+<p>我们看到已经创建了一个与索引名称对应的新目录。该目录有两个子文件夹：<code>_state</code>和<code>0</code>. 前者包含所谓的索引状态文件 ( <code>indices/{index-name}/_state/state-{version}.st</code>)，其中包含有关索引的元数据，例如其创建时间戳。它还包含唯一标识符以及索引的设置和映射。后者包含与索引的第一个（也是唯一一个）分片（分片 0）相关的数据。接下来，我们将仔细研究一下。</p>
+<h2 id="分片数据"><a href="#分片数据" class="headerlink" title="分片数据"></a>分片数据</h2><p>分片数据目录包含分片的状态文件，其中包括版本控制以及有关分片被视为主分片还是副本的信息。</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ tree -h data/elasticsearch/nodes/<span class="number">0</span>/indices/foo/<span class="number">0</span></span><br><span class="line">data/elasticsearch/nodes/<span class="number">0</span>/indices/foo/<span class="number">0</span></span><br><span class="line">├── [ <span class="number">102</span>]  _state</span><br><span class="line">│   └── [  <span class="number">81</span>]  <span class="section">state</span><span class="number">-0.</span>st</span><br><span class="line">├── [ <span class="number">170</span>]  index</span><br><span class="line">│   ├── [  <span class="number">36</span>]  segments.gen</span><br><span class="line">│   ├── [  <span class="number">79</span>]  segments_1</span><br><span class="line">│   └── [   <span class="number">0</span>]  write.lock</span><br><span class="line">└── [ <span class="number">102</span>]  translog</span><br><span class="line">    └── [  <span class="number">17</span>]  translog<span class="number">-1429697028120</span></span><br></pre></td></tr></table></figure>
+<p>在早期的 Elasticsearch 版本中，在分片数据目录中也可以找到单独的<code>{shard_id}/index/_checksums-</code>文件（和<code>.cks</code>-files）。在当前版本中，这些校验和现在位于 Lucene 文件的页脚中，因为 Lucene 已为其所有索引文件添加了端到端校验和。</p>
+<p>该<code>{shard_id}/index</code>目录包含 Lucene 拥有的文件。Elasticsearch 通常不会直接写入此文件夹（在早期版本中发现较旧的校验和实现除外）。这些目录中的文件构成了任何 Elasticsearch 数据目录的大部分大小。</p>
+<p>在我们进入 Lucene 的世界之前，我们将看一下 Elasticsearch 事务日志，不出所料，它位于每个分片<code>translog</code>目录中，前缀为<code>translog-</code>. 事务日志对于 Elasticsearch 的功能和性能非常重要，因此我们将在下一节更深入地解释它的使用。</p>
+<h3 id="每个分片的事务日志"><a href="#每个分片的事务日志" class="headerlink" title="每个分片的事务日志"></a>每个分片的事务日志</h3><p>Elasticsearch事务<a href="http://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-translog.html" target="_blank" rel="noopener">日志</a>确保数据可以安全地被索引到 Elasticsearch 中，而无需为每个文档执行低级别的 Lucene 提交。提交 Lucene 索引会在 Lucene 级别创建一个新段，该段是<code>fsync()</code>-ed 并导致大量磁盘 I/O 影响性能。</p>
+<p>为了接受文档进行索引并使其可搜索而不需要完整的 Lucene 提交，Elasticsearch 将其添加到<a href="http://lucene.apache.org/core/5_1_0/core/org/apache/lucene/index/IndexWriter.html" target="_blank" rel="noopener">Lucene<code>IndexWriter</code></a>并将其附加到事务日志中。每次之后<a href="http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html" target="_blank" rel="noopener"><code>refresh_interval</code></a>，它都会调用<code>reopen()</code>Lucene 索引，这将使数据无需提交即可搜索。这是 Lucene 近实时 API 的一部分。当<code>IndexWriter</code>由于事务日志的自动刷新或显式<a href="http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-flush.html" target="_blank" rel="noopener">刷新操作</a>而最终提交时，先前的事务日志将被丢弃，而新的事务日志将取而代之。</p>
+<p>如果需要恢复，Lucene中写入磁盘的段将首先恢复，然后重放事务日志，以防止丢失尚未完全提交到磁盘的操作。</p>
+<h2 id="Lucene-索引文件"><a href="#Lucene-索引文件" class="headerlink" title="Lucene 索引文件"></a><a href="https://www.elastic.co/cn/blog/found-dive-into-elasticsearch-storage#lucene-index-files" target="_blank" rel="noopener">Lucene 索引文件</a></h2><p><a href="https://lucene.apache.org/core/5_1_0/core/org/apache/lucene/codecs/lucene50/package-summary.html#package_description" target="_blank" rel="noopener">Lucene 在记录Lucene 索引目录</a>中的文件方面做得很好，为了方便起见，在此处复制（Lucene 中的链接文档还详细介绍了这些文件自 Lucene 2.1 以来所经历的更改，因此请检查出来）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Name</th>
+<th style="text-align:left">Extension</th>
+<th style="text-align:left">Brief Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Segments File</td>
+<td style="text-align:left">segments_N</td>
+<td style="text-align:left">Stores information about a commit point</td>
+</tr>
+<tr>
+<td style="text-align:left">Lock File</td>
+<td style="text-align:left">write.lock</td>
+<td style="text-align:left">The Write lock prevents multiple IndexWriters from writing to the same file.</td>
+</tr>
+<tr>
+<td style="text-align:left">Segment Info</td>
+<td style="text-align:left">.si</td>
+<td style="text-align:left">Stores metadata about a segment</td>
+</tr>
+<tr>
+<td style="text-align:left">Compound File</td>
+<td style="text-align:left">.cfs, .cfe</td>
+<td style="text-align:left">An optional “virtual” file consisting of all the other index files for systems that frequently run out of file handles.</td>
+</tr>
+<tr>
+<td style="text-align:left">Fields</td>
+<td style="text-align:left">.fnm</td>
+<td style="text-align:left">Stores information about the fields</td>
+</tr>
+<tr>
+<td style="text-align:left">Field Index</td>
+<td style="text-align:left">.fdx</td>
+<td style="text-align:left">Contains pointers to field data</td>
+</tr>
+<tr>
+<td style="text-align:left">Field Data</td>
+<td style="text-align:left">.fdt</td>
+<td style="text-align:left">The stored fields for documents</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Dictionary</td>
+<td style="text-align:left">.tim</td>
+<td style="text-align:left">The term dictionary, stores term info</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Index</td>
+<td style="text-align:left">.tip</td>
+<td style="text-align:left">The index into the Term Dictionary</td>
+</tr>
+<tr>
+<td style="text-align:left">Frequencies</td>
+<td style="text-align:left">.doc</td>
+<td style="text-align:left">Contains the list of docs which contain each term along with frequency</td>
+</tr>
+<tr>
+<td style="text-align:left">Positions</td>
+<td style="text-align:left">.pos</td>
+<td style="text-align:left">Stores position information about where a term occurs in the index</td>
+</tr>
+<tr>
+<td style="text-align:left">Payloads</td>
+<td style="text-align:left">.pay</td>
+<td style="text-align:left">Stores additional per-position metadata information such as character offsets and user payloads</td>
+</tr>
+<tr>
+<td style="text-align:left">Norms</td>
+<td style="text-align:left">.nvd, .nvm</td>
+<td style="text-align:left">Encodes length and boost factors for docs and fields</td>
+</tr>
+<tr>
+<td style="text-align:left">Per-Docukment Values</td>
+<td style="text-align:left">.dvd, .dvm</td>
+<td style="text-align:left">Encodes additional scoring factors or other per-document information.</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Vector Index</td>
+<td style="text-align:left">.tvx</td>
+<td style="text-align:left">Stores offset into the document data file</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Vector Documents</td>
+<td style="text-align:left">.tvd</td>
+<td style="text-align:left">Contains information about each document that has term vectors</td>
+</tr>
+<tr>
+<td style="text-align:left">Term Vector Fields</td>
+<td style="text-align:left">.tvf</td>
+<td style="text-align:left">The field level info about term vectors</td>
+</tr>
+<tr>
+<td style="text-align:left">Live Documents</td>
+<td style="text-align:left">.liv</td>
+<td style="text-align:left">Info about what files are live</td>
+</tr>
+</tbody>
+</table>
+<p>通常，您还会<code>segments.gen</code>在 Lucene 索引目录中看到一个文件，该文件是一个帮助文件，其中包含有关当前/最新<code>segments_N</code>文件的信息，用于可能无法通过目录列表返回足够信息来确定最新一代段文件的文件系统.</p>
+<p>在较旧的 Lucene 版本中，您还可以找到带有<code>.del</code>后缀的文件。它们与 Live Documents ( ) 文件的用途相同<code>.liv</code>——换句话说，它们是删除列表。如果您想知道所有这些关于实时文档和删除列表的讨论是关于什么的，您可能想阅读<a href="https://www.elastic.co/blog/found-elasticsearch-from-the-bottom-up/#building-indexes" target="_blank" rel="noopener">自下而上文章中关于在我们的 Elasticsearch</a>中构建索引的部分。</p>
+<h2 id="修复有问题的碎片"><a href="#修复有问题的碎片" class="headerlink" title="修复有问题的碎片"></a>修复有问题的碎片</h2><p>由于 Elasticsearch 分片包含 Lucene 索引，因此我们可以使用 Lucene 出色的<a href="https://lucene.apache.org/core/5_1_0/core/org/apache/lucene/index/CheckIndex.html" target="_blank" rel="noopener">CheckIndex 工具</a>，它使我们能够扫描和修复有问题的段，通常数据丢失最少。我们通常会建议 Elasticsearch 用户简单地重新索引数据，但如果由于某种原因无法重新索引并且数据非常重要，那么即使需要相当多的手动工作和时间，也可以采用这种方法，取决于分片的数量及其大小。</p>
+<blockquote>
+<p>Lucene<code>CheckIndex</code>工具包含在默认的 Elasticsearch 发行版中，无需额外下载。</p>
+</blockquote>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更改它以反映您的分片路径，格式为# &#123;path.data&#125;/&#123;cluster_name&#125;/nodes/&#123;node_id&#125;/indices/&#123;index_name&#125;/&#123;shard_id&#125;/index/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ export SHARD_PATH = data / elasticsearch / nodes / <span class="number">0</span> / indices / foo / <span class="number">0</span> / index / </span><br><span class="line">$java - cp <span class="class"><span class="keyword">lib</span> / <span class="title">elasticsearch</span>- *。<span class="title">jar</span> : <span class="title">lib</span> /*:<span class="title">lib</span>/<span class="title">sigar</span>/* -<span class="title">ea</span>:<span class="title">org</span>.<span class="title">apache</span>.<span class="title">lucene</span>... <span class="title">org</span>.<span class="title">apache</span>.<span class="title">lucene</span>.<span class="title">index</span>.<span class="title">CheckIndex</span> $<span class="title">SHARD_PATH</span></span></span><br></pre></td></tr></table></figure>
+<p><code>-fix</code>如果 CheckIndex 检测到问题并且它的修复建议看起来很合理，您可以通过添加命令行参数 告诉 CheckIndex 应用修复程序。</p>
+<h2 id="存储快照"><a href="#存储快照" class="headerlink" title="存储快照"></a>存储快照</h2><p>您可能想知道所有这些文件如何转换为<a href="http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html" target="_blank" rel="noopener">快照存储库</a>使用的存储。不要再想了：获取这个集群，将其作为<code>my-snapshot</code>基于文件系统的网关进行快照，然后检查存储库中的文件，我们会找到这些文件（为简洁起见，省略了一些文件）：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$ tree -h snapshots</span><br><span class="line">snapshots</span><br><span class="line">├── [  <span class="number">31</span>]  index</span><br><span class="line">├── [ <span class="number">102</span>]  indices</span><br><span class="line">│   └── [ <span class="number">136</span>]  foo</span><br><span class="line">│       ├── [<span class="number">1.2</span>K]  <span class="number">0</span></span><br><span class="line">│       │   ├── [ <span class="number">350</span>]  __0</span><br><span class="line">│       │   ├── [<span class="number">1.8</span>K]  __1</span><br><span class="line">...</span><br><span class="line">│       │   ├── [ <span class="number">350</span>]  __w</span><br><span class="line">│       │   ├── [ <span class="number">380</span>]  __x</span><br><span class="line">│       │   └── [<span class="number">8.2</span>K]  snapshot-my-snapshot</span><br><span class="line">│       └── [ <span class="number">249</span>]  snapshot-my-snapshot</span><br><span class="line">├── [  <span class="number">79</span>]  metadata-my-snapshot</span><br><span class="line">└── [ <span class="number">171</span>]  snapshot-my-snapshot$ tree - h 快照</span><br><span class="line">快照</span><br><span class="line">├── [ <span class="number">31</span> ]  索引</span><br><span class="line">├── [ <span class="number">102</span> ]  索引</span><br><span class="line">│ └── [ <span class="number">136</span> ]   foo</span><br><span class="line"> │ ├── [ <span class="number">1.2</span>K ] <span class="number">0</span> │ │ ├── [ <span class="number">350</span> ]   __0</span><br><span class="line"> │ │ ├── [ <span class="number">1.8</span>K ]   __1</span><br><span class="line"> ... │ │ ├── [ <span class="number">350</span> ]   __w</span><br><span class="line"> │ │ ├── [ <span class="number">380</span> ]   __x</span><br><span class="line"> │ │ └── [                    </span><br><span class="line">                       </span><br><span class="line">                                   <span class="number">8.2</span>K ]  快照-我的-快照</span><br><span class="line">│ └── [ <span class="number">249</span> ]  快照-我的-快照</span><br><span class="line">├── [ <span class="number">79</span> ]  元数据-我的-快照</span><br><span class="line">└── [ <span class="number">171</span> ]  快照-我的-快照</span><br></pre></td></tr></table></figure>
+<p>在根目录下，我们有一个<code>index</code>文件，其中包含有关此存储库中所有快照的信息，并且每个快照都有一个关联的文件<code>snapshot-</code>和一个<code>metadata-</code>文件。根目录中的<code>snapshot-</code>文件包含有关快照状态的信息，它包含哪些索引等等。<code>metadata-</code>根目录中 的文件包含快照时的集群元数据。</p>
+<blockquote>
+<p><code>compress: true</code>设置时， 文件<code>metadata-</code>使用<code>snapshot-</code>LZF 进行压缩<a href="https://github.com/ning/compress" target="_blank" rel="noopener">，</a>它侧重于压缩和解压缩速度，这使得它非常适合 Elasticsearch。数据与标题一起存储：<code>ZV + 1 byte indicating whether the data is compressed</code>。在标头之后会有一个或多个压缩的 64K 块，格式为：<code>2 byte block length + 2 byte uncompressed size + compressed data</code>. 使用此信息，您可以使用任何<a href="http://freecode.com/projects/liblzf" target="_blank" rel="noopener">与 LibLZF</a>兼容的解压缩器。如果您想了解有关 LZF 的更多信息，请查看<a href="https://github.com/ning/compress/wiki/LZFFormat" target="_blank" rel="noopener">此格式的精彩描述</a>。</p>
+</blockquote>
+<p>在索引级别有另一个文件，<code>indices/{index_name}/snapshot-{snapshot_name}</code>其中包含索引元数据，例如快照时索引的设置和映射。</p>
+<p>在分片级别，您会发现两种文件：重命名的 Lucene 索引文件和分片快照文件：<code>indices/{index_name}/{shard_id}/snapshot-{snapshot_name}</code>. 该文件包含有关快照中使用了分片目录中的哪些文件的信息，以及从快照中的逻辑文件名到它们在恢复时应存储为磁盘上的具体文件名的映射。它还包含可用于检测和防止数据损坏的所有相关文件的校验和、Lucene 版本控制和大小信息。</p>
+<blockquote>
+<p>您可能想知道为什么这些文件被重命名，而不是仅仅保留它们的原始文件名，这可能更容易直接在磁盘上使用。原因很简单：可以对索引进行快照、删除并在再次创建快照之前重新创建它。在这种情况下，几个文件最终将具有相同的名称，但内容不同。</p>
+</blockquote>
+<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、官网，链接：<a href="https://www.elastic.co/cn/" target="_blank" rel="noopener">https://www.elastic.co/cn/</a></p>
+<p>2、<a href="https://www.shenyanchao.cn/blog/2018/12/04/lucene-index-files/" target="_blank" rel="noopener">https://www.shenyanchao.cn/blog/2018/12/04/lucene-index-files/</a></p>
+<p>3、<a href="https://www.elastic.co/cn/blog/found-dive-into-elasticsearch-storage" target="_blank" rel="noopener">https://www.elastic.co/cn/blog/found-dive-into-elasticsearch-storage</a></p>
+<p>4、<a href="https://elasticsearch.cn/article/6178" target="_blank" rel="noopener">https://elasticsearch.cn/article/6178</a></p>
+
+      
+    </div>
+
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/posts/642aca8a/">深入了解Elasticsearch存储</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
+  <p><span>发布时间:</span>2022年05月21日 - 13:05</p>
+  <p><span>最后更新:</span>2022年10月25日 - 23:10</p>
+  <p><span>原始链接:</span><a href="/posts/642aca8a/" title="深入了解Elasticsearch存储">https://zjrongxiang.github.io/posts/642aca8a/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/posts/642aca8a/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/702c2e4c/" rel="next" title="Python项目打包实践">
+                <i class="fa fa-chevron-left"></i> Python项目打包实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/abcd31ab/" rel="prev" title="Python环境配置-pip更换国内源">
+                Python环境配置-pip更换国内源 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar/person.png" alt="rong xiang">
+            
+              <p class="site-author-name" itemprop="name">rong xiang</p>
+              <p class="site-description motion-element" itemprop="description">Keep a Pure Curiosity</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">311</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zjrongxiang" title="GitHub &rarr; https://github.com/zjrongxiang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:rongxiang1986@163.com" title="E-Mail &rarr; mailto:rongxiang1986@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/1971060643" title="Weibo &rarr; http://weibo.com/u/1971060643" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/fly51fly?refer_flag=1005055010_" title="https://weibo.com/fly51fly?refer_flag=1005055010_" rel="noopener" target="_blank">爱生活爱可可</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-路径"><span class="nav-number">3.</span> <span class="nav-text">第一部分 路径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-JVM中路径参数"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 JVM中路径参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-配置文件中路径"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 配置文件中路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-全部文件树"><span class="nav-number">3.3.</span> <span class="nav-text">1.3 全部文件树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-数据路径"><span class="nav-number">4.</span> <span class="nav-text">第二部分 数据路径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-存储架构"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 存储架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-数据路径"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 数据路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-集群元数据"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 集群元数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-索引数据"><span class="nav-number">4.4.</span> <span class="nav-text">2.4 索引数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分片数据"><span class="nav-number">5.</span> <span class="nav-text">分片数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#每个分片的事务日志"><span class="nav-number">5.1.</span> <span class="nav-text">每个分片的事务日志</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lucene-索引文件"><span class="nav-number">6.</span> <span class="nav-text">Lucene 索引文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修复有问题的碎片"><span class="nav-number">7.</span> <span class="nav-text">修复有问题的碎片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储快照"><span class="nav-number">8.</span> <span class="nav-text">存储快照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">9.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2014 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rong xiang</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">940k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">14:15</span>
+  
+</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+    
+  <script id="dsq-count-scr" src="https://https-zjrongxiang-github-io.disqus.com/count.js" async></script>
+
+
+<script>
+  var disqus_config = function () {
+    this.page.url = "https://zjrongxiang.github.io/posts/642aca8a/";
+    this.page.identifier = "posts/642aca8a/";
+    this.page.title = '深入了解Elasticsearch存储';
+    };
+  function loadComments () {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-zjrongxiang-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    loadComments();
+  
+</script>
+
+  
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>

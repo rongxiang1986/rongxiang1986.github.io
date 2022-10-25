@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="目录 背景  第一部分  Spark SQL  第二部分  Spark SQL实践  第三部分    参考文献及资料   背景第一部分 Spark SQL1.1 Spark 2.0之前在Spark 1.6（Spark 2.0之前）中，我们通过Spark SQL用于处理结构化数据。Spark SQL的入口点是SQLContext类或者子类HiveContext。 例如下面的例子（Pyspark），可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pyspark系列文章-Spark SQL与Hive交互实践">
+<meta property="og:url" content="https://zjrongxiang.github.io/posts/4a851dd3/index.html">
+<meta property="og:site_name" content="RongXiang">
+<meta property="og:description" content="目录 背景  第一部分  Spark SQL  第二部分  Spark SQL实践  第三部分    参考文献及资料   背景第一部分 Spark SQL1.1 Spark 2.0之前在Spark 1.6（Spark 2.0之前）中，我们通过Spark SQL用于处理结构化数据。Spark SQL的入口点是SQLContext类或者子类HiveContext。 例如下面的例子（Pyspark），可">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://zjrongxiang.github.io/posts/4a851dd3/images/picture/Spark-sql/hive.jpg">
+<meta property="og:image" content="https://zjrongxiang.github.io/posts/4a851dd3/images/picture/Spark-sql/memory.jpg">
+<meta property="og:updated_time" content="2022-10-25T15:01:29.569Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pyspark系列文章-Spark SQL与Hive交互实践">
+<meta name="twitter:description" content="目录 背景  第一部分  Spark SQL  第二部分  Spark SQL实践  第三部分    参考文献及资料   背景第一部分 Spark SQL1.1 Spark 2.0之前在Spark 1.6（Spark 2.0之前）中，我们通过Spark SQL用于处理结构化数据。Spark SQL的入口点是SQLContext类或者子类HiveContext。 例如下面的例子（Pyspark），可">
+<meta name="twitter:image" content="https://zjrongxiang.github.io/posts/4a851dd3/images/picture/Spark-sql/hive.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RongXiang" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://zjrongxiang.github.io/posts/4a851dd3/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Pyspark系列文章-Spark SQL与Hive交互实践 | RongXiang</title>
+  
+
+
+
+
+  <script async src="//www.googletagmanager.com/gtag/js?id=UA-113063423-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-113063423-1');
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a> -->
+    <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RongXiang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">我的烂笔头</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>日程表</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/4a851dd3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Pyspark系列文章-Spark SQL与Hive交互实践
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-02 22:42:00" itemprop="dateCreated datePublished" datetime="2020-03-02T22:42:00+08:00">2020-03-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/pyspark/" itemprop="url" rel="index"><span itemprop="name">pyspark</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/4a851dd3/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/4a851dd3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">23k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">21 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><p>背景</p>
+</li>
+<li><p>第一部分  Spark SQL</p>
+</li>
+<li><p>第二部分  Spark SQL实践</p>
+</li>
+<li><p>第三部分  </p>
+</li>
+<li><p>参考文献及资料</p>
+</li>
+</ul>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h2 id="第一部分-Spark-SQL"><a href="#第一部分-Spark-SQL" class="headerlink" title="第一部分 Spark SQL"></a>第一部分 Spark SQL</h2><h3 id="1-1-Spark-2-0之前"><a href="#1-1-Spark-2-0之前" class="headerlink" title="1.1 Spark 2.0之前"></a>1.1 Spark 2.0之前</h3><p>在<code>Spark 1.6</code>（<code>Spark 2.0</code>之前）中，我们通过<code>Spark SQL</code>用于处理结构化数据。<code>Spark SQL</code>的入口点是<code>SQLContext</code>类或者子类<code>HiveContext</code>。</p>
+<p>例如下面的例子（<code>Pyspark</code>），可以访问<code>Hive</code>仓库中表（<code>default</code>库中的<code>users</code>表）：</p>
+<blockquote>
+<p>注：需要在<code>Spark conf</code>目录（<code>classpath</code>）下配置<code>hive</code>相关配置（<code>hive-site.xml</code>），才能访问<code>Hive MetaStore</code>，实现读写<code>Hive</code>表。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> HiveContext</span><br><span class="line"><span class="comment"># Pyspark on Jupyter,sc（sparkContext）已创建</span></span><br><span class="line">hiveContext = HiveContext(sc)</span><br><span class="line">tableExample = hiveContext.table(<span class="string">"default.users"</span>)</span><br><span class="line">tableExample.show()</span><br></pre></td></tr></table></figure>
+<p>另外也支持将<code>DataFrame</code>注册成<code>Table</code>，通过<code>SQL</code>语言处理<code>DataFrame</code>数据。例如下面的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SQLContext</span><br><span class="line">sqlContext = SQLContext(sc)</span><br><span class="line"><span class="comment"># 从外部数据源创建DataFrame</span></span><br><span class="line">jsonData = <span class="string">"file:///opt/spark-1.5.1/examples/src/main/resources/people.json"</span></span><br><span class="line">df = sqlContext.read.json(jsonData)</span><br><span class="line"><span class="comment"># 注册表</span></span><br><span class="line">sqlContext.registerDataFrameAsTable(df, <span class="string">"tempTable"</span>)</span><br><span class="line">sqlContext.sql(<span class="string">"SELECT * from tempTable limit 1"</span>).show()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：<code>SQLContext</code>现在只支持<code>sql</code>语法解析器（<code>SQL-92</code>语法），而<code>HiveContext</code>现在既支持sql语法解析器又支持<code>hivesql</code>语法解析器，默认为<code>hivesql</code>语法解析器，用户可以通过配置参数（<code>spark.sql.dialect</code>）切换成<code>sql</code>语法解析器，来运行<code>hiveql</code>不支持的语法。</p>
+</blockquote>
+<p>通常我们直接使用<code>HiveContext</code> （<code>HiveContext is a super set of the SQLContext. Hortonworks and the Spark community suggest using the HiveContext.</code>）。但是需要<code>Hive</code>启动<code>MetaStore</code>的<code>Thrift</code>接口服务。</p>
+<h3 id="1-2-Spark-2-0-之后"><a href="#1-2-Spark-2-0-之后" class="headerlink" title="1.2 Spark 2.0 之后"></a>1.2 Spark 2.0 之后</h3><p><code>Spark 2.0</code>之前，<code>SparkContext</code>是Spark的唯一切入点（<code>Entry Point</code>），其他<code>Context</code>都是基于其实现。例如下面例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> SparkContext</span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SQLContext</span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> HiveContext</span><br><span class="line"><span class="keyword">from</span> pyspark.streaming <span class="keyword">import</span> StreamingContext</span><br><span class="line"><span class="keyword">from</span> pyspark <span class="keyword">import</span> SparkConf</span><br><span class="line"><span class="comment"># 实例化SparkContext，通常起名sc</span></span><br><span class="line">conf = SparkConf()</span><br><span class="line">sc = SparkContext(conf=conf)</span><br><span class="line"><span class="comment"># hive</span></span><br><span class="line">hiveContext = HiveContext(sc)</span><br><span class="line"><span class="comment"># sql</span></span><br><span class="line">sqlContext = SQLContext(sc)</span><br><span class="line"><span class="comment"># 流处理</span></span><br><span class="line">streamingcontext = StreamingContext(sc)</span><br></pre></td></tr></table></figure>
+<p><code>Spark2.0</code>开始只需要创建一个<code>SparkSession</code>就够了，<code>SparkConf</code>、<code>SparkContext</code>和<code>SQLContext</code>都已经被封装在<code>SparkSession</code>当中，常用场景逐步替代<code>SparkContext</code>。</p>
+<p>创建方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SparkSession</span><br><span class="line">spark = SparkSession \</span><br><span class="line">    .builder \</span><br><span class="line">    .appName(<span class="string">"Python Spark SQL basic example"</span>) \</span><br><span class="line">    .config(<span class="string">"spark.some.config.option"</span>, <span class="string">"some-value"</span>) \</span><br><span class="line">    .getOrCreate()</span><br></pre></td></tr></table></figure>
+<p>SparkSession接口代替Spark1.6 中的SQLcontext和HiveContext 来实现对数据的加载、转换、处理等工作，并且实现了SQLcontext和HiveContext的所有功能。</p>
+<p>在新版本中并不需要之前那么繁琐的创建很多对象，只需要创建一个SparkSession对象即可。SparkSession支持从不同的数据源加载数据，并把数据转换成DataFrame，并支持把DataFrame转换成SQLContext自身中的表。然后使用SQL语句来操作数据，也提供了HiveQL以及其他依赖于Hive的功能支持。</p>
+<h2 id="第二部分-Spark-SQL实践"><a href="#第二部分-Spark-SQL实践" class="headerlink" title="第二部分 Spark SQL实践"></a>第二部分 Spark SQL实践</h2><h3 id="2-1-PySpark-on-Jupyter"><a href="#2-1-PySpark-on-Jupyter" class="headerlink" title="2.1 PySpark on Jupyter"></a>2.1 PySpark on Jupyter</h3><p>在测试研发环境我们通常使用<code>Jupyter</code>来研发和测试数据类<code>Spark</code>任务。启动命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> /root/anaconda3/bin/python /root/anaconda3/bin/jupyter-notebook --ip=0.0.0.0 --no-browser --allow-root --notebook-dir=/opt/jupyter</span></span><br></pre></td></tr></table></figure>
+<p>需要提前配置相关<code>Python</code>环境变量：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">"SPARK_HOME": "/opt/spark-2.3.2/",</span><br><span class="line">"PYSPARK_PYTHON": "/root/anaconda3/bin/python",</span><br><span class="line">"PYSPARK_DRIVER_PYTHON": "ipython3",                       </span><br><span class="line">"PYTHONPATH": "/opt/spark-2.3.2/python/:/opt/spark-2.3.2/python/lib/py4j-0.10.7-src.zip",</span><br><span class="line">"PYTHONSTARTUP": "/opt/spark-2.3.2/python/pyspark/shell.py",</span><br><span class="line">"PYSPARK_SUBMIT_ARGS": "--name pyspark --master local pyspark-shell"</span><br></pre></td></tr></table></figure>
+<p>启动<code>Jupyter</code>后已经预定义好了两个对象：<code>sc</code>和<code>spark</code>，类型分别是：<code>SparkContext</code>和<code>SparkSession</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Spark context Web UI available at http://hadoop01:4040</span><br><span class="line">Spark context available as 'sc' (master = local[*], app id = local-1653645196618).</span><br><span class="line">Spark session available as 'spark'.</span><br></pre></td></tr></table></figure>
+<p>用户在<code>Jupyter</code>上编写代码时候，直接使用两个对象即可（注意：如果重新定义，Spark部分配置是无法覆盖的）。</p>
+<h3 id="2-2-Two-Catalogs"><a href="#2-2-Two-Catalogs" class="headerlink" title="2.2  Two Catalogs"></a>2.2  Two Catalogs</h3><p><code>Spark 2.0</code>版本后，<code>Spark</code>有两个<code>Catalogs</code>，分别是<code>Hive</code>和<code>in-memory</code>。如果需要使用<code>Hive</code>需要配置<code>Spark</code>配置（参数默认值为：<code>in-memory</code>）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark.sql.catalogImplementation：hive</span><br></pre></td></tr></table></figure>
+<p>可以在<code>Spark UI</code>上查看任务配置，显示如下：</p>
+<p><img src="images\picture\Spark-sql\hive.jpg" alt="hive"></p>
+<p><code>Spark</code> 任务可以有如下功能：</p>
+<ul>
+<li>读写<code>Hive</code>库的元数据库（读写<code>Hive</code>表数据）;</li>
+<li>使用<code>Hive</code>的<code>UDF</code>函数；</li>
+<li>使用<code>Hive</code>的<code>SerDe</code>序列化；</li>
+</ul>
+<p>另外也可以基于内存实现<code>Catalogs</code>，从而和<code>Hive</code>解耦。配置如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark.sql.catalogImplementation：in-memory</span><br></pre></td></tr></table></figure>
+<p><img src="images\picture\Spark-sql\memory.jpg" alt="memory"></p>
+<h3 id="2-3-连接Hive"><a href="#2-3-连接Hive" class="headerlink" title="2.3 连接Hive"></a>2.3 连接Hive</h3><p><code>SparkSession</code>连接<code>Hive Metastore</code>，需要指定配置文件<code>hive-site.xml</code>（文件从<code>hive</code> <code>conf</code>目录中拷贝至<code>Spark</code> <code>conf</code>目录）。</p>
+<p>也可以通过在创建<code>SparkSession</code>对象是通过配置指定<code>hive.metastore.uris</code>，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">spark = SparkSession</span><br><span class="line">        .builder</span><br><span class="line">        .config(<span class="string">"hive.metastore.uris"</span>, <span class="string">"thrift://172.25.21.2:9083"</span>)</span><br><span class="line">        .enableHiveSupport()</span><br><span class="line">        .appName(<span class="string">'SparkByExamples'</span>)</span><br><span class="line">        .getOrCreate()</span><br></pre></td></tr></table></figure>
+<p>接下来我们就可以通过<code>SparkSession</code>对<code>Hive</code>进行操作。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"> </span><br><span class="line">//展示hive中的表</span><br><span class="line">spark.<span class="keyword">sql</span>("show tables").<span class="keyword">show</span>(<span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">// 创建一个dataframe</span><br><span class="line">val df1 = Seq(("one", <span class="number">1</span>), ("two", <span class="number">2</span>), ("three", <span class="number">3</span>)).toDF("word", "count")</span><br><span class="line">df1.<span class="keyword">show</span>()</span><br><span class="line">df1.<span class="keyword">write</span>.mode("overwrite").saveAsTable("t4")</span><br><span class="line"> </span><br><span class="line">//打印表结构</span><br><span class="line">val df2 = spark.<span class="keyword">sql</span>("show create table t4")</span><br><span class="line">df2.<span class="keyword">foreach</span>(println(_))</span><br><span class="line">//输出条数</span><br><span class="line">val df3 = spark.<span class="keyword">sql</span>("select count(1) as total from t4")</span><br><span class="line">df3.<span class="keyword">show</span>()</span><br><span class="line">spark.<span class="keyword">close</span>()</span><br></pre></td></tr></table></figure>
+<p>  }</p>
+<h3 id="2-4-PySpark-Catalog-API"><a href="#2-4-PySpark-Catalog-API" class="headerlink" title="2.4 PySpark Catalog API"></a>2.4 <code>PySpark</code> <code>Catalog</code> <code>API</code></h3><p> <code>PySpark</code>中目前支持的访问<code>Catalog</code>的方法清单：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">SPARK CATALOG API IN PYSPARK</th>
+<th style="text-align:left">DESCRIPTION</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">currentDatabase()</td>
+<td style="text-align:left">This API returns the current default database in this session</td>
+</tr>
+<tr>
+<td style="text-align:left">setCurrentDatabase()</td>
+<td style="text-align:left">You can use this API to sets the current default database in this session.</td>
+</tr>
+<tr>
+<td style="text-align:left">listDatabases()</td>
+<td style="text-align:left">Returns a list of databases available across all sessions</td>
+</tr>
+<tr>
+<td style="text-align:left">listTables(dbName=None)</td>
+<td style="text-align:left">Returns a list of tables/views in the specified database. API uses current database if no database is provided.</td>
+</tr>
+<tr>
+<td style="text-align:left">listFunctions(dbName=None)</td>
+<td style="text-align:left">Returns a list of functions registered in the specified database. API uses current database if no database is provided.</td>
+</tr>
+<tr>
+<td style="text-align:left">listColumns(tableName, dbName=None)</td>
+<td style="text-align:left">Returns a list of columns for the given table/view in the specified database.API uses current database if no database is provided.</td>
+</tr>
+<tr>
+<td style="text-align:left">createTable(tableName, path=None, source=None, schema=None, **options)</td>
+<td style="text-align:left">Creates a table based on the dataset in a data source and returns the DataFrame associated with the table.</td>
+</tr>
+<tr>
+<td style="text-align:left">dropGlobalTempView(viewName)</td>
+<td style="text-align:left">Drops the global temporary view with the given view name in the catalog. If the view has been cached before, then it will also be uncached. Returns true if this view is dropped successfully, false otherwise.</td>
+</tr>
+<tr>
+<td style="text-align:left">dropTempView(viewName)</td>
+<td style="text-align:left">Drops the local temporary view with the given view name in the catalog. If the view has been cached before, then it will also be uncached. Returns true if this view is dropped successfully, false otherwise.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>isCached</code>(tableName)</td>
+<td style="text-align:left">Returns true if the table is currently cached in-memory.</td>
+</tr>
+<tr>
+<td style="text-align:left">recoverPartitions(tableName)</td>
+<td style="text-align:left">Recovers all the partitions of the given table and update the catalog. Only works with a partitioned table, and not a view.</td>
+</tr>
+<tr>
+<td style="text-align:left">refreshByPath(path)</td>
+<td style="text-align:left">Invalidates and refreshes all the cached data for any DataFrame that contains the given data source path.</td>
+</tr>
+<tr>
+<td style="text-align:left">refreshTable(tableName)</td>
+<td style="text-align:left">Invalidates and refreshes all the cached data and metadata of the given table.</td>
+</tr>
+<tr>
+<td style="text-align:left">cacheTable(tableName)</td>
+<td style="text-align:left">Caches the specified table in-memory.</td>
+</tr>
+<tr>
+<td style="text-align:left">isCached(tableName)</td>
+<td style="text-align:left">Returns true if the table is currently cached in-memory.</td>
+</tr>
+<tr>
+<td style="text-align:left">uncacheTable(tableName)</td>
+<td style="text-align:left">Removes the specified table from the in-memory cache.</td>
+</tr>
+<tr>
+<td style="text-align:left">clearCache()</td>
+<td style="text-align:left">Removes all cached tables from the in-memory cache.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="第三部分-Spark-on-Hive-和Hive-on-Spark"><a href="#第三部分-Spark-on-Hive-和Hive-on-Spark" class="headerlink" title="第三部分 Spark on Hive 和Hive on Spark"></a>第三部分 Spark on Hive 和Hive on Spark</h2><h3 id="3-1-Hive-on-Spark"><a href="#3-1-Hive-on-Spark" class="headerlink" title="3.1 Hive on Spark"></a>3.1 Hive on Spark</h3><p><code>Hive</code>最开始底层使用<code>MapReduce</code>作为计算引擎，通常称为：<code>Hive on MapReduce</code>。为了提升效率出现了<code>tez</code>内存计算引擎，即<code>Hive on tez</code>。后续考虑到<code>Spark</code>的优秀性能，<code>Hive</code>项目也支持<code>Spark</code>作为底层引擎。这就是<code>Hive on Spark</code>。</p>
+<p>在<code>Hive CLI</code>中可以临时调整计算引擎：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 配置mapreduce计算引擎</span></span><br><span class="line">set hive.execution.engine=mr;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置tez计算引擎</span></span><br><span class="line">set hive.execution.engine=tez;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置spark计算引擎</span></span><br><span class="line">set hive.execution.engine=spark;</span><br></pre></td></tr></table></figure>
+<p>如果持久化配置，需要在配置文件<code>hive-default.xml</code>中调整计算引擎，如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.execution.engine<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>mr<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span></span><br><span class="line">    Expects one of [mr, tez, spark].</span><br><span class="line">    Chooses execution engine. Options are: mr (Map reduce, default), tez, spark. While MR</span><br><span class="line">    remains the default engine for historical reasons, it is itself a historical engine</span><br><span class="line">    and is deprecated in Hive 2 line. It may be removed without further warning.</span><br><span class="line">  <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-2-Spark-on-Hive"><a href="#3-2-Spark-on-Hive" class="headerlink" title="3.2 Spark on Hive"></a>3.2 Spark on Hive</h3><p><code>Spark</code>本身是一个计算引擎，并不负责数据的存储，计算过程需要从外部数据源读写数据。当然<code>Hive</code>也是一种外部数据源，所以这种模式通常被称为：<code>Spark on Hive</code>。</p>
+<p>这时候用户可以通过<code>Spark</code>的提供的<code>java/scala/pyhon/r</code>等接口访问外部数据源。</p>
+<p>3。spark + spark hive catalog。这是spark和hive结合的一种新形势，随着数据湖相关技术的进一步发展，这种模式现在在市场上受到了越来越多用户的青睐。其本质是，数据以orc/parquet/delta lake等格式存储在分布式文件系统如hdfs或对象存储系统如s3中，然后通过使用spark计算引擎提供的scala/java/python等api或spark 语法规范的sql来进行处理。由于在处理分析时针对的对象是table, 而table的底层对应的才是hdfs/s3上的文件/对象，所以我们需要维护这种table到文件/对象的映射关系，而spark自身就提供了 spark hive catalog来维护这种table到文件/对象的映射关系。注意这里的spark hive catalog，其本质是使用了hive 的 metasore 相关 api来读写表到文件/对象的映射关系（以及一起其他的元数据信息）到 metasore db如mysql, postgresql等数据库中。（由于spark编译时可以把hive metastore api等相关代码一并打包到spark的二进制安装包中，所以使用这种模式，我们并不需要额外单独安装hive）。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>对于shell中重新定义spark</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val spark = SparkSession.builder().enableHiveSupport().getOrCreate()</span><br><span class="line"><span class="number">2022</span><span class="number">-05</span><span class="number">-23</span> <span class="number">08</span>:<span class="number">47</span>:<span class="number">52</span> WARN  SparkSession$Builder:<span class="number">66</span> - Using an existing SparkSession; some configuration may <span class="keyword">not</span> take effect.</span><br><span class="line">spark: org.apache.spark.sql.SparkSession = org.apache.spark.sql.<span class="symbol">SparkSession@</span><span class="number">7</span>ecca48</span><br></pre></td></tr></table></figure>
+<p>spark和hive版本兼容问题：</p>
+<p><a href="https://blog.csdn.net/z1941563559/article/details/120764519" target="_blank" rel="noopener">https://blog.csdn.net/z1941563559/article/details/120764519</a></p>
+<p>如果Windows启动部署Spark，需要注意Java部署的路径中不能有括号等特殊字符。</p>
+<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、Pyspark接口说明，链接：<a href="https://cwiki.apache.org/confluence/display/Hive/Hive+on+Spark%3A+Getting+Started" target="_blank" rel="noopener">https://cwiki.apache.org/confluence/display/Hive/Hive+on+Spark%3A+Getting+Started</a></p>
+
+      
+    </div>
+
+    
+
+    <div>
+      
+        
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/a575ffa7/" rel="next" title="Python系列文章-Pandas使用碎碎念">
+                <i class="fa fa-chevron-left"></i> Python系列文章-Pandas使用碎碎念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/4dcace2f/" rel="prev" title="Elasticsearch集群升级指引">
+                Elasticsearch集群升级指引 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar/person.png" alt="rong xiang">
+            
+              <p class="site-author-name" itemprop="name">rong xiang</p>
+              <p class="site-description motion-element" itemprop="description">Keep a Pure Curiosity</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">311</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zjrongxiang" title="GitHub &rarr; https://github.com/zjrongxiang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:rongxiang1986@163.com" title="E-Mail &rarr; mailto:rongxiang1986@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/1971060643" title="Weibo &rarr; http://weibo.com/u/1971060643" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/fly51fly?refer_flag=1005055010_" title="https://weibo.com/fly51fly?refer_flag=1005055010_" rel="noopener" target="_blank">爱生活爱可可</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Spark-SQL"><span class="nav-number">3.</span> <span class="nav-text">第一部分 Spark SQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Spark-2-0之前"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 Spark 2.0之前</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Spark-2-0-之后"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 Spark 2.0 之后</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Spark-SQL实践"><span class="nav-number">4.</span> <span class="nav-text">第二部分 Spark SQL实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-PySpark-on-Jupyter"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 PySpark on Jupyter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Two-Catalogs"><span class="nav-number">4.2.</span> <span class="nav-text">2.2  Two Catalogs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-连接Hive"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 连接Hive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-PySpark-Catalog-API"><span class="nav-number">4.4.</span> <span class="nav-text">2.4 PySpark Catalog API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-Spark-on-Hive-和Hive-on-Spark"><span class="nav-number">5.</span> <span class="nav-text">第三部分 Spark on Hive 和Hive on Spark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Hive-on-Spark"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 Hive on Spark</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Spark-on-Hive"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 Spark on Hive</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">6.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">7.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2014 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rong xiang</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">940k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">14:15</span>
+  
+</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+    
+  <script id="dsq-count-scr" src="https://https-zjrongxiang-github-io.disqus.com/count.js" async></script>
+
+
+<script>
+  var disqus_config = function () {
+    this.page.url = "https://zjrongxiang.github.io/posts/4a851dd3/";
+    this.page.identifier = "posts/4a851dd3/";
+    this.page.title = 'Pyspark系列文章-Spark SQL与Hive交互实践';
+    };
+  function loadComments () {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-zjrongxiang-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    loadComments();
+  
+</script>
+
+  
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>

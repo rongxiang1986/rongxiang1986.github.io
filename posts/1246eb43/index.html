@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="https://blog.csdn.net/ARPOSPF/article/details/103236241 https://zhuanlan.zhihu.com/p/76567213 摘要异常检测是构建安全可靠系统的关键步骤。系统日志的主要目的是记录系统状态和重大事件在不同的临界点来帮助调试系统故障和执行根源分析。这样的日志数据在几乎所有的计算机系统中都是通用的。日志数据是了解系统状态和性能问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[翻译]基于深度学习对系统日志进行异常检测和诊断">
+<meta property="og:url" content="https://zjrongxiang.github.io/posts/1246eb43/index.html">
+<meta property="og:site_name" content="RongXiang">
+<meta property="og:description" content="https://blog.csdn.net/ARPOSPF/article/details/103236241 https://zhuanlan.zhihu.com/p/76567213 摘要异常检测是构建安全可靠系统的关键步骤。系统日志的主要目的是记录系统状态和重大事件在不同的临界点来帮助调试系统故障和执行根源分析。这样的日志数据在几乎所有的计算机系统中都是通用的。日志数据是了解系统状态和性能问">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://zjrongxiang.github.io/images/picture/deeplog/table1.PNG">
+<meta property="og:image" content="https://zjrongxiang.github.io/images/picture/deeplog/figure1.PNG">
+<meta property="og:updated_time" content="2022-10-25T15:01:29.663Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[翻译]基于深度学习对系统日志进行异常检测和诊断">
+<meta name="twitter:description" content="https://blog.csdn.net/ARPOSPF/article/details/103236241 https://zhuanlan.zhihu.com/p/76567213 摘要异常检测是构建安全可靠系统的关键步骤。系统日志的主要目的是记录系统状态和重大事件在不同的临界点来帮助调试系统故障和执行根源分析。这样的日志数据在几乎所有的计算机系统中都是通用的。日志数据是了解系统状态和性能问">
+<meta name="twitter:image" content="https://zjrongxiang.github.io/images/picture/deeplog/table1.PNG">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RongXiang" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://zjrongxiang.github.io/posts/1246eb43/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[翻译]基于深度学习对系统日志进行异常检测和诊断 | RongXiang</title>
+  
+
+
+
+
+  <script async src="//www.googletagmanager.com/gtag/js?id=UA-113063423-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-113063423-1');
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a> -->
+    <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RongXiang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">我的烂笔头</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>日程表</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/1246eb43/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[翻译]基于深度学习对系统日志进行异常检测和诊断
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-27 19:30:00" itemprop="dateCreated datePublished" datetime="2019-08-27T19:30:00+08:00">2019-08-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/deeplog/" itemprop="url" rel="index"><span itemprop="name">deeplog</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/1246eb43/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/1246eb43/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">18k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">16 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://blog.csdn.net/ARPOSPF/article/details/103236241" target="_blank" rel="noopener">https://blog.csdn.net/ARPOSPF/article/details/103236241</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/76567213" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/76567213</a></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>异常检测是构建安全可靠系统的关键步骤。系统日志的主要目的是记录系统状态和重大事件在不同的临界点来帮助调试系统故障和执行根源分析。这样的日志数据在几乎所有的计算机系统中都是通用的。日志数据是了解系统状态和性能问题的重要和有价值的资源;因此，各种系统日志自然是在线监视和异常检测的良好信息来源。我们提出了一种利用长短时记忆(LSTM)的深度神经网络模型DeepLog，将系统日志建模为自然语言序列。这使DeepLog可以自动地从正常执行中学习日志模式并在正常执行情况下日志模式偏离日志数据训练的模型时检测异常。此外,我们演示了如何以在线方式增量更新DeepLog模型，以便其可以随着时间的推移适应新的日志模式。此外，Deeplog从底层系统构建工作流，以便一旦检测到异常，用户就可以诊断出检测到的异常并有效地进行根本原因分析。对于大型日志数据进行的广泛实验评估表明，Deeplog的性能优于基于传统数据挖掘方法的其他现有的日志异常检测方法。</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>异常检测；深度学习；日志数据分析</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1 引言"></a>1 引言</h2><p>异常检测是构建安全可靠的计算系统的一个重要任务。随着系统和应用程序比以往任何时候都变得越来越复杂，它们会遇到更多的错误和漏洞，攻击者可能利用这些错误和漏洞来发起攻击。这些攻击也越来越复杂。因此，异常检测变得更具挑战性，并且许多基于标准数据挖掘的传统方法不再有效。</p>
+<p>系统日志在各个关键点记录系统状态和重大事件，以帮助调试性能问题和故障，并进行根本原因分析。这样的日志数据几乎在所有计算机系统中普遍存在，并且是了解系统状态的宝贵资源。此外，由于系统日志记录了活跃运行过程中发生的重要事件，因此它们是用于在线监视和异常检测的极佳信息源。</p>
+<p>利用系统日志数据进行异常检测的现有方法可以大致分为三类：基于PCA的日志消息计数器方法，基于不变量挖掘的方法来捕获不同日志键之间的共现模式和基于工作流的方法以识别程序逻辑流程中的异常执行。尽管它们在某些情况下是成功的，但它们都不能作为一种有效的通用异常检测方法，即能够以在线的方式防御各种攻击。</p>
+<p>这项工作提出了DeepLog，这是一种数据驱动的异常检测方法，可以利用大量系统日志。DeepLog设计背后的主要灵感来自自然语言处理：我们将日志条目视为遵循某些模式和语法规则的序列元素。确实，系统日志是由遵循严格的逻辑和控制流程集的程序生成的，并且非常类似于自然语言（尽管在词汇方面结构更严格，受约束）。为此，DeepLog是一个深层神经网络，它使用长短期记忆（LSTM）对日志条码的序列进行建模。这使DeepLog可以从正常执行中自动学习日志模式的模型，并将与正常系统执行的偏差标记为异常。此外，由于它是一种学习驱动的方法，因此，可以增量地更新DeepLog模型，以便它可以适应随着时间而出现的新日志模式。</p>
+<p>挑战：日志数据是非结构化的，并且它们的格式和语言在系统之间可能会显著不同。即使知道发生了错误，使用非结构化日志来诊断问题也已经很困难。从大量日志数据中进行在线异常检测更具挑战性。一些现有的方法使用基于规则的方法来解决此问题，这需要特定的领域知识。例如，使用“IP地址”之类的功能来解析日志。但是，这对于一般用途的异常检测不起作用，在这种情况下，几乎不可能先验地了解不同类型的日志中有哪些有趣的功能（并防范不同类型的攻击）。</p>
+<p>为了及时发现异常，必须及时进行检测，以便用户可以干预正在进行的攻击或系统性能问题[10]。 决策将以流方式进行。其结果是需要对整个日志数据进行多次传递的offine方法不适用于我们的设定[22，39]。我们还希望能够检测未知类型的异常，而不是针对特定类型的异常。 因此，以前的工作[44]使用正常和异常（对于特定类型的异常）日志数据条目来训练二分类器以进行异常检测在这种情况下是没有用的。</p>
+<p>并发是另一个挑战。 显然，日志中日志消息的顺序为诊断和分析提供了重要信息（例如，确定程序的执行路径）。但是，在许多系统日志中，日志消息是由几个不同的线程或同时运行的任务产生的。 这种并发性使得难以应用基于工作流的异常检测方法[42]，该方法将针对单个任务的工作流模型用作生成模型来与一系列日志消息进行匹配。</p>
+<p>最后，每个日志消息都包含丰富的信息，例如日志键和一个或多个度量值，以及其时间戳。整合和利用这些不同信息的整体方法将更加有效。大多数现有方法[22、32、39、41、42、44]仅分析日志消息的一个特定部分（例如，日志key），这限制了它们可以检测到的异常的类型。</p>
+<p>我们的贡献。循环神经网络（RNN）是一个人工神经网络，它使用循环将最后一个状态的输出转发到当前输入，从而跟踪历史以进行预测。长短期记忆（LSTM）网络[13、18、27]是RNN的一个实例，能够记住序列的长期依赖性。LSTM已证明在各种任务中都取得了成功，例如机器翻译[35]，情感分析[8]和医学自我诊断[20]。</p>
+<p>受到观察的启发，系统日志中的条目是由执行结构化源代码（因此可以视为结构化语言）产生的一系列事件，因此，我们使用LSTM神经网络设计DeepLog框架，以通过系统日志在线检测异常。 DeepLog不仅在日志条目中使用日志键，还使用度量值进行异常检测，因此，它能够捕获不同类型的异常。 DeepLog仅取决于小的训练数据集，该数据集由一系列“正常日志条目”组成。 在训练阶段之后，DeepLog可以识别正常的日志序列，并可以以流方式用于对传入日志条目进行在线异常检测。</p>
+<p>直观上，DeepLog隐式地从与常规系统执行路径相对应的训练数据中捕获日志条目之间潜在的非线性和高维依赖性。为帮助用户在发现异常后诊断问题，DeepLog还在训练阶段从日志条目构建工作流模型。DeepLog将并发任务或线程产生的日志条目分为不同的顺序，以便可以为每个单独的任务构建工作流模型。</p>
+<p>我们的评估表明，在以前的工作中探索的大型HDFS日志数据集[22，39]上，仅对很小一部分（少于1％）的日志条目进行了训练，这些日志条目对应于正常的系统执行，DeepLog在其余99％的日志条目上可以达到几乎100％的检测精度。来自大型OpenStack日志的结果有类似的趋势。此外，DeepLog还提供了通过合并实时用户反馈来在检测阶段逐步更新其权重的功能。更具体地说，如果正常日志条目被错误地分类为异常，DeepLog提供了一种用于用户反馈的机制。 然后，DeepLog可以使用此类反馈随着时间的推移在线动态调整其权重，以使其适应新的系统执行（因此为新的日志）模式。</p>
+<h2 id="2-预备知识"><a href="#2-预备知识" class="headerlink" title="2 预备知识"></a>2 预备知识</h2><h3 id="2-1-日志解析"><a href="#2-1-日志解析" class="headerlink" title="2.1 日志解析"></a>2.1 日志解析</h3><p>我们首先将非结构化的、无格式文本的日志条目解析为结构化的表示，这样我们就可以基于结构化的数据学习一个序列模型。例如文献中前期工作[9, 22, 39, 42, 45]，一种有效的方法是从每个日志条目中提取一个“日志键”(也称为“消息类型”)。日志条目$e$的日志键即为源码中打印语句中的字符串常量$k$，源码在执行后打印出$e$​。例如，对于日志条目e=”Took 10 seconds to build instance.”的日志键为k =Took * seconds to build instance，即打印语句printf(“Took %f seconds to build instance.)”, t)的字符串常量。注意到参数(s)在日志键中抽象为信号(s)。这些指标值反应了基础系统的状态和性能状态。某些参数的值可以作为特定的执行序列的标识符。例如HDFS日志中的block_id，OpenStack日志中的instance_id。这些标识符可以对日志条目进行聚类，也可以对多进程产生的日志条目进行拆解，以分离出单线程顺序序列[22, 39,42, 45]。目前最新的日志解析方法代码有Spell [9],这是一个无监督的流失解析器，基于LCS（最长公共子序列）原理在线解析输入的日志条目。</p>
+<p>前期在日志分析上的工作[22, 39, 42, 44]，已经丢弃了日志条目中时间字段和（或）参数值，仅适用日志键来检测异常。DeepLog会存储每个日志条目e的参数值，以及日志条目e和前项日志条目的时间间隔，表示成一个向量$v_{e}$。这个向量除了日志键，也被DeepLog适用。Table1中给了一个案例，该案例展示了OpenStack多伦执行删除虚拟机（VM）的任务产生的日志条目序列的解析结果。</p>
+<p><img src="\images\picture\deeplog\table1.PNG" alt="image-20210920162705527"></p>
+<h3 id="2-2-DeepLog结构和概述"><a href="#2-2-DeepLog结构和概述" class="headerlink" title="2.2 DeepLog结构和概述"></a>2.2 <code>DeepLog</code>结构和概述</h3><p> DeepLog的系统结构如Figure1图展示，主要分为三个组件：日志键异常检测模型，参数值异常检测模型，诊断和检测异常的工作流模型。</p>
+<p><img src="\images\picture\deeplog\figure1.PNG" alt="image-20210920162705527"></p>
+<h4 id="2-2-1-训练阶段"><a href="#2-2-1-训练阶段" class="headerlink" title="2.2.1 训练阶段"></a>2.2.1 训练阶段</h4><p>DeepLog的训练数据来源是正常系统执行路径的日志条目。每条日志条目被江西成日志键和参数值向量。日志键序列从训练日志文件中解析获取，DeepLog用其训练日志键异常检测模型，并且创建系统执行工作流模型用于诊断目的。对于每个不同的日志键k，DeepLog还会训练和维护模型用来检测系统的性能异常，这些度量值通过参数值向量k训练获得。</p>
+<h4 id="2-2-2-检测阶段"><a href="#2-2-2-检测阶段" class="headerlink" title="2.2.2 检测阶段"></a>2.2.2 检测阶段</h4><p>一个新的输入日志条目被解析成日志键和参数值向量。DeepLog首先使用日志键异常检测模型检测输入日志键是否正常。如果正常，DeepLog进一步使用该日志键的参数值异常检测模型，检查参数值向量。如果新的日志条目的日志键或参数值向量被预测为异常，则其标记为异常。最后，如果被标记为异常，DeepLog的工作流模型为用户提供语义信息诊断该异常。</p>
+<h3 id="2-3-威胁模型"><a href="#2-3-威胁模型" class="headerlink" title="2.3 威胁模型"></a>2.3 威胁模型</h3><h2 id="3-异常检测"><a href="#3-异常检测" class="headerlink" title="3 异常检测"></a>3 异常检测</h2><h3 id="3-1-执行路径异常"><a href="#3-1-执行路径异常" class="headerlink" title="3.1 执行路径异常"></a>3.1 执行路径异常</h3><h3 id="3-2-参数值和性能异常"><a href="#3-2-参数值和性能异常" class="headerlink" title="3.2 参数值和性能异常"></a>3.2 参数值和性能异常</h3><h3 id="3-3-异常检测模型的在线更新"><a href="#3-3-异常检测模型的在线更新" class="headerlink" title="3.3 异常检测模型的在线更新"></a>3.3 异常检测模型的在线更新</h3><h2 id="4-多任务执行的工作流构建"><a href="#4-多任务执行的工作流构建" class="headerlink" title="4 多任务执行的工作流构建"></a>4 多任务执行的工作流构建</h2><h2 id="5-评估"><a href="#5-评估" class="headerlink" title="5 评估"></a>5 评估</h2><p>DeepLog是使用Keras [6]和TensorFlow [2]作为后端实现的。 在本节中，我们将对DeepLog的每个组件和整体性能进行评估，以展示其在从大型系统日志数据中查找异常的有效性。</p>
+<h2 id="6-相关工作"><a href="#6-相关工作" class="headerlink" title="6 相关工作"></a>6 相关工作</h2><p>系统事件日志主要用于记录重要事件以简化调试，它具有丰富的信息，并且实际上存在于每个计算机系统上，从而使它们成为跟踪和调查系统状态的宝贵资源。但是，由于系统日志主要由各种自由格式的文本组成，因此分析具有挑战性。</p>
+<p>已经针对不同的系统设计了许多日志挖掘工具。 许多使用基于规则的方法[7、15、28、29、31、32、40、41]，尽管准确，但仅限于特定的应用场景，并且还需要领域专业知识。 例如，Beehive [41]通过对数据特定特征进行无监督的聚类，然后手动标记异常值，从日志中识别出潜在的安全威胁。 Oprea [28]使用信念传播从DNS日志中检测早期企业感染。 PerfAugur [32]专门用于通过使用谓词组合等专门功能来挖掘服务日志来发现性能问题。 DeepLog是一种通用方法，不依赖于任何特定于域的知识。</p>
+<p>使用系统日志进行异常检测的其他通用方法通常采用两步过程。首先，日志解析器[9、14、16、23、36、37]用于将日志条目解析为结构化形式，通常仅包含“日志键”（或“消息类型”）。除了用于分隔和分组日志条目的标识符外，参数值和时间戳都将被丢弃。然后，对日志键序列执行异常检测。一种典型的方法是通过计数唯一的日志键或使用更复杂的方法（例如TF-IDF）为每个会话或时间窗口生成数字矢量。然后，由这些向量组成的矩阵将适合基于矩阵的无监督异常检测方法，例如主成分分析（PCA）[38，39]和不变挖掘（IM）[22]。构造这样的矩阵通常是一个精妙的过程，并且这些方法不能提供日志条目级别的异常检测（相反，它们只能在会话级别运行）。我们向读者推荐[17]，以对这些方法进行概述和比较。</p>
+<p>有监督方法[17，44]使用正常和异常矢量来训练可检测未来异常的二进制分类器。这种方法的缺点是，可能无法检测到训练数据中未发现的未知异常。此外，很难获得异常数据进行训练。我们在评估中显示，仅使用一小部分正常数据进行训练，DeepLog可以实现具有更好性能的在线异常检测。此外，DeepLog还使用时间戳和参数值进行异常检测，这是先前工作中所缺少的。</p>
+<p>人们已经大量使用从精细日志文件中提取的日志键来研究工作流的构建[4，11，21，42]。已经表明，工作流在异常检测方面提供了有限的优势[11，42]。相反，工作流的主要用途是辅助系统诊断[4，21]。但是，所有过去的工作都假定要建模的日志文件仅包含一个任务的重复执行。在本文中，我们提出了自动将不同任务与日志文件分离的方法，以便为不同任务构建工作流模型。</p>
+<p>除了工作流之外，其他使用系统日志执行异常诊断的系统包括DISTALYZER [26]，它通过将有问题的日志与正常日志进行比较来诊断系统性能问题； LogCluster [19]，它聚类并组织历史日志以帮助将来的问题识别；以及Stitch [45]从系统日志中提取不同级别的标识符，并构建一个Web界面供用户直观地监视每个进程的进度会话并查找性能问题。请注意，一旦检测到异常，它们便用于诊断目的，并且本身不能用于异常检测。</p>
+<h2 id="7-结论"><a href="#7-结论" class="headerlink" title="7 结论"></a>7 结论</h2><p>本文介绍了DeepLog，这是一种使用基于深度神经网络的方法进行在线日志异常检测和诊断的通用框架。 DeepLog学习并编码整个日志消息，包括时间戳，日志密钥和参数值。它在每个日志条目级别而不是在每个会话级别执行异常检测，因为许多以前的方法都受到限制。DeepLog可以从日志文件中分离出不同的任务，并使用深度学习（LSTM）和经典挖掘（密度聚类）方法为每个任务构建工作流模型。这样可以进行有效的异常诊断。通过整合用户反馈，DeepLog支持对其LSTM模型的在线更新/训练，因此能够整合并适应新的执行模式。对大型系统日志的广泛评估清楚地证明了DeepLog与以前的方法相比的优越性。</p>
+<p>未来的工作包括但不限于将其他类型的RNN（递归神经网络）合并到DeepLog中以测试其效率，并集成来自不同应用程序和系统的日志数据以执行更全面的系统诊断（例如，MySQL数据库的故障可能是由磁盘故障引起，正如一个独立的系统日志中所示）。</p>
+<h2 id="8-致谢"><a href="#8-致谢" class="headerlink" title="8 致谢"></a>8 致谢</h2><h2 id="9-文献"><a href="#9-文献" class="headerlink" title="9 文献"></a>9 文献</h2><p>[1] VAST Challenge 2011. 2011. MC2 - Computer Networking Operations.<br>(2011). hp://hcil2.cs.umd.edu/newvarepository/VAST%20Challenge%202011/<br>challenges/MC2%20-%20Computer%20Networking%20Operations/ [Online; accessed<br>08-May-2017].<br>[2] Mart´ın Abadi, Paul Barham, Jianmin Chen, Zhifeng Chen, Andy Davis, Jerey<br>Dean, Mahieu Devin, Sanjay Ghemawat, Georey Irving, Michael Isard, and<br>others. 2016. TensorFlow: A system for large-scale machine learning. In Proc.<br>USENIX Symposium on Operating Systems Design and Implementation (OSDI).<br>264–285.<br>[3] Yoshua Bengio, R´ejean Ducharme, Pascal Vincent, and Christian Jauvin. 2003. A<br>neural probabilistic language model. Journal of machine learning research 3, Feb<br>(2003), 1137–1155.<br>[4] Ivan Beschastnikh, Yuriy Brun, Michael D Ernst, and Arvind Krishnamurthy.2014.Inferring models of concurrent systems from logs of their behavior with<br>CSight. In Proc. International Conference on Soware Engineering (ICSE ). 468–479.<br>[5] Andrea Biau, Adam Belay, Ali Mashtizadeh, David Mazi`eres, and Dan Boneh.Hacking blind. In Security and Privacy (SP), 2014 IEEE Symposium on. IEEE,<br>227–242.<br>[6] Franois Chollet. 2015. keras. hps://github.com/fchollet/keras. (2015). [Online;<br>accessed 08-May-2017].<br>[7] Marcello Cinque, Domenico Cotroneo, and Antonio Pecchia. 2013. Event logs<br>for the analysis of soware failures: A rule-based approach. IEEE Transactions<br>on Soware Engineering (TSE) (2013), 806–821.</p>
+<p>[8] Andrew M Dai and oc V Le. 2015. Semi-supervised sequence learning. In Proc.<br>Neural Information Processing Systems Conference (NIPS). 3079–3087.<br>[9] Min Du and Feifei Li. 2016. Spell: Streaming Parsing of System Event Logs. In<br>Proc. IEEE International Conference on Data Mining (ICDM). 859–864.<br>[10] Min Du and Feifei Li. 2017. ATOM: Ecient Tracking, Monitoring, and Orchestration<br>of Cloud Resources. IEEE Transactions on Parallel and Distributed Systems<br>(2017).<br>[11] Qiang Fu, Jian-Guang Lou, Yi Wang, and Jiang Li. 2009. Execution anomaly<br>detection in distributed systems through unstructured log analysis. In Proc. IEEE<br>International Conference on Data Mining (ICDM). 149–158.<br>[12] Yoav Goldberg. 2016. A primer on neural network models for natural language<br>processing. Journal of Articial Intelligence Research 57 (2016), 345–420.<br>[13] Ian Goodfellow, Yoshua Bengio, and Aaron Courville. 2016. Deep Learning. MIT<br>Press. hp://<a href="http://www.deeplearningbook.org" target="_blank" rel="noopener">www.deeplearningbook.org</a>.<br>[14] Hossein Hamooni, Biplob Debnath, Jianwu Xu, Hui Zhang, Guofei Jiang, and<br>Abdullah Mueen. 2016. LogMine: Fast Paern Recognition for Log Analytics. In<br>Proc. Conference on Information and Knowledge Management (CIKM). 1573–1582.<br>[15] Stephen E Hansen and E Todd Atkins. 1993. Automated System Monitoring<br>and Notication with Swatch.. In Proc. Large Installation System Administration<br>Conference (LISA). 145–152.<br>[16] Pinjia He, Jieming Zhu, Shilin He, Jian Li, and Michael R Lyu. 2016. An evaluation<br>study on log parsing and its use in log mining. In Proc. International Conference<br>on Dependable Systems and Networks (DSN). 654–661.<br>[17] Shilin He, Jieming Zhu, Pinjia He, and Michael R Lyu. 2016. Experience Report:<br>System Log Analysis for Anomaly Detection. In Proc. International Symposium<br>on Soware Reliability Engineering (ISSRE). 207–218.<br>[18] Sepp Hochreiter and J¨urgen Schmidhuber. 1997. Long short-term memory. Neural<br>computation (1997), 1735–1780.<br>[19] Qingwei Lin, Hongyu Zhang, Jian-Guang Lou, Yu Zhang, and Xuewei Chen.</p>
+<ol start="2016">
+<li>Log clustering based problem identication for online service systems. In<br>Proc. International Conference on Soware Engineering (ICSE ). 102–111.<br>[20] Chaochun Liu, Huan Sun, Nan Du, Shulong Tan, Hongliang Fei, Wei Fan, Tao<br>Yang, Hao Wu, Yaliang Li, and Chenwei Zhang. 2016. Augmented LSTM Framework<br>to Construct Medical Self-diagnosis Android. In Proc. IEEE International<br>Conference on Data Mining (ICDM). 251–260.<br>[21] Jian-Guang Lou, Qiang Fu, Shengqi Yang, Jiang Li, and Bin Wu. 2010. Mining<br>program workow from interleaved traces. In Proc. ACM SIGKDD International<br>Conference on Knowledge Discovery and Data Mining (SIGKDD).<br>[22] Jian-Guang Lou, Qiang Fu, Shengqi Yang, Ye Xu, and Jiang Li. 2010. Mining<br>Invariants from Console Logs for System Problem Detection.. In Proc. USENIX<br>Annual Technical Conference (ATC). 231–244.<br>[23] Adetokunbo AO Makanju, A Nur Zincir-Heywood, and Evangelos E Milios.</li>
+<li>Clustering event logs using iterative partitioning. In Proc. ACM SIGKDD<br>International Conference on Knowledge Discovery and Data Mining (SIGKDD).<br>1255–1264.<br>[24] Christopher D Manning and Hinrich Sch¨utze. 1999. Foundations of statistical<br>natural language processing. MIT Press.<br>[25] Tomas Mikolov, Martin Kara´at, Lukas Burget, Jan Cernock`y, and Sanjeev Khudanpur.</li>
+<li>Recurrent neural network based language model.. In Interspeech,<br>Vol. 2. 3.<br>[26] Karthik Nagaraj, Charles Killian, and Jennifer Neville. 2012. Structured comparative<br>analysis of systems logs to diagnose performance problems. In Proc. USENIX<br>Symposium on Networked Systems Design and Implementation (NSDI). 26–26.<br>[27] Christopher Olah. 2015. Understanding LSTM Networks. (2015). hp://colah.<br>github.io/posts/2015-08-Understanding-LSTMs [Online; accessed 16-May-2017].<br>[28] Alina Oprea, Zhou Li, Ting-Fang Yen, Sang H Chin, and Sumayah Alrwais. 2015.<br>Detection of early-stage enterprise infection by mining large-scale log data. In Proc. International Conference on Dependable Systems and Networks (DSN). 45–56.<br>[29] James E Prewe. 2003. Analyzing cluster log les using Logsurfer. In Proc. Annual<br>Conference on Linux Clusters.<br>[30] Robert Ricci, Eric Eide, and e CloudLab Team. 2014. Introducing CloudLab:<br>Scientic Infrastructure for Advancing Cloud Architectures and Applications.<br>USENIX ;login: 39, 6 (Dec. 2014). hps://<a href="http://www.usenix.org/publications/login/" target="_blank" rel="noopener">www.usenix.org/publications/login/</a><br>dec14/ricci<br>[31] John P Rouillard. 2004. Real-time Log File Analysis Using the Simple Event<br>Correlator (SEC).. In Proc. Large Installation System Administration Conference<br>(LISA). 133–150.<br>[32] Sudip Roy, Arnd Christian K¨onig, Igor Dvorkin, and Manish Kumar. 2015. Perfaugur:<br>Robust diagnostics for performance anomalies in cloud services. In Proc.<br>IEEE International Conference on Data Engineering (ICDE). IEEE, 1167–1178.<br>[33] Elastic Stack. 2017. e Open Source Elastic Stack. (2017). hps://<a href="http://www.elastic" target="_blank" rel="noopener">www.elastic</a>.<br>co/products [Online; accessed 16-May-2017].<br>[34] Martin Sundermeyer, Ralf Schl¨uter, and Hermann Ney. 2012. LSTM Neural<br>Networks for Language Modeling.. In Interspeech. 194–197.<br>[35] Ilya Sutskever, Oriol Vinyals, andoc V Le. 2014. Sequence to sequence learning<br>with neural networks. In Proc. Neural Information Processing Systems Conference<br>(NIPS). 3104–3112.<br>[36] Liang Tang and Tao Li. 2010. LogTree: A framework for generating system<br>events from raw textual logs. In Proc. IEEE International Conference on Data<br>Mining (ICDM). 491–500.<br>[37] Liang Tang, Tao Li, and Chang-Shing Perng. 2011. LogSig: Generating system<br>events from raw textual logs. In Proc. Conference on Information and Knowledge<br>Management (CIKM). 785–794.<br>[38] Wei Xu, Ling Huang, Armando Fox, David Paerson, and Michael Jordan. 2009.<br>Online system problem detection by mining paerns of console logs. In Proc.<br>IEEE International Conference on Data Mining (ICDM). 588–597.<br>[39] Wei Xu, Ling Huang, Armando Fox, David Paerson, and Michael I Jordan. 2009.<br>Detecting large-scale system problems by mining console logs. In Proc. ACM<br>Symposium on Operating Systems Principles (SOSP). 117–132.<br>[40] Kenji Yamanishi and Yuko Maruyama. 2015. Dynamic syslog mining for network<br>failure monitoring. In Proc. ACM SIGKDD International Conference on Knowledge<br>Discovery and Data Mining (SIGKDD). 499–508.<br>[41] Ting-Fang Yen, Alina Oprea, Kaan Onarlioglu, Todd Leetham, William Robertson,<br>Ari Juels, and Engin Kirda. 2013. Beehive: Large-scale log analysis for detecting<br>suspicious activity in enterprise networks. In Proc. International Conference on<br>Dependable Systems and Networks (ACSAC). 199–208.<br>[42] Xiao Yu, Pallavi Joshi, Jianwu Xu, Guoliang Jin, Hui Zhang, and Guofei Jiang. 2016.<br>CloudSeer: Workow Monitoring of Cloud Infrastructures via Interleaved Logs.<br>In Proc. ACM International Conference on Architectural Support for Programming<br>Languages and Operating Systems (ASPLOS). 489–502.<br>[43] Ding Yuan, Haohui Mai, Weiwei Xiong, Lin Tan, Yuanyuan Zhou, and Shankar<br>Pasupathy. 2010. SherLog: error diagnosis by connecting clues from run-time<br>logs. In ACM SIGARCH computer architecture news. ACM, 143–154.<br>[44] Ke Zhang, Jianwu Xu, Martin Renqiang Min, Guofei Jiang, Konstantinos Pelechrinis,<br>and Hui Zhang. 2016. Automated IT system failure prediction: A deep learning<br>approach. In Proc. IEEE International Conference on Big Data (IEEE BigData).<br>1291–1300.<br>[45] Xu Zhao, Kirk Rodrigues, Yu Luo, Ding Yuan, and Michael Stumm. 2016. Nonintrusive<br>performance proling for entire soware stacks based on the ow<br>reconstruction principle. In Proc. USENIX Symposium on Operating Systems Design<br>and Implementation (OSDI). 603–618.</li>
+</ol>
+
+      
+    </div>
+
+    
+
+    <div>
+      
+        
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/c147e1bc/" rel="next" title="Helm简介和安装部署">
+                <i class="fa fa-chevron-left"></i> Helm简介和安装部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/70c6d4f1/" rel="prev" title="Hadoop集群kerberos互信">
+                Hadoop集群kerberos互信 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar/person.png" alt="rong xiang">
+            
+              <p class="site-author-name" itemprop="name">rong xiang</p>
+              <p class="site-description motion-element" itemprop="description">Keep a Pure Curiosity</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">311</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zjrongxiang" title="GitHub &rarr; https://github.com/zjrongxiang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:rongxiang1986@163.com" title="E-Mail &rarr; mailto:rongxiang1986@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/1971060643" title="Weibo &rarr; http://weibo.com/u/1971060643" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/fly51fly?refer_flag=1005055010_" title="https://weibo.com/fly51fly?refer_flag=1005055010_" rel="noopener" target="_blank">爱生活爱可可</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关键词"><span class="nav-number">2.</span> <span class="nav-text">关键词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-引言"><span class="nav-number">3.</span> <span class="nav-text">1 引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-预备知识"><span class="nav-number">4.</span> <span class="nav-text">2 预备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-日志解析"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 日志解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-DeepLog结构和概述"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 DeepLog结构和概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-训练阶段"><span class="nav-number">4.2.1.</span> <span class="nav-text">2.2.1 训练阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-检测阶段"><span class="nav-number">4.2.2.</span> <span class="nav-text">2.2.2 检测阶段</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-威胁模型"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 威胁模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-异常检测"><span class="nav-number">5.</span> <span class="nav-text">3 异常检测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-执行路径异常"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 执行路径异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-参数值和性能异常"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 参数值和性能异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-异常检测模型的在线更新"><span class="nav-number">5.3.</span> <span class="nav-text">3.3 异常检测模型的在线更新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-多任务执行的工作流构建"><span class="nav-number">6.</span> <span class="nav-text">4 多任务执行的工作流构建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-评估"><span class="nav-number">7.</span> <span class="nav-text">5 评估</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-相关工作"><span class="nav-number">8.</span> <span class="nav-text">6 相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-结论"><span class="nav-number">9.</span> <span class="nav-text">7 结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-致谢"><span class="nav-number">10.</span> <span class="nav-text">8 致谢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-文献"><span class="nav-number">11.</span> <span class="nav-text">9 文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2014 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rong xiang</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">940k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">14:15</span>
+  
+</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+    
+  <script id="dsq-count-scr" src="https://https-zjrongxiang-github-io.disqus.com/count.js" async></script>
+
+
+<script>
+  var disqus_config = function () {
+    this.page.url = "https://zjrongxiang.github.io/posts/1246eb43/";
+    this.page.identifier = "posts/1246eb43/";
+    this.page.title = '[翻译]基于深度学习对系统日志进行异常检测和诊断';
+    };
+  function loadComments () {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-zjrongxiang-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    loadComments();
+  
+</script>
+
+  
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>

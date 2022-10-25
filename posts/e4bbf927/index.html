@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark内存优化 第三部分 总结 参考文献及资料  背景当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，MapReduce这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark内存管理和优化">
+<meta property="og:url" content="https://zjrongxiang.github.io/posts/e4bbf927/index.html">
+<meta property="og:site_name" content="RongXiang">
+<meta property="og:description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark内存优化 第三部分 总结 参考文献及资料  背景当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，MapReduce这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/cluster-overview.png">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/fenji.png">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/静态（堆内）.bmp">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/静态（堆外）.bmp">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/统一（堆内）.bmp">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/统一（堆外）.bmp">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/example_ui.PNG">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/20200604212151736.png">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/disk.png">
+<meta property="og:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/shuffleDisk.jpg">
+<meta property="og:updated_time" content="2022-10-25T15:01:29.612Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark内存管理和优化">
+<meta name="twitter:description" content="目录 背景 第一部分 Spark内存管理详解 第二部分 Spark内存优化 第三部分 总结 参考文献及资料  背景当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，MapReduce这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背">
+<meta name="twitter:image" content="c:/Users/rongxiang/Desktop/spark_Merory_Manager/cluster-overview.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RongXiang" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://zjrongxiang.github.io/posts/e4bbf927/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Spark内存管理和优化 | RongXiang</title>
+  
+
+
+
+
+  <script async src="//www.googletagmanager.com/gtag/js?id=UA-113063423-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-113063423-1');
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a> -->
+    <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RongXiang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">我的烂笔头</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>日程表</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/e4bbf927/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spark内存管理和优化
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-11-16 13:30:00" itemprop="dateCreated datePublished" datetime="2021-11-16T13:30:00+08:00">2021-11-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spark/" itemprop="url" rel="index"><span itemprop="name">Spark</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/e4bbf927/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/e4bbf927/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">28k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">25 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li>背景</li>
+<li>第一部分 Spark内存管理详解</li>
+<li>第二部分 Spark内存优化</li>
+<li>第三部分 总结</li>
+<li>参考文献及资料</li>
+</ul>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>当前企业各类业务应用场景，对于大数据处理的速度追求是越来越”卷”了，特别是互联网行业。回头看，<code>MapReduce</code>这种基于磁盘的大数据计算框架早已过时。一方面，内存IO的速度和磁盘不是一个级别，另外内存硬件的成本逐渐降低。所以基于内存的计算框架逐渐成为主流。Spark计算框架就是在这个背景下出现（其实本质都是实现<a href="https://uxtuo.github.io/2018/01/03/Google%E4%B8%89%E5%A4%A7%E8%AE%BA%E6%96%87/" target="_blank" rel="noopener">Google关于大数据的三篇论文</a>）。虽然现在Flink已然形成流式霸权，但大部分企业（传统行业）中，<code>Spark</code>仍然是大数据生产环境上，最主要的分布式计算引擎。</p>
+<p>但是在开发和维护<code>Spark</code>任务的时候经常出现内存资源问题。本文将详细介绍<code>Spark</code>的内存管理原理和各个版本的演进。内容主要基于<code>Spark 2.3.0</code>版本。需要读者具备<code>Java JVM</code>基础、<code>Spark RDD</code>、<code>Shuffle</code>等<code>Spark</code>基础知识。前面主要将理论和原理，后面介绍案例。</p>
+<p>本文图片使用<code>visio</code>画图，需要原文件的同学可以私信我提供。限于经验等各方面原因，难免有所疏漏或者有失偏颇。如有问题，欢迎联系一起讨论。</p>
+<h2 id="第一部分-Spark-内存管理详解"><a href="#第一部分-Spark-内存管理详解" class="headerlink" title="第一部分 Spark 内存管理详解"></a>第一部分 Spark 内存管理详解</h2><h3 id="1-1-Spark任务运行基础"><a href="#1-1-Spark任务运行基础" class="headerlink" title="1.1 Spark任务运行基础"></a>1.1 Spark任务运行基础</h3><p><code>Spark</code>在运行时，会启动<code>Executor</code>和<code>Driver</code>两种<code>JVM</code>进程。其中<code>Driver</code>为管理容器，负责创建<code>Spark Context</code>、提交<code>Spark</code>作业（<code>job</code>），最后将作业转换成计算任务（<code>Task</code>），并协调、调度、下发给任务集群的<code>Executor</code>容器。<code>Executor</code>容器负责具体的计算任务，执行完成后将结果返回给<code>Driver</code>，并提供对<code>RDD</code>的存储服务。参考下图（对于<code>Spark on Yarn</code>运行模式时，<code>Cluster Manager</code>对应为<code>ResourceManager</code>，<code>Worker Node</code> 对应<code>NodeManager</code>）。</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\cluster-overview.png" alt="cluster-overview"></p>
+<p><code>Spark2.3.0</code>版本前，<code>Driver</code>进程的内存管理即为典型<code>JVM</code>内存管理。主要区别是对于<code>Executor</code>，<code>Spark</code>内存管理引入了堆外内存的概念。</p>
+<p><code>Spark 2.3.0</code>版本开始，<code>Driver</code>进程也引入了堆外内存的概念，如下图。</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\fenji.png" alt="fenji"></p>
+<p>我们以<code>Spark on Yarn</code>运行模式来描述<code>Execution</code>的内存管理。当我们将任务提交给Yarn集群，Yarn集群首先分配和<code>AM</code>（<code>Application Master</code>）容器（即<code>Driver</code>）资源，然后向<code>RM</code>（<code>Resource Manager</code>）申请<code>Executior</code>容器资源。<code>RM</code>处理内存资源请求并分配<code>Executior</code>容器。</p>
+<h3 id="1-2-Spark内存管理演进"><a href="#1-2-Spark内存管理演进" class="headerlink" title="1.2 Spark内存管理演进"></a>1.2 Spark内存管理演进</h3><p><code>Spark</code>目前版本演进中支持两种内存管理模式：静态内存管理器（<code>Static Memory Manager</code>）和统一内存管理器（<code>Unified Memory Manager</code>），主要版本演进如下：</p>
+<ul>
+<li><p><code>Spark 1.0+</code>版本，静态内存管理器;</p>
+</li>
+<li><p><code>Spark 1.6</code> 版本，<code>Executor</code>容器引入堆外（<code>off-Head</code>）内存机制；</p>
+</li>
+<li><p><code>Spark 1.6+</code> 版本，引入统一内存管理器；</p>
+</li>
+<li><p><code>Spark 2.3+</code>版本，<code>Driver</code>容器也引入堆外内存机制（<code>Spark on Yarn</code> 和<code>Spark on K8s</code>）；</p>
+<p>注：在官网<a href="https://spark.apache.org/releases/spark-release-2-3-0.html" target="_blank" rel="noopener">Spark2.3.0版本特性</a>说明上没找到，但查证为该版本新增特性（目前大量相关Spark的中文介绍材料还没有更新，即Driver没有堆外内存。建议大家可以留意一下官网）；</p>
+</li>
+<li><p><code>Spark 3.0+</code> 版本，去除对静态内存管理器的支持；</p>
+</li>
+</ul>
+<p>从<code>Spark</code> 源码中看：<a href="https://github.com/apache/spark/tree/master/core/src/main/scala/org/apache/spark/memory" target="_blank" rel="noopener">org/apache/spark/memory</a>，通过<code>MemoryManager</code>接口实现管理<code>Storage</code> 内存和 Execution 内存、同一个Executor中的任务调用接口申请或释放内存。而<code>MemoryManager</code>有两个实现 <code>StaticMemoryManager</code>和<code>UnifiedMemoryManager</code>，即分别是静态内存管理器（<code>Static Memory Manager</code>）和统一内存管理器（<code>Unified Memory Manager</code>）。</p>
+<p><code>Spark 1.6+</code> 版本中，可以通过参数<code>spark.memory.useLegacyMode</code>配置使用哪种模式，默认开启<code>Unified Memory Manager</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下面的配置开启静态内存管理器（Static Memory Manager），默认值为<span class="literal">false</span></span></span><br><span class="line">spark.memory.useLegacyMode = true</span><br></pre></td></tr></table></figure>
+<p>后文，将详细介绍两种资源分配的方式。</p>
+<h4 id="1-2-1-静态管理模式"><a href="#1-2-1-静态管理模式" class="headerlink" title="1.2.1 静态管理模式"></a>1.2.1 静态管理模式</h4><p>所谓静态管理（<code>Static Memory Manager</code>）模式，即存储内存（<code>Storage Memory</code>）、执行内存（<code>Execution Memory</code>）以及其他内存（<code>Other Memory</code>）资源的大小，在<code>Spark</code>应用程序运行期间是固定值。用户需要在任务运行前进行配置，任务一旦运行中将无法动态调整。</p>
+<h5 id="1-2-1-1-堆内内存"><a href="#1-2-1-1-堆内内存" class="headerlink" title="1.2.1.1 堆内内存"></a>1.2.1.1 堆内内存</h5><p>下图是静态内存管理模式下的内存资源划分：</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\静态（堆内）.bmp" alt="静态（堆内）"></p>
+<ul>
+<li><p>预留内存（<code>Reserved Memory</code>）：</p>
+<p>其中<code>Storage</code>内存和<code>Execution</code>内存均有预留区域，用于防止<code>OOM</code>的风险。</p>
+</li>
+<li><p><code>Storage</code>内存（存储内存）：</p>
+<p>计算公式（其中 <code>systemMaxMemory</code>取决于当前 <code>JVM</code> 堆内内存的大小）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">可用的Storage内存 = systemMaxMemory*spark.storage.memoryFraction*spark.storage.safetyFraction</span><br><span class="line"><span class="meta">#</span><span class="bash"> spark.storage.memoryFraction 默认为0.6</span></span><br></pre></td></tr></table></figure>
+<p>用于存储 <code>RDD</code>的缓存（<code>cache</code>）数据 和 广播（<code>Broadcast</code>）。这部分存储对象更多是为将来计算重用的数据。</p>
+</li>
+<li><p><code>Execution</code>内存（执行内存）：</p>
+<p>计算公式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">可用的Execution内存 = systemMaxMemory*spark.shuffle.memoryFraction*spark.shuffle.safetyFraction</span><br><span class="line"><span class="meta">#</span><span class="bash"> spark.shuffle.memoryFraction 默认为0.2</span></span><br></pre></td></tr></table></figure>
+<p>用于执行<code>Shuffle</code>时占用的内存，主要用于存放 <code>Shuffles</code>、<code>Joins</code>、<code>Sort</code>、<code>aggregations</code>等计算过程中的临时数据。待完成操作后，就会释放资源，寿命较短。</p>
+</li>
+<li><p>其他内存（<code>Otrher Memory</code>）：</p>
+<p><code>Spark</code>内部元数据和用户自定义数据类型。</p>
+</li>
+</ul>
+<h5 id="1-2-1-2-堆外内存"><a href="#1-2-1-2-堆外内存" class="headerlink" title="1.2.1.2 堆外内存"></a>1.2.1.2 堆外内存</h5><p><code>Spark</code>任务本质还是运行在<code>JVM</code>虚机上的<code>Java</code>进程，所以<code>Executor</code>的内存管理仍然是基于<code>JVM</code>的内存管理。而堆内存受到 <code>JVM</code>统一管理，<code>GC</code>基于一定算法逻辑，当spark任务需要申请和释放内存的时候，并不自由灵活。具体流程如下：</p>
+<ul>
+<li>申请内存：<ul>
+<li><code>Spark</code>在代码中<code>new</code>一个对象实例;</li>
+<li><code>JVM</code>从堆内内存分配空间，创建对象并返回对象引用;</li>
+<li><code>Spark</code>保存该对象的引用，记录该对象占用的内存;</li>
+</ul>
+</li>
+<li>释放内存：<ul>
+<li><code>Spark</code>记录该对象释放的内存，删除该对象的引用;</li>
+<li>等待<code>JVM</code>的垃圾回收机制释放该对象占用的堆内内存;</li>
+</ul>
+</li>
+</ul>
+<p>所以，对于堆内内存的申请和释放实际是由 <code>JVM</code> 来管理的。因此，在统计堆内内存具体使用量时，考虑性能等各方面原因，<code>Spark</code> 目前采用的是抽样统计的方式来计算已使用的内存。<code>Spark</code>不能准确记录实际可用的堆内内存，当数据量较大时，如果不能及时溢出(<code>Spill</code>)数据到磁盘，也就无法避免内存溢出<code>OOM</code>。</p>
+<blockquote>
+<p>Spark预估内存资源算法介绍：<a href="https://www.turbofei.wang/spark/2016/12/26/spark%E5%86%85%E5%AD%98%E9%A2%84%E6%B5%8B" target="_blank" rel="noopener">https://www.turbofei.wang/spark/2016/12/26/spark%E5%86%85%E5%AD%98%E9%A2%84%E6%B5%8B</a></p>
+<p>源码：org/apache/spark/util/SizeEstimator.scala</p>
+</blockquote>
+<p>所以Spark 从1.6 版本开始引入了<code>Off-heap memory</code>(<a href="https://issues.apache.org/jira/browse/SPARK-11389" target="_blank" rel="noopener">SPARK-11389</a>)。该内存资源不属于<code>JVM</code>内存，而是调用 <code>Java</code> 的 <code>unsafe</code> 相关 <code>API</code> 直接向操作系统申请内存，直接在服务器节点的内存中开辟空间，存储经过序列化的二进制数据。由于这种方式不需要 <code>JVM</code> 内存管理，所以可以避免频繁的 <code>GC</code>，但是缺点是用户必须自行编写内存申请和释放的逻辑。</p>
+<p>默认情况下，堆外内存是禁用的。可以通过参数<code>spark.memory.offHeap.enabled</code> 参数启用它 ，并通过<code>spark.memory.offHeap.size</code> 参数设置内存大小，单位为字节 。</p>
+<p>与堆内内存相比，堆外内存模型比较简单，只有<code>Storage memory</code>和<code>Execution memory</code>，其分布如下图所示：</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\静态（堆外）.bmp" alt="静态（堆外）"></p>
+<h5 id="1-2-1-2-总结"><a href="#1-2-1-2-总结" class="headerlink" title="1.2.1.2 总结"></a>1.2.1.2 总结</h5><p><code>Static Memory Manager</code>机制实现起来比较简单，但是使用中需要用户熟悉Spark的存储机制，并具有丰富的资源预设评估能力。否则很容易导致<code>Storage memory</code>和<code>Execution memory</code>空间资源使用冰火两重天，饿的饿死，饱的饱死。</p>
+<p>于是Spark社区考虑引入新的内存管理模式，参考提案文件：<a href="https://www.linuxprobe.com/wp-content/uploads/2017/04/unified-memory-management-spark-10000.pdf" target="_blank" rel="noopener">Unified Memory Manager</a>提案。</p>
+<h4 id="1-2-2-统一管理模式"><a href="#1-2-2-统一管理模式" class="headerlink" title="1.2.2 统一管理模式"></a>1.2.2 统一管理模式</h4><p>在统一管理模式（Unified Memory Manager ）机制下，<code>Storage memory</code> 和<code>Execution memory</code> 共享一个内存区域，两者可以相互占用空闲区域，不再有严格的资源限制边界。</p>
+<h5 id="1-2-2-1-堆内-On-Heap-内存"><a href="#1-2-2-1-堆内-On-Heap-内存" class="headerlink" title="1.2.2.1 堆内(On-Heap)内存"></a>1.2.2.1 堆内(On-Heap)内存</h5><p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\统一（堆内）.bmp" alt="统一（堆内）"></p>
+<p>注：上图显示<code>spark.memory.fraction=0.75</code> 。根据<a href="https://issues.apache.org/jira/browse/SPARK-15796" target="_blank" rel="noopener">SPARK-15796</a>，从 <code>Spark 2.0</code> 版本开始减少到 <code>0.6</code>。</p>
+<p>主要变化是预留内存：</p>
+<ul>
+<li><p>Reserved预留内存</p>
+<p>这部分内存主要用户Spark内部对象存储。大小不可配置，写死在代码中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 代码文件：org.apache.spark.memory.UnifiedMemoryManager</span></span><br><span class="line"><span class="keyword">private</span> val RESERVED_SYSTEM_MEMORY_BYTES = <span class="number">300</span> * <span class="number">1024</span> * <span class="number">1024</span></span><br></pre></td></tr></table></figure>
+<p>注：对于测试环境，可以通过参数调小该资源。参数值为：<code>spark.testing.reservedMemory</code>。</p>
+</li>
+</ul>
+<p>堆内内存的大小为spark任务提交是参数<code>executor-memory</code>或配置参数<code>spark.executor.memory</code>决定。</p>
+<h5 id="1-2-2-2-堆外-Off-Heap-内存"><a href="#1-2-2-2-堆外-Off-Heap-内存" class="headerlink" title="1.2.2.2 堆外(Off-Heap)内存"></a>1.2.2.2 堆外(Off-Heap)内存</h5><h6 id="1-2-2-2-1-Exector堆外内存"><a href="#1-2-2-2-1-Exector堆外内存" class="headerlink" title="1.2.2.2.1 Exector堆外内存"></a>1.2.2.2.1 Exector堆外内存</h6><p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\统一（堆外）.bmp" alt="统一（堆外）"></p>
+<p>对于<code>Spark on Yarn</code>（<code>Spark 2.3.0</code>）模式，通过下面的参数修改任务的对外内存大小：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">spark.memory.enable.offheap.enable = true</span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认开启</span></span><br><span class="line"></span><br><span class="line">spark.yarn.executor.memoryOverhead=1024</span><br><span class="line"><span class="meta">#</span><span class="bash"> 单位M</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认值为executorMemory * 0.10, with minimum of 384m</span></span><br></pre></td></tr></table></figure>
+<p>例如下面的启动日志，默认申请了<code>384MB</code>的对外内存：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">YarnAllocator:<span class="number">54</span> - Will request <span class="number">2</span> executor container(s), each with <span class="number">1</span> core(s) <span class="keyword">and</span> <span class="number">1408</span> MB memory (including <span class="number">384</span> MB of overhead)</span><br></pre></td></tr></table></figure>
+<h6 id="1-2-2-2-2-Driver堆外内存"><a href="#1-2-2-2-2-Driver堆外内存" class="headerlink" title="1.2.2.2.2 Driver堆外内存"></a>1.2.2.2.2 Driver堆外内存</h6><p><code>Spark 2.3.0</code>版本对于<code>Driver</code>也引入了堆外内存的机制。堆外内存的大小为：<code>max(driverMemory * 0.10,384MB)</code>。主要注意的是只支持对于<code>Spark</code>任务基于<code>Yarn</code>和<code>K8s</code>集群调度运行的场景。</p>
+<p>官网参数说明如下：</p>
+<table>
+<thead>
+<tr>
+<th><code>spark.driver.memoryOverhead</code></th>
+<th>driverMemory * 0.10, with minimum of 384</th>
+<th>The amount of off-heap memory to be allocated per driver in cluster mode, in MiB unless otherwise specified. This is memory that accounts for things like VM overheads, interned strings, other native overheads, etc. This tends to grow with the container size (typically 6-10%). This option is currently supported on YARN and Kubernetes.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>可以在任务提交日志中看下面下面的日志：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> driverMemory = 1G, max(driverMemory * 0.10,384MB) = 384MB</span></span><br><span class="line">Client:54 - Will allocate AM container, with 1408 MB memory including 384 MB overhead</span><br><span class="line"><span class="meta">#</span><span class="bash"> driverMemory = 4G, max(driverMemory * 0.10,384MB) = 409MB</span></span><br><span class="line">Client:54 - Will allocate AM container, with 4505 MB memory including 409 MB overhead</span><br></pre></td></tr></table></figure>
+<h5 id="1-2-2-3-计算案例"><a href="#1-2-2-3-计算案例" class="headerlink" title="1.2.2.3 计算案例"></a>1.2.2.3 计算案例</h5><p>我们在测试集群上运行一个<code>Spark</code>任务，并计算和验证上面的理论，<code>Yarn</code>集群资源限制：</p>
+<p>参数<code>yarn.scheduler.maximum-allocation-mb</code>限制单个容器最大分配内存大小，高于该值请求无法生效。</p>
+<p>同样对于单个<code>Node Manager</code>也有资源限制，由参数<code>yarn.nodemanager.resource.memory-mb</code>控制。即单个<code>Node Manager</code>可提供给<code>Yarn</code>集群的物理内存资源。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> nodemanager能够申请的最大内存，默认值为30G</span></span><br><span class="line">yarn.nodemanager.resource.memory-mb: 30G</span><br><span class="line"><span class="meta">#</span><span class="bash"> 调度时一个container能够申请的最大资源，默认值为4G</span></span><br><span class="line">yarn.scheduler.maximum-allocation-mb: 4G</span><br></pre></td></tr></table></figure>
+<p>对于统一内存管理模式，运行脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@quickstart spark-2.3.0]# cat run_example.sh </span><br><span class="line">export YARN_CONF_DIR=/etc/hadoop/conf</span><br><span class="line">/home/spark-2.3.0/bin/spark-submit \</span><br><span class="line">--conf "spark.executorEnv.JAVA_HOME=/home/openjdk" \</span><br><span class="line">--conf "spark.yarn.appMasterEnv.JAVA_HOME=/home/openjdk" \</span><br><span class="line">--master yarn \</span><br><span class="line">--deploy-mode cluster \</span><br><span class="line">--num-executors 2 \</span><br><span class="line">--driver-memory 1G \</span><br><span class="line">--executor-memory 1G \</span><br><span class="line">--class org.apache.spark.examples.SparkPi \</span><br><span class="line">/home/spark-2.3.0/examples/jars/spark-examples_2.11-2.3.0.jar</span><br></pre></td></tr></table></figure>
+<p>任务运行后我们查看<code>Spark UI</code>，发现<code>Storage Memory</code>的大小为<code>384.1MB</code>。</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\example_ui.PNG" alt="example_ui"></p>
+<p>接下来我们使用之前理论进行计算：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Spark任务提交参数</span></span><br><span class="line">spark.executor.memory=1g</span><br><span class="line">spark.memory.fraction=0.6</span><br><span class="line">spark.memory.storageFraction=0.5</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 堆内存</span></span><br><span class="line">Java Heap Memory = 1 GB = 1 * 1024 MB = 1024 MB</span><br><span class="line"><span class="meta">#</span><span class="bash"> 保留内存</span></span><br><span class="line">Reserved Memory = 300 MB</span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line">Usable Memory = (Java Heap Memory — Reserved Memory)= 1024 MB - 300 MB = 724 MB</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">Other Memory = Usable Memory * (1.0 — spark.memory.fraction) </span><br><span class="line">            = 724 MB * (1.0 - 0.6) = 724 MB * 0.4 </span><br><span class="line">            = 289.6 MB</span><br><span class="line"></span><br><span class="line">Spark Memory = Usable Memory * spark.memory.fraction</span><br><span class="line">             = 724 MB * 0.6 </span><br><span class="line">             = 434.4 MB</span><br><span class="line"></span><br><span class="line">Spark Storage Memory = Spark Memory * spark.memory.storageFraction</span><br><span class="line">                     = 434.4 MB * 0.5 = 217.2 MB</span><br><span class="line"></span><br><span class="line">Spark Execution Memory = Spark Memory * (1.0 - spark.memory.storageFraction)</span><br><span class="line">                       = 434.4 MB * ( 1 - 0.5) = 434.4 MB</span><br></pre></td></tr></table></figure>
+<p>这个计算结果（<code>Spark Storage Memory=217.2 MB</code>）和<code>UI</code>显示的<code>Storage Memory（384.1MB）</code>有很大差距的。事实上<code>UI</code>中的<code>Storage Memory = Spark Storage Memory+Spark Execution Memory</code>，即<code>434.4 MB</code>。</p>
+<p>但是这个结果和<code>UI</code>仍然有差异。我们查看<code>Spark</code>的源码发现可用内存（<code>Usable Memory</code>）的计算方法并不是堆栈内存，而是<code>Runtime.getRuntime.maxMemory</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//org.apache.spark.memory.UnifiedMemoryManager</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> def <span class="title">getMaxMemory</span><span class="params">(conf: SparkConf)</span>: Long </span>= &#123;</span><br><span class="line">  val systemMemory = conf.getLong(<span class="string">"spark.testing.memory"</span>, Runtime.getRuntime.maxMemory)</span><br><span class="line">  val reservedMemory = conf.getLong(<span class="string">"spark.testing.reservedMemory"</span>,</span><br><span class="line">        <span class="keyword">if</span> (conf.contains(<span class="string">"spark.testing"</span>)) <span class="number">0</span> <span class="keyword">else</span> RESERVED_SYSTEM_MEMORY_BYTES)</span><br><span class="line">  val usableMemory = systemMemory - reservedMemory</span><br><span class="line">  val memoryFraction = conf.getDouble(<span class="string">"spark.memory.fraction"</span>, <span class="number">0.6</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//获取最大的内存值</span></span><br><span class="line">  (usableMemory * memoryFraction).toLong</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>Java</code> 虚拟机中（<code>JDK8</code>）堆栈内存被划分为新生代（<code>NewGen</code>）和老年代（<code>OldGen</code> ），而新生代又被划分为：<code>Eden</code>、<code>From Survivor</code>、<code>To Survivor</code>。即有下面公式：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ExecutorMemory</span> =  Eden + <span class="number">2</span> * Survivor + OldGen  = <span class="number">1</span>G</span><br><span class="line"><span class="attr">systemMemory</span> = Runtime.getRuntime.maxMemory=ExecutorMemory - Survivor</span><br></pre></td></tr></table></figure>
+<p>所以<code>UI</code>显示的大小会略小于上面计算的结果，属于正常。</p>
+<h4 id="1-2-3-动态占用模式"><a href="#1-2-3-动态占用模式" class="headerlink" title="1.2.3 动态占用模式"></a>1.2.3 动态占用模式</h4><p>统一内存管理模式最大新颖点，就是动态占用机制的引入。在实际生产线上<code>Spark</code>任务运行时，数据计算是动态变化的，无法在任务运行前合理的分配好资源，动态占用模式正是解决该需求场景的。</p>
+<p>动态占用机制的规则如下：</p>
+<ul>
+<li><code>Spark</code>任序提交时，根据<code>spark.memory.storageFraction</code> 参数设置<code>Storage</code>内存和<code>Execution</code>内存 （初始化）。</li>
+<li>运行时，如果<code>Storage</code>内存和<code>Execution</code>内存的空间均不够（标准是：存储空间不够放下一个完整的块（<code>Block</code>）），会根据<code>LRU</code>缓存策略，将数据存储到磁盘。若一方空间不足，而对方空间空余时，可借用对方的空间。</li>
+<li><code>Storage</code>占用对方的内存，会将占用的部分转移到硬盘上，然后“归还”借来的空间。</li>
+<li><code>Execution</code>占用了对方的内存时，却无法立刻“归还”借来的空间，只能等待释放。由于<code>Shuffle</code>过程生成的数据（本质是文件）会在后面使用，而<code>Cache</code>中的数据不一定会在后面使用，因此回收内存可能会导致性能严重下降。</li>
+</ul>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\20200604212151736.png" alt="20200604212151736"></p>
+<h4 id="1-2-3-对比"><a href="#1-2-3-对比" class="headerlink" title="1.2.3 对比"></a>1.2.3 对比</h4><p>最后表格对比一下堆内堆外内存，<code>Auto</code>的自动但管理不精细。</p>
+<table>
+<thead>
+<tr>
+<th>内存类别</th>
+<th>管理方式</th>
+<th>对比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>on-heap</td>
+<td>由JVM管理</td>
+<td>受到JVM GC管理，容易OOM</td>
+</tr>
+<tr>
+<td>off-heap</td>
+<td>手动管（spark）</td>
+<td>用户编写内存申请和释放的逻辑</td>
+</tr>
+</tbody>
+</table>
+<h2 id="第二部分-Spark内存优化"><a href="#第二部分-Spark内存优化" class="headerlink" title="第二部分 Spark内存优化"></a>第二部分 Spark内存优化</h2><p>讲完枯燥的理论后，我们要使用这些理论指导日常的研发调优、生产问题的分析定位。即理论指导实践，解决问题才是目的。</p>
+<p>通常我们说<code>Spark</code>是基于内存计算的，但是并不是说所有的数据对象都是缓存在内存中。如果数据量较大而内存资源不足的场景下，<code>Spark</code>也会把数据缓存在磁盘中。但是为了提升任务运行效率，需要尽量避免缓存数据溢出（<code>Spill</code>）到磁盘。</p>
+<p>那么如何判断<code>Spark</code>任务的内存资源管理是合适的？通过上文的理论介绍，<code>Spark</code>任务的内存资源主要使用分配有：存储（<code>Storage</code>）内存和执行（<code>Executor</code>）内存，所以我们分别讨论。通常通过<code>Spark</code> UI界面，来查看<code>Spark</code>任务资源实时使用情况。</p>
+<h3 id="2-1-存储（Storage）内存优化"><a href="#2-1-存储（Storage）内存优化" class="headerlink" title="2.1 存储（Storage）内存优化"></a>2.1 存储（Storage）内存优化</h3><p><code>Storage</code>子菜单界面中，如果发现缓存cache中数据开始溢出到磁盘上(<code>Size on Disk</code>)。这时候说明预留给 <code>Storage</code>内存资源不足。例如下图，<code>Size on Disk</code>数值为<code>4.7GB</code>，表示任务中有<code>4.7GB</code>的数据因为资源不足溢出到磁盘进行缓存。</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\disk.png" alt="disk"></p>
+<p>这时候可以尝试先通过适当增加<code>Storage</code>内存资源解决。涉及参数有：</p>
+<ul>
+<li><code>spark.memory.fraction</code>，这是资源比例参数（存储（<code>Storage</code>）内存+执行（<code>Executor</code>）内存资源整体），默认是0.6。可以适当调大该值，这样 <code>Execution</code> 和 <code>Storage</code> 的整体可用内存资源变大。</li>
+<li><code>spark.memory.storageFraction</code>，同样是资源比例参数（<code>Storage</code> 占 <code>Storage+Executor</code> 内存总和的比例）。我们知道在统一内存管理机制下，<code>Storage</code> 和 <code>Executor</code> 之间内存资源可以动态伸缩借用。但是<code>spark.memory.storageFraction</code>越大，任务运行过程中，Storage 能用的内存就会越多。可以适当调大该值。反之，如果任务更吃 <code>Executor</code> 内存，适当把这个值调小。</li>
+</ul>
+<h3 id="2-2-执行（Executor）内存"><a href="#2-2-执行（Executor）内存" class="headerlink" title="2.2 执行（Executor）内存"></a>2.2 执行（Executor）内存</h3><p><code>Stages</code>子菜单界面中，点击最新完成的<code>stage</code>，页面显示<code>stage</code>的运行情况汇总。发现<code>shuffle spill (disk)</code>的数值较大，<code>Executor</code>内存资源不足。例如下图，任务中<code>shuffle</code>的时候，2个<code>Executor</code>平均使用300M的磁盘空间。</p>
+<p><img src="C:\Users\rongxiang\Desktop\spark_Merory_Manager\shuffleDisk.jpg" alt="shuffleDisk"></p>
+<p>这时候通过调整参数，适当增加<code>Executor</code>内存资源解决。</p>
+<h3 id="2-3-其他内存问题"><a href="#2-3-其他内存问题" class="headerlink" title="2.3 其他内存问题"></a>2.3 其他内存问题</h3><h4 id="2-3-1-Driver内存"><a href="#2-3-1-Driver内存" class="headerlink" title="2.3.1 Driver内存"></a>2.3.1 Driver内存</h4><p>报错：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Job aborted due to stage failure: Total size of serialized results of 334502 tasks (1024.0 MB) is bigger than spark.driver.maxResultSize (1024.0 MB)</span><br></pre></td></tr></table></figure>
+<p>处理： 对于collect和一些操作，driver会接收各task执行后的数据，spark.driver.maxResultSize参数控制接收数据大小，建议先检查代码，避免或减少take，collect操作，如果不成功再考虑增大该参数。尽量不要使用collect操作即可。</p>
+<h2 id="第三部分-总结"><a href="#第三部分-总结" class="headerlink" title="第三部分 总结"></a>第三部分 总结</h2><p>Spark引入堆外内存，其实是Spark钨丝计划（Spark Tungsten）的一部分。该计划的细节可以参考databricks公司的官网博客：<a href="https://databricks.com/blog/2015/04/28/project-tungsten-bringing-spark-closer-to-bare-metal.html" target="_blank" rel="noopener">Project Tungsten: Bringing Apache Spark Closer to Bare Metal</a> 。文章总结了目前Spark的瓶颈主要在CPU和内存。以前磁盘和网络I/O随着高速网络和廉价SSD的使用，已经不再是性能瓶颈。</p>
+<p>钨丝计划（Project Tungsten）包含三个方面：</p>
+<ul>
+<li><p>内存管理（Memory Management）和二进制处理（Binary Processing）：利用应用的语义（application semantics）来更明确地管理内存，同时消除JVM对象模型和垃圾回收开销。</p>
+</li>
+<li><p>缓存友好的计算（Cache-aware Computation）：使用算法和数据结构来实现内存分级结构（MemoryHierarchy）。</p>
+</li>
+<li><p>代码生成（Code Generation，CG）：使用代码生成来利用新型编译器和CPU。</p>
+</li>
+</ul>
+<p>其中本文介绍Spark内存优化就是钨丝计划的内存管理部分。</p>
+<p>计划安排：</p>
+<ul>
+<li>Project Tungsten (Spark 1.5 Phase 1)，链接：<a href="https://issues.apache.org/jira/browse/SPARK-7075" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/SPARK-7075</a></li>
+<li>Project Tungsten (Phase 2)，链接：<a href="https://issues.apache.org/jira/browse/SPARK-9697" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/SPARK-9697</a></li>
+</ul>
+<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、《Deep Dive: Apache Spark Memory Management》介绍视频，链接：<a href="https://youtu.be/dPHrykZL8Cg" target="_blank" rel="noopener">https://youtu.be/dPHrykZL8Cg</a></p>
+<p>2、探索Spark Tungsten的秘密，链接：<a href="https://github.com/hustnn/TungstenSecret" target="_blank" rel="noopener">https://github.com/hustnn/TungstenSecret</a></p>
+
+      
+    </div>
+
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/posts/e4bbf927/">Spark内存管理和优化</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
+  <p><span>发布时间:</span>2021年11月16日 - 13:11</p>
+  <p><span>最后更新:</span>2022年10月25日 - 23:10</p>
+  <p><span>原始链接:</span><a href="/posts/e4bbf927/" title="Spark内存管理和优化">https://zjrongxiang.github.io/posts/e4bbf927/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/posts/e4bbf927/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/31c4567f/" rel="next" title="Spark对外内存实践">
+                <i class="fa fa-chevron-left"></i> Spark对外内存实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/ae6d5f9f/" rel="prev" title="Spark钨丝计划（Spark Tungsten）">
+                Spark钨丝计划（Spark Tungsten） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar/person.png" alt="rong xiang">
+            
+              <p class="site-author-name" itemprop="name">rong xiang</p>
+              <p class="site-description motion-element" itemprop="description">Keep a Pure Curiosity</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">311</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zjrongxiang" title="GitHub &rarr; https://github.com/zjrongxiang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:rongxiang1986@163.com" title="E-Mail &rarr; mailto:rongxiang1986@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/1971060643" title="Weibo &rarr; http://weibo.com/u/1971060643" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/fly51fly?refer_flag=1005055010_" title="https://weibo.com/fly51fly?refer_flag=1005055010_" rel="noopener" target="_blank">爱生活爱可可</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Spark-内存管理详解"><span class="nav-number">3.</span> <span class="nav-text">第一部分 Spark 内存管理详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Spark任务运行基础"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 Spark任务运行基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Spark内存管理演进"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 Spark内存管理演进</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-静态管理模式"><span class="nav-number">3.2.1.</span> <span class="nav-text">1.2.1 静态管理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-1-堆内内存"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1.2.1.1 堆内内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-2-堆外内存"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">1.2.1.2 堆外内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-2-总结"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">1.2.1.2 总结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-统一管理模式"><span class="nav-number">3.2.2.</span> <span class="nav-text">1.2.2 统一管理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-1-堆内-On-Heap-内存"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">1.2.2.1 堆内(On-Heap)内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-2-堆外-Off-Heap-内存"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">1.2.2.2 堆外(Off-Heap)内存</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-2-1-Exector堆外内存"><span class="nav-number">3.2.2.2.1.</span> <span class="nav-text">1.2.2.2.1 Exector堆外内存</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#1-2-2-2-2-Driver堆外内存"><span class="nav-number">3.2.2.2.2.</span> <span class="nav-text">1.2.2.2.2 Driver堆外内存</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-3-计算案例"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">1.2.2.3 计算案例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-动态占用模式"><span class="nav-number">3.2.3.</span> <span class="nav-text">1.2.3 动态占用模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-对比"><span class="nav-number">3.2.4.</span> <span class="nav-text">1.2.3 对比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Spark内存优化"><span class="nav-number">4.</span> <span class="nav-text">第二部分 Spark内存优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-存储（Storage）内存优化"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 存储（Storage）内存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-执行（Executor）内存"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 执行（Executor）内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-其他内存问题"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 其他内存问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-1-Driver内存"><span class="nav-number">4.3.1.</span> <span class="nav-text">2.3.1 Driver内存</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-总结"><span class="nav-number">5.</span> <span class="nav-text">第三部分 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">6.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2014 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rong xiang</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">940k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">14:15</span>
+  
+</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+    
+  <script id="dsq-count-scr" src="https://https-zjrongxiang-github-io.disqus.com/count.js" async></script>
+
+
+<script>
+  var disqus_config = function () {
+    this.page.url = "https://zjrongxiang.github.io/posts/e4bbf927/";
+    this.page.identifier = "posts/e4bbf927/";
+    this.page.title = 'Spark内存管理和优化';
+    };
+  function loadComments () {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-zjrongxiang-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    loadComments();
+  
+</script>
+
+  
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>

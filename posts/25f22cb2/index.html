@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： elasticsearch基于 本文以Python API（官方包：https://github.com">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch中数据查询(Python实现)总结">
+<meta property="og:url" content="https://zjrongxiang.github.io/posts/25f22cb2/index.html">
+<meta property="og:site_name" content="RongXiang">
+<meta property="og:description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： elasticsearch基于 本文以Python API（官方包：https://github.com">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2022-10-25T15:01:29.555Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elasticsearch中数据查询(Python实现)总结">
+<meta name="twitter:description" content="目录 背景 第一部分  Search 接口 第二部分  Scroll 接口 第三部分  Scan 接口 第四部分 总结 参考文献及资料  背景Elasticsearch是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下Elasticsearch的查询原理： elasticsearch基于 本文以Python API（官方包：https://github.com">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RongXiang" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://zjrongxiang.github.io/posts/25f22cb2/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Elasticsearch中数据查询(Python实现)总结 | RongXiang</title>
+  
+
+
+
+
+  <script async src="//www.googletagmanager.com/gtag/js?id=UA-113063423-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-113063423-1');
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a> -->
+    <a href="https://github.com/zjrongxiang"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RongXiang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">我的烂笔头</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-schedule">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>日程表</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjrongxiang.github.io/posts/25f22cb2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rong xiang">
+      <meta itemprop="description" content="Keep a Pure Curiosity">
+      <meta itemprop="image" content="/images/avatar/person.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RongXiang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Elasticsearch中数据查询(Python实现)总结
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-03-28 13:30:00" itemprop="dateCreated datePublished" datetime="2022-03-28T13:30:00+08:00">2022-03-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-10-25 23:01:29" itemprop="dateModified" datetime="2022-10-25T23:01:29+08:00">2022-10-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Elasticsearch/" itemprop="url" rel="index"><span itemprop="name">Elasticsearch</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/25f22cb2/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="posts/25f22cb2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">23k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">21 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li>背景</li>
+<li>第一部分  <code>Search</code> 接口</li>
+<li>第二部分  Scroll 接口</li>
+<li>第三部分  Scan 接口</li>
+<li>第四部分 总结</li>
+<li>参考文献及资料</li>
+</ul>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><code>Elasticsearch</code>是为了全文检索出现的，在实际使用中查询数据是客户端和集群交互的主要交互形式。我们先看一下<code>Elasticsearch</code>的查询原理：</p>
+<p>elasticsearch基于</p>
+<p>本文以Python API（官方包：<official elasticsearch client library for python><a href="https://github.com/elastic/elasticsearch-py）为例进行实现讲解。" target="_blank" rel="noopener">https://github.com/elastic/elasticsearch-py）为例进行实现讲解。</a></official></p>
+<h2 id="第一部分-查询原理说明"><a href="#第一部分-查询原理说明" class="headerlink" title="第一部分 查询原理说明"></a>第一部分 查询原理说明</h2><p><a href="https://pdai.tech/md/db/nosql-es/elasticsearch-y-th-4.html" target="_blank" rel="noopener">https://pdai.tech/md/db/nosql-es/elasticsearch-y-th-4.html</a></p>
+<h2 id="第一部分-Search-接口"><a href="#第一部分-Search-接口" class="headerlink" title="第一部分 Search 接口"></a>第一部分 <code>Search</code> 接口</h2><h3 id="1-1-接口案例"><a href="#1-1-接口案例" class="headerlink" title="1.1 接口案例"></a>1.1 接口案例</h3><p>我们使用Elasticsearch官方提供 <code>Python</code> 包进行查询交互：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</span><br><span class="line">elasticClient = Elasticsearch(<span class="string">'http://192.168.52.142:9200'</span>)</span><br><span class="line"></span><br><span class="line">query_body = &#123;</span><br><span class="line">    <span class="string">"query"</span>:&#123;</span><br><span class="line">        <span class="string">"bool"</span>:&#123;</span><br><span class="line">            <span class="string">"must"</span>:&#123;</span><br><span class="line">                <span class="string">"match"</span>:&#123;</span><br><span class="line">                    <span class="string">"text_entry"</span>: <span class="string">"we"</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"from"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">"size"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">result = elasticClient.search(index=<span class="string">"shakespeare"</span>, body=query_body)</span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
+<p>查询结果为:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "took": 0,</span><br><span class="line">    "timed_out": false,</span><br><span class="line">    "_shards": &#123;</span><br><span class="line">        "total": 1,</span><br><span class="line">        "successful": 1,</span><br><span class="line">        "skipped": 0,</span><br><span class="line">        "failed": 0</span><br><span class="line">    &#125;,</span><br><span class="line">    "hits": &#123;</span><br><span class="line">        "total": &#123;</span><br><span class="line">            "value": 3109,</span><br><span class="line">            "relation": "eq"</span><br><span class="line">        &#125;,</span><br><span class="line">        "max_score": 5.6665335,</span><br><span class="line">        "hits": [</span><br><span class="line">            &#123;</span><br><span class="line">                "_index": "shakespeare",</span><br><span class="line">                "_type": "_doc",</span><br><span class="line">                "_id": "35519",</span><br><span class="line">                "_score": 5.6665335,</span><br><span class="line">                "_source": &#123;</span><br><span class="line">                    "type": "line",</span><br><span class="line">                    "line_id": 35520,</span><br><span class="line">                    "play_name": "Hamlet",</span><br><span class="line">                    "speech_number": 33,</span><br><span class="line">                    "line_number": "4.5.119",</span><br><span class="line">                    "speaker": "Danes",</span><br><span class="line">                    "text_entry": "We will, we will."</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>按照顺序说明一下字段参数的含义：</p>
+<ul>
+<li><p><code>took</code>，表示Elasticsearch查询语句花费的时间，单位毫秒；</p>
+</li>
+<li><p>timed_out，表示查询是否超时；</p>
+</li>
+<li><p><code>_shards</code>，表示查询中查看的分片（<code>shard</code>）信息，其中<code>total</code>表示<code>shard</code>总量，<code>successful</code>成功个数，<code>skipped</code>跳过个数，<code>failed</code>失败个数；</p>
+</li>
+<li><p><code>hits</code> ，查询的结果；</p>
+</li>
+<li><p><code>hits.total</code>，是包含与搜索条件匹配的文档总数信息的对象</p>
+</li>
+<li><p><code>hits.total.value</code>，表示查询共命中数量（结合<code>hits.total.relation</code>参数看）；</p>
+</li>
+<li><p><code>hits.total.relation</code>，当值是<code>eq</code>时，<code>hits.total.value</code>的值是准确计数。当值是<code>gte</code>时，<code>hits.total.value</code>的值是不准确的。</p>
+</li>
+<li><p><code>hits.max_score</code>，最大分数；</p>
+</li>
+<li><p><code>hits.hits</code>，查询结果数据存储<code>List</code>（默认为前10个文档，查询中<code>size</code>参数决定）。</p>
+</li>
+</ul>
+<p>  第35行，hits.sort 表示结果排序键（如果请求中没有指定，则默认按分数排序）。</p>
+<p>  现在我们来重点关注11~14行，参数track_total_hits可以控制total值的准确性，可以设为false、true或正整数。当为false时，不再返回total计数，total始终为1；当为正整数时，表示精确的命中文档计数，例如为1000时，返回如下结构 :</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">"total": &#123;</span><br><span class="line">    "value": 3109,</span><br><span class="line">    "relation": "eq"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  此时如果命中结果小于或等于1000时，value是精确的计数，relation是eq，如果命中的结果数大于了1000时，此时value等于1000，relation是gte，如果需要精确统计结果数，这个值要设置的很大或者设为true，这个参数的设基更多的出于性能考虑。具体工程应用中，我们可以首先检查relation的值，如果是eq，则表示value的值真实代表了命中的结果数，如果为gte表示value的值是不准确的。<br>  那么track_total_hits这个参数到底如何设置才是最合理的呢？这要结合具体的业务需求和应用场景。可以遵循如下三个原则：</p>
+<p>保持默认值：10000，不变，这足以满足一般的业务需求，就算是淘宝、京东这样的大型电商网站，一页展示40个结果，10000个结果可以展示250页，相信没有用户会看250页后的商品，大多数情况下用户基本上都是浏览前10也的商品。<br>如果需要精确知道命中的文档数量，此时应把track_total_hits设置为true,但用户需要清楚的明白，如果命中的文档数量很大，会影响查询性能，而且会消耗大量的内存，甚至存在内存异常的风险。<br>如果你确切知道不需要知道命中的结果数，则把track_total_hits设为false,这会提升查询性能。</p>
+<p>一般的分页需求我们可以使用form和size的方式实现，但是这种分页方式在深度分页的场景下应该是要避免使用的。深度分页会随着请求的页次增加，所消耗的内存和时间的增长也是成比例的增加，为了避免深度分页产生的问题，elasticsearch从2.0版本开始，增加了一个限制：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index<span class="selector-class">.max_result_window</span> =<span class="number">10000</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-2-接口说明"><a href="#1-2-接口说明" class="headerlink" title="1.2 接口说明"></a>1.2 接口说明</h3><p>用search API 可以获取数据，但是存在下面两个问题：</p>
+<ol>
+<li>返回的数据默认只有10条</li>
+</ol>
+<p>这个是因为ES默认的返回数据都值设置成了10条，所以无论索引中的文档数有多少，都只反馈最开始的10条</p>
+<p>我们可以看到，可以根据设置size数值，来获取返回的文档数，但是另外的问题又来了，如果文档数量大于10000（size的最大值）呢？且这样获取貌似速度上比较慢？</p>
+<p>2.文档数量大于10000，且查询速度不够快</p>
+<p>这时候scan API就派上用场了。</p>
+<p>当发送查询命令到ElasticSearch中，返回的文档集合默认会按照计算出来的文档打分排序(已经在本章的 Lucene的默认打分算法 一节中讲到)。</p>
+<h3 id="1-3-Python实现"><a href="#1-3-Python实现" class="headerlink" title="1.3 Python实现"></a>1.3 Python实现</h3><h2 id="第二部分-Scroll-接口"><a href="#第二部分-Scroll-接口" class="headerlink" title="第二部分 Scroll 接口"></a>第二部分 Scroll 接口</h2><p>elasticsearch的scroll是什么？<br>可以简单理解为mysql的cursor游标，比如你一次请求的数据会很大，可以使用scroll这样的流式接口，scroll会把你的所需要的结果标记起来。<br>但是这scroll的查询还是会对数据进行排序的，这样会影响性能。 如果你只是单纯的想要数据，那么可以使用scan，因为scan会告诉 elasticsearch 不去排序。scan模式会扫描shard分片中的数据,单纯的扫除匹配，而不会像scroll进行排序处理。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/392363821" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/392363821</a></p>
+<p>Slice使用方式以及原理。多线程方式提升查询速度。</p>
+<ul>
+<li>slice 在 search + scroll 的时候可以用，在聚类结果导出的时候也可以用。</li>
+<li>注意用完的scroll应该及时删除。es默认保留500个滚动任务id。多了就不能再使用了！</li>
+<li>注意scroll状态保留的时间。如果你后续接到数据以后的处理时间比较长，或者查询本身时间花费也长，你应该合理的设置一个长的状态保留时间。</li>
+</ul>
+<h3 id="2-1-接口案例"><a href="#2-1-接口案例" class="headerlink" title="2.1 接口案例"></a>2.1 接口案例</h3><h3 id="2-2-接口说明"><a href="#2-2-接口说明" class="headerlink" title="2.2 接口说明"></a>2.2 接口说明</h3><h3 id="2-3-Python实现"><a href="#2-3-Python实现" class="headerlink" title="2.3 Python实现"></a>2.3 Python实现</h3><p><a href="https://simplernerd.com/elasticsearch-scroll-python/" target="_blank" rel="noopener">https://simplernerd.com/elasticsearch-scroll-python/</a></p>
+<h2 id="第三部分-Scan-接口"><a href="#第三部分-Scan-接口" class="headerlink" title="第三部分 Scan 接口"></a>第三部分 Scan 接口</h2><p>按照官网介绍</p>
+<p>不用排序，单纯将数据查出来。</p>
+<p>如果没有排序的深度分页需求，最好使用 scan scroll的组合。</p>
+<p>scan scroll的流式接口用法很是简单,在url里扩充字段 search_type 是scan类型，scroll是3分钟，当次查询的结果会在elasticsearch标记3分钟。<br>这里的size 1000个会在每个shard起到作用。 并不是把所有结果限制为1000个 ！ 如果你的分片数目有10个，那么你最多可以拿到 1000 * 10的数据。</p>
+<h2 id="第四部分-异步搜索"><a href="#第四部分-异步搜索" class="headerlink" title="第四部分 异步搜索"></a>第四部分 异步搜索</h2><p><a href="https://blog.csdn.net/UbuntuTouch/article/details/107868114" target="_blank" rel="noopener">https://blog.csdn.net/UbuntuTouch/article/details/107868114</a></p>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.16/async-search.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/7.16/async-search.html</a></p>
+<h2 id="第四部分-总结"><a href="#第四部分-总结" class="headerlink" title="第四部分 总结"></a>第四部分 总结</h2><p>当需求查询es数据库中大量数据时,用_search就不符合应用场景了，建议使用helpers.scan，helpers.scan返回的数据对象时迭代器，很大节省内存空间，而且查询速度要远远大于search；search在利用from、size参数控制返回数据的条数,使用 from and size 的深度分页，size=10&amp;from=10000 是非常低效的，因为 100,000 排序的结果必须从每个分片上取出并重新排序最后返回 10 条。这个过程需要对每个请求页重复，scroll进行数据分页，也可以返回大数据，但是search返回的数据是以list的形式，如果一次需要返回的数据量比较大的话，则会十分耗费内存，而且数据传输速度也会比较慢</p>
+<h2 id="第五部分-附录"><a href="#第五部分-附录" class="headerlink" title="第五部分 附录"></a>第五部分 附录</h2><h3 id="5-1-参数track-total-hits说明"><a href="#5-1-参数track-total-hits说明" class="headerlink" title="5.1 参数track_total_hits说明"></a>5.1 参数<code>track_total_hits</code>说明</h3><p>Generally the total hit count can’t be computed accurately without visiting all matches, which is costly for queries that match lots of documents. The <code>track_total_hits</code> parameter allows you to control how the total number of hits should be tracked. Given that it is often enough to have a lower bound of the number of hits, such as “there are at least 10000 hits”, the default is set to <code>10,000</code>. This means that requests will count the total hit accurately up to <code>10,000</code> hits. It’s is a good trade off to speed up searches if you don’t need the accurate number of hits after a certain threshold.</p>
+<p>When set to <code>true</code> the search response will always track the number of hits that match the query accurately (e.g. <code>total.relation</code> will always be equal to <code>&quot;eq&quot;</code> when <code>track_total_hits</code> is set to true). Otherwise the <code>&quot;total.relation&quot;</code> returned in the <code>&quot;total&quot;</code> object in the search response determines how the <code>&quot;total.value&quot;</code> should be interpreted. A value of <code>&quot;gte&quot;</code> means that the <code>&quot;total.value&quot;</code> is a lower bound of the total hits that match the query and a value of <code>&quot;eq&quot;</code> indicates that <code>&quot;total.value&quot;</code> is the accurate count.</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET twitter/_search</span><br><span class="line">&#123;</span><br><span class="line">    "track_total_hits": true,</span><br><span class="line">     "query": &#123;</span><br><span class="line">        "match" : &#123;</span><br><span class="line">            "message" : "Elasticsearch"</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Copy as curl<a href="http://localhost:5601/app/kibana#/dev_tools/console?load_from=https://www.elastic.co/guide/en/elasticsearch/reference/7.5/snippets/1889.console" target="_blank" rel="noopener">View in Console</a> </p>
+<p>… returns:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;_shards&quot;: ...</span><br><span class="line">    &quot;timed_out&quot;: false,</span><br><span class="line">    &quot;took&quot;: 100,</span><br><span class="line">    &quot;hits&quot;: &#123;</span><br><span class="line">        &quot;max_score&quot;: 1.0,</span><br><span class="line">        &quot;total&quot; : &#123;</span><br><span class="line">            &quot;value&quot;: 2048,    </span><br><span class="line">            &quot;relation&quot;: &quot;eq&quot;  </span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;hits&quot;: ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>The total number of hits that match the query.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>The count is accurate (e.g. <code>&quot;eq&quot;</code> means equals).</td>
+</tr>
+</tbody>
+</table>
+<p>It is also possible to set <code>track_total_hits</code> to an integer. For instance the following query will accurately track the total hit count that match the query up to 100 documents:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET twitter/_search</span><br><span class="line">&#123;</span><br><span class="line">    "track_total_hits": 100,</span><br><span class="line">     "query": &#123;</span><br><span class="line">        "match" : &#123;</span><br><span class="line">            "message" : "Elasticsearch"</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Copy as curl<a href="http://localhost:5601/app/kibana#/dev_tools/console?load_from=https://www.elastic.co/guide/en/elasticsearch/reference/7.5/snippets/1890.console" target="_blank" rel="noopener">View in Console</a> </p>
+<p>The <code>hits.total.relation</code> in the response will indicate if the value returned in <code>hits.total.value</code> is accurate (<code>&quot;eq&quot;</code>) or a lower bound of the total (<code>&quot;gte&quot;</code>).</p>
+<p>For instance the following response:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;_shards&quot;: ...</span><br><span class="line">    &quot;timed_out&quot;: false,</span><br><span class="line">    &quot;took&quot;: 30,</span><br><span class="line">    &quot;hits&quot; : &#123;</span><br><span class="line">        &quot;max_score&quot;: 1.0,</span><br><span class="line">        &quot;total&quot; : &#123;</span><br><span class="line">            &quot;value&quot;: 42,         </span><br><span class="line">            &quot;relation&quot;: &quot;eq&quot;     </span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;hits&quot;: ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>42 documents match the query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>and the count is accurate (<code>&quot;eq&quot;</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>… indicates that the number of hits returned in the <code>total</code> is accurate.</p>
+<p>If the total number of hits that match the query is greater than the value set in <code>track_total_hits</code>, the total hits in the response will indicate that the returned value is a lower bound:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;_shards&quot;: ...</span><br><span class="line">    &quot;hits&quot; : &#123;</span><br><span class="line">        &quot;max_score&quot;: 1.0,</span><br><span class="line">        &quot;total&quot; : &#123;</span><br><span class="line">            &quot;value&quot;: 100,         </span><br><span class="line">            &quot;relation&quot;: &quot;gte&quot;     </span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;hits&quot;: ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>There are at least 100 documents that match the query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>This is a lower bound (<code>&quot;gte&quot;</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>If you don’t need to track the total number of hits at all you can improve query times by setting this option to <code>false</code>:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET twitter/_search</span><br><span class="line">&#123;</span><br><span class="line">    "track_total_hits": false,</span><br><span class="line">     "query": &#123;</span><br><span class="line">        "match" : &#123;</span><br><span class="line">            "message" : "Elasticsearch"</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Copy as curl<a href="http://localhost:5601/app/kibana#/dev_tools/console?load_from=https://www.elastic.co/guide/en/elasticsearch/reference/7.5/snippets/1891.console" target="_blank" rel="noopener">View in Console</a> </p>
+<p>… returns:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;_shards&quot;: ...</span><br><span class="line">    &quot;timed_out&quot;: false,</span><br><span class="line">    &quot;took&quot;: 10,</span><br><span class="line">    &quot;hits&quot; : &#123; </span><br><span class="line">        &quot;max_score&quot;: 1.0,</span><br><span class="line">        &quot;hits&quot;: ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>The total number of hits is unknown.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Finally you can force an accurate count by setting <code>&quot;track_total_hits&quot;</code> to <code>true</code> in the request.</p>
+<ul>
+<li></li>
+</ul>
+<h2 id="参考文献及资料"><a href="#参考文献及资料" class="headerlink" title="参考文献及资料"></a>参考文献及资料</h2><p>1、Official Elasticsearch client library for Python，链接：<a href="https://github.com/elastic/elasticsearch-py" target="_blank" rel="noopener">https://github.com/elastic/elasticsearch-py</a></p>
+
+      
+    </div>
+
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/posts/25f22cb2/">Elasticsearch中数据查询(Python实现)总结</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 rong xiang 的个人博客">rong xiang</a></p>
+  <p><span>发布时间:</span>2022年03月28日 - 13:03</p>
+  <p><span>最后更新:</span>2022年10月25日 - 23:10</p>
+  <p><span>原始链接:</span><a href="/posts/25f22cb2/" title="Elasticsearch中数据查询(Python实现)总结">https://zjrongxiang.github.io/posts/25f22cb2/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://zjrongxiang.github.io/posts/25f22cb2/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({   
+          title: "",   
+          text: '复制成功',   
+          html: false,
+          timer: 500,   
+          showConfirmButton: false
+        });
+      });
+    }));  
+</script>
+
+      
+    </div>
+    
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/5b6d428b/" rel="next" title="智能运维综述系列（日志处理）">
+                <i class="fa fa-chevron-left"></i> 智能运维综述系列（日志处理）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/663cd177/" rel="prev" title="智能运维综述系列（异常检测）">
+                智能运维综述系列（异常检测） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar/person.png" alt="rong xiang">
+            
+              <p class="site-author-name" itemprop="name">rong xiang</p>
+              <p class="site-description motion-element" itemprop="description">Keep a Pure Curiosity</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">311</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">80</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zjrongxiang" title="GitHub &rarr; https://github.com/zjrongxiang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:rongxiang1986@163.com" title="E-Mail &rarr; mailto:rongxiang1986@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="http://weibo.com/u/1971060643" title="Weibo &rarr; http://weibo.com/u/1971060643" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Link
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://weibo.com/fly51fly?refer_flag=1005055010_" title="https://weibo.com/fly51fly?refer_flag=1005055010_" rel="noopener" target="_blank">爱生活爱可可</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-查询原理说明"><span class="nav-number">3.</span> <span class="nav-text">第一部分 查询原理说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一部分-Search-接口"><span class="nav-number">4.</span> <span class="nav-text">第一部分 Search 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-接口案例"><span class="nav-number">4.1.</span> <span class="nav-text">1.1 接口案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-接口说明"><span class="nav-number">4.2.</span> <span class="nav-text">1.2 接口说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Python实现"><span class="nav-number">4.3.</span> <span class="nav-text">1.3 Python实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二部分-Scroll-接口"><span class="nav-number">5.</span> <span class="nav-text">第二部分 Scroll 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-接口案例"><span class="nav-number">5.1.</span> <span class="nav-text">2.1 接口案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-接口说明"><span class="nav-number">5.2.</span> <span class="nav-text">2.2 接口说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Python实现"><span class="nav-number">5.3.</span> <span class="nav-text">2.3 Python实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三部分-Scan-接口"><span class="nav-number">6.</span> <span class="nav-text">第三部分 Scan 接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-异步搜索"><span class="nav-number">7.</span> <span class="nav-text">第四部分 异步搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四部分-总结"><span class="nav-number">8.</span> <span class="nav-text">第四部分 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五部分-附录"><span class="nav-number">9.</span> <span class="nav-text">第五部分 附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-参数track-total-hits说明"><span class="nav-number">9.1.</span> <span class="nav-text">5.1 参数track_total_hits说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献及资料"><span class="nav-number">10.</span> <span class="nav-text">参考文献及资料</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2014 – <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rong xiang</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">940k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">14:15</span>
+  
+</div>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+    
+  <script id="dsq-count-scr" src="https://https-zjrongxiang-github-io.disqus.com/count.js" async></script>
+
+
+<script>
+  var disqus_config = function () {
+    this.page.url = "https://zjrongxiang.github.io/posts/25f22cb2/";
+    this.page.identifier = "posts/25f22cb2/";
+    this.page.title = 'Elasticsearch中数据查询(Python实现)总结';
+    };
+  function loadComments () {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-zjrongxiang-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    loadComments();
+  
+</script>
+
+  
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>
